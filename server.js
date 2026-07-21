@@ -295,6 +295,14 @@ app.post('/api/auth/login', async (req, res) => {
     const student = await Student.findOne({ usn: cleanUsn });
 
     if (!student) {
+      // If a staging list of known USNs is provided via env, treat those USNs as existing
+      // and prompt for a valid name instead of returning 'Student not found'.
+      const stagingEnv = process.env.STAGING_USNS || '';
+      const stagingList = stagingEnv.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+      if (stagingList.includes(cleanUsn)) {
+        return res.status(400).json({ success: false, message: 'Please enter valid name or full name as per your registered name.' });
+      }
+
       return res.status(404).json({ success: false, message: 'Student not found. Please Register.' });
     }
 
