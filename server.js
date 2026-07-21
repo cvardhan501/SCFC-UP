@@ -291,16 +291,27 @@ app.post('/api/auth/login', async (req, res) => {
     const cleanUsn = usn.trim().toUpperCase();
     const cleanName = name ? name.trim() : '';
 
-    // Check if USN exists in the database
+    // Check if USN exists in the database first
     const student = await Student.findOne({ usn: cleanUsn });
 
     if (!student) {
       return res.status(404).json({ success: false, message: 'Student not found. Please Register.' });
     }
 
-    // If USN exists but name is blank or doesn't match
-    if (!cleanName || student.name.toLowerCase() !== cleanName.toLowerCase()) {
-      return res.status(400).json({ success: false, message: 'Please enter your full name.' });
+    // If USN exists, check if name was provided
+    if (!cleanName) {
+      return res.status(400).json({ success: false, message: 'Please enter a valid name.' });
+    }
+
+    // Use case-insensitive and whitespace-flexible comparison for the name
+    const storedNameFormatted = student.name.trim().toLowerCase();
+    const inputNameFormatted = cleanName.toLowerCase();
+
+    if (storedNameFormatted !== inputNameFormatted) {
+      return res.status(400).json({
+        success: false,
+        message: `Please enter valid name or full name as per your registered name (${student.name}).`
+      });
     }
 
     console.log(`User logged in: ${cleanUsn}`);
@@ -314,7 +325,6 @@ app.post('/api/auth/login', async (req, res) => {
     return res.status(500).json({ success: false, message: 'Server error during login.' });
   }
 });
-
 // ==========================================
 // GET STUDENT DATA ENDPOINT
 // ==========================================
