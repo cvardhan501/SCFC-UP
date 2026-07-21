@@ -278,22 +278,58 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
+// // ==========================================
+// // LOGIN ENDPOINT
+// // ==========================================
+// app.post('/api/auth/login', async (req, res) => {
+//   try {
+//     const { name, usn } = req.body;
+//     if (!name || !usn) {
+//       return res.status(400).json({ success: false, message: 'Both Student Name and USN are required.' });
+//     }
+
+//     const cleanUsn = usn.trim().toUpperCase();
+//     const cleanName = name.trim();
+
+//     const student = await Student.findOne({ usn: cleanUsn });
+//     if (!student || student.name.toLowerCase() !== cleanName.toLowerCase()) {
+//       return res.status(404).json({ success: false, message: 'Student not found. Please Register.' });
+//     }
+
+//     console.log(`User logged in: ${cleanUsn}`);
+//     return res.json({
+//       success: true,
+//       message: 'Login successful.',
+//       student: student
+//     });
+//   } catch (error) {
+//     console.error('Login error:', error);
+//     return res.status(500).json({ success: false, message: 'Server error during login.' });
+//   }
+// });
 // ==========================================
 // LOGIN ENDPOINT
 // ==========================================
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { name, usn } = req.body;
-    if (!name || !usn) {
-      return res.status(400).json({ success: false, message: 'Both Student Name and USN are required.' });
+    if (!usn || !usn.trim()) {
+      return res.status(400).json({ success: false, message: 'USN is required.' });
     }
 
     const cleanUsn = usn.trim().toUpperCase();
-    const cleanName = name.trim();
+    const cleanName = name ? name.trim() : '';
 
+    // Check if USN exists in the database
     const student = await Student.findOne({ usn: cleanUsn });
-    if (!student || student.name.toLowerCase() !== cleanName.toLowerCase()) {
+
+    if (!student) {
       return res.status(404).json({ success: false, message: 'Student not found. Please Register.' });
+    }
+
+    // If USN exists but name is blank or doesn't match
+    if (!cleanName || student.name.toLowerCase() !== cleanName.toLowerCase()) {
+      return res.status(400).json({ success: false, message: 'Please enter your full name.' });
     }
 
     console.log(`User logged in: ${cleanUsn}`);
