@@ -1180,6 +1180,190 @@
       margin-top: 20px;
     }
 
+    .dash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .dash-grid .glass.p-6 {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .dash-grid .glass.p-6 .val {
+      width: 100%;
+      text-align: left;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .tracker-basket-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      height: 100%;
+      min-height: 360px;
+      overflow: hidden;
+    }
+
+    .tracker-course-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tracker-course-group h5 {
+      margin: 0;
+      font-size: 11px;
+      line-height: 1.3;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--ink-soft);
+    }
+
+    .tracker-course-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 160px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .tracker-course-details {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.38s ease, opacity 0.25s ease;
+    }
+
+    .tracker-course-details.open {
+      max-height: 840px;
+      opacity: 1;
+    }
+
+    .tracker-course-details-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 4px;
+    }
+
+    .tracker-course-section-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+
+    .tracker-course-section-body {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.25s ease;
+    }
+
+    .tracker-course-section-body.open {
+      max-height: 260px;
+      opacity: 1;
+    }
+
+    .tracker-course-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .tracker-course-item:last-child {
+      border-bottom: none;
+    }
+
+    .tracker-toggle-btn {
+      width: fit-content;
+      margin-top: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tracker-toggle-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.12);
+    }
+
+    .tracker-filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 180px;
+    }
+
+    .tracker-filter-group label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .tracker-ring {
+      width: 72px;
+      height: 72px;
+      min-width: 72px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+    }
+
+    .tracker-ring::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      background: var(--glass-bg);
+      border-radius: 50%;
+      border: 1px solid var(--glass-border);
+    }
+
+    .tracker-ring span {
+      position: relative;
+      z-index: 1;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
     .sem-card {
       padding: 22px;
       display: flex;
@@ -1735,10 +1919,15 @@
         left: 50%;
         transform: translateX(-50%);
         z-index: 60;
-        padding: 10px 18px;
+        padding: 8px 12px;
         border-radius: 22px;
-        gap: 18px;
+        gap: 10px;
         align-items: center;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        justify-content: center;
+        max-width: calc(100vw - 24px);
       }
 
       .mnav-item {
@@ -1747,8 +1936,11 @@
         align-items: center;
         gap: 3px;
         color: var(--ink-soft);
-        font-size: 9.5px;
+        font-size: 10px;
         cursor: pointer;
+        min-width: 56px;
+        padding: 4px 6px;
+        white-space: nowrap;
       }
 
       .mnav-item.active {
@@ -1836,11 +2028,24 @@
       .aurora-wrap,
       .dock,
       .topbar,
-      .app,
       .mobile-bottomnav,
       .fab,
       .modal-overlay {
         display: none !important;
+      }
+
+      .app {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .page-view {
+        display: none !important;
+      }
+
+      .page-view.active {
+        display: block !important;
       }
 
       #printableReport {
@@ -1923,6 +2128,22 @@
               <path d="M3 9h18M8 3v3M16 3v3" />
             </svg>
             <span class="label">Semester</span>
+          </a>
+          <a class="dock-item" data-view="timetable" onclick="switchView('timetable')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <span class="label">Timetable</span>
+          </a>
+          <a class="dock-item" data-view="tracker" onclick="switchView('tracker')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 6v6l4 2" />
+            </svg>
+            <span class="label">Credit Tracker</span>
           </a>
           <a class="dock-item" data-view="analytics" onclick="switchView('analytics')">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -2100,22 +2321,24 @@
               </div>
 
               <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Course</th>
-                      <th>Credits</th>
-                      <th>Grade</th>
-                      <th>GP</th>
-                      <th>CP</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody id="tableBody">
-                    <!-- rows injected by JS -->
-                  </tbody>
-                </table>
+                <div style="overflow-x: auto; padding-bottom:12px;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Course</th>
+                        <th>Credits</th>
+                        <th>Grade</th>
+                        <th>GP</th>
+                        <th>CP</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                      <!-- rows injected by JS -->
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               <div class="ws-foot">
@@ -2347,12 +2570,158 @@
                     <path d="M18 8a6 6 0 00-12 0c0 5-2 6-2 6h16s-2-1-2-6z" />
                     <path d="M10 20a2 2 0 004 0" />
                   </svg></div>
-                <h4>Announcements</h4>
+                <h4>Smart Warnings</h4>
               </div>
-              <span class="announce-badge">Active</span>
-              <p class="note">MongoDB integration and Student USN authentication are active. All changes auto-save
-                instantly to the database.</p>
+              <div id="smartWarningsContainer">
+                 <span class="announce-badge">Active</span>
+                 <p class="note">MongoDB integration and Student USN authentication are active. All changes auto-save instantly to the database.</p>
+              </div>
             </div>
+          </div>
+        </div>
+
+        <!-- VIEW: TIMETABLE DASHBOARD -->
+        <div id="view-timetable" class="page-view">
+          <div class="hero fade-up">
+            <h1>Semester <span class="grad">Timetable</span></h1>
+            <p>Official course timetable with theory and lab slot mappings. Auto-generates based on selected slots.</p>
+          </div>
+          <div class="glass fade-up" style="padding: 24px; margin-bottom:24px; overflow-x: auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; flex-wrap:wrap;">
+              <h3 style="margin:0;">Course Slot Assignments</h3>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <select class="form-input" id="timetableSemSelect" style="width:200px;" onchange="renderTimetable()">
+                  <option value="1">Semester 1</option>
+                  <option value="2">Semester 2</option>
+                  <option value="3">Semester 3</option>
+                  <option value="4">Semester 4</option>
+                  <option value="5">Semester 5</option>
+                  <option value="6">Semester 6</option>
+                  <option value="7">Semester 7</option>
+                  <option value="8">Semester 8</option>
+                </select>
+                <button class="btn btn-ghost" onclick="window.print()">Print Timetable</button>
+              </div>
+            </div>
+            <table style="width:100%; text-align:left;">
+              <thead>
+                <tr>
+                  <th style="padding:8px;">Course</th>
+                  <th style="padding:8px;">Instructor Name</th>
+                  <th style="padding:8px;">Course Type</th>
+                  <th style="padding:8px;">Theory Slot</th>
+                  <th style="padding:8px;">Lab Slot</th>
+                </tr>
+              </thead>
+              <tbody id="timetableCourseAssignmentBody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+          <div class="glass fade-up" style="padding: 24px; overflow-x: auto;">
+            <h3 style="margin-top:0; margin-bottom:16px;">Weekly Schedule</h3>
+            <table class="timetable-grid" style="width:100%; border-collapse:collapse; text-align:center;">
+              <thead>
+                <tr>
+                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">Day / Time</th>
+                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">9:00 - 9:50</th>
+                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">9:55 - 10:45</th>
+                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">10:50 - 11:40</th>
+                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">11:45 - 12:35</th>
+                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">12:35 - 1:15</th>
+                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">1:15 - 2:05</th>
+                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">2:10 - 3:00</th>
+                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">3:05 - 3:55</th>
+                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">4:00 - 4:50</th>
+                </tr>
+              </thead>
+              <tbody id="timetableBody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- VIEW: CREDIT TRACKER -->
+        <div id="view-tracker" class="page-view">
+          <div class="hero fade-up">
+            <h1>Credit <span class="grad">Tracker</span></h1>
+            <p>Track your academic progress across different curriculum baskets and overall degree requirements.</p>
+          </div>
+          <div class="dash-grid fade-up" style="animation-delay: 0.1s;">
+            <div class="glass p-6">
+              <h3>Total Degree Credits</h3>
+              <div class="val" id="trackerRequiredCredits" style="font-size:36px; margin: 10px 0;">160</div>
+              <p style="color:var(--ink-soft); font-size:13px;">Official graduation requirement</p>
+            </div>
+            <div class="glass p-6">
+              <h3>Credits Earned</h3>
+              <div class="val" id="trackerCompletedCredits" style="font-size:36px; margin: 10px 0; color:var(--green);">0</div>
+              <p style="color:var(--ink-soft); font-size:13px;">Passed credits only</p>
+            </div>
+            <div class="glass p-6">
+              <h3>Credits Remaining</h3>
+              <div class="val" id="trackerRemaining" style="font-size:36px; margin: 10px 0; color:var(--indigo);">160</div>
+              <p style="color:var(--ink-soft); font-size:13px;">Minimum requirement balance</p>
+            </div>
+            <div class="glass p-6">
+              <h3>Overall Completion %</h3>
+              <div class="val" id="trackerPct" style="font-size:36px; margin: 10px 0;">0%</div>
+              <div class="prog-bar"><div class="prog-fill" id="trackerTotalProg" style="width:0%; background:var(--green)"></div></div>
+            </div>
+            <div class="glass p-6">
+              <h3>Current Semester Credits</h3>
+              <div class="val" id="trackerCurrentSemCredits" style="font-size:36px; margin: 10px 0; color:var(--indigo);">0</div>
+              <p style="color:var(--ink-soft); font-size:13px;">Passed credits in active semester</p>
+            </div>
+            <div class="glass p-6">
+              <h3>Courses Completed</h3>
+              <div class="val" id="trackerCompletedCourses" style="font-size:36px; margin: 10px 0; color:var(--green);">0</div>
+              <p style="color:var(--ink-soft); font-size:13px;">Courses with grade D or higher</p>
+            </div>
+            <div class="glass p-6">
+              <h3>Courses Pending</h3>
+              <div class="val" id="trackerPendingCourses" style="font-size:36px; margin: 10px 0; color:#F59E0B;">0</div>
+              <p style="color:var(--ink-soft); font-size:13px;">Courses not yet in pass range</p>
+            </div>
+          </div>
+
+          <div class="glass fade-up" style="padding: 18px; margin: 24px 0; display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
+            <div class="tracker-filter-group">
+              <label for="trackerSemesterFilter">Semester</label>
+              <select class="form-input" id="trackerSemesterFilter">
+                <option value="all">All Semesters</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+              </select>
+            </div>
+            <div class="tracker-filter-group">
+              <label for="trackerBasketFilter">Basket</label>
+              <select class="form-input" id="trackerBasketFilter">
+                <option value="all">All Baskets</option>
+              </select>
+            </div>
+            <div class="tracker-filter-group">
+              <label for="trackerStatusFilter">Status</label>
+              <select class="form-input" id="trackerStatusFilter">
+                <option value="all">All Courses</option>
+                <option value="completed">Completed</option>
+                <option value="pending">Pending</option>
+                <option value="not-started">Not Started</option>
+              </select>
+            </div>
+            <button class="btn btn-ghost" onclick="window.print()">Export Tracker Report</button>
+          </div>
+
+          <h2 style="margin:24px 0 16px 0; font-size:20px;">Basket Progress</h2>
+          <div class="grid-3" id="trackerBasketsGrid">
+            <!-- Injected via JS -->
           </div>
         </div>
 
@@ -2501,13 +2870,31 @@
             </div>
 
             <div class="glass spot card-pad">
-              <h3 style="margin-bottom:16px; font-size:16px; font-weight:700;">Data Management & Account</h3>
-              <p style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">Your data is continuously auto-saved
-                to MongoDB. You can also export a JSON backup.</p>
-              <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <h3 style="margin-bottom:16px; font-size:16px; font-weight:700;">Data Management & Reset</h3>
+              <p style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">Export backup JSON, import data, or reset specific semester timetables.</p>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
                 <button class="btn btn-ghost" onclick="exportDataBackup()">Export Backup (JSON)</button>
-                <button class="btn btn-ghost" style="color:#EF4444; border-color:rgba(239,68,68,.3);"
-                  onclick="logoutStudent()">Logout Session</button>
+                <label class="btn btn-ghost" style="cursor:pointer; display:inline-flex; align-items:center;">
+                  Import Backup
+                  <input type="file" accept=".json" onchange="importDataBackup(event)" style="display:none;">
+                </label>
+              </div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn btn-ghost" style="color:#F59E0B; border-color:rgba(245,158,11,.3);" onclick="resetTimetable()">Reset Current Timetable</button>
+                <button class="btn btn-ghost" style="color:#EF4444; border-color:rgba(239,68,68,.3);" onclick="resetCurrentSemester()">Reset Semester Courses</button>
+                <button class="btn btn-ghost" style="color:#EF4444; border-color:rgba(239,68,68,.3);" onclick="logoutStudent()">Logout Session</button>
+              </div>
+            </div>
+
+            <div class="glass spot card-pad">
+              <h3 style="margin-bottom:16px; font-size:16px; font-weight:700;">Notifications & Preferences</h3>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <span style="font-size:13px;">Credit Shortage Alerts</span>
+                <input type="checkbox" checked style="accent-color:var(--indigo);">
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:13px;">Auto-Save Sync Notifications</span>
+                <input type="checkbox" checked style="accent-color:var(--indigo);">
               </div>
             </div>
           </div>
@@ -2630,6 +3017,16 @@
         <rect x="3" y="4" width="18" height="17" rx="3" />
         <path d="M3 9h18" />
       </svg>Sem</div>
+    <div class="mnav-item" data-view="timetable" onclick="switchView('timetable')"><svg width="19" height="19"
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="3" y="4" width="18" height="17" rx="3" />
+        <path d="M16 2v4M8 2v4M3 10h18" />
+      </svg>Timetable</div>
+    <div class="mnav-item" data-view="tracker" onclick="switchView('tracker')"><svg width="19" height="19"
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M12 2v20M2 12h20" />
+        <circle cx="12" cy="12" r="8" />
+      </svg>Tracker</div>
     <div class="mnav-item" data-view="analytics" onclick="switchView('analytics')"><svg width="19" height="19"
         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
         <path d="M4 20V10M12 20V4M20 20v-7" />
@@ -2861,6 +3258,174 @@
       if (seen.has(c.code)) return false;
       seen.add(c.code); return true;
     });
+
+    const TRACKER_CURRICULUM_REQUIREMENTS = Object.freeze({
+      'School Core': 59,
+      'Program Core': 41,
+      'English': 2,
+      'Electrical & Electronics': 4,
+      'Modern Physics': 3,
+      'Foreign Language': 1,
+      'Foreign Languages': 1,
+      'Behavioural Science': 2,
+      'Soft Skills': 3,
+      'AI & ML': 12,
+      'Cyber Security': 3,
+      'Data Analytics': 3,
+      'IoT': 3,
+      'Cloud Computing': 3,
+      'Robotics': 3,
+      'Full Stack Development': 3,
+      'DevOps': 3,
+      'Common Elective': 9,
+      'Specialized Elective': 33,
+      'Open Elective': 18
+    });
+
+    const TRACKER_BASKET_ALIASES = Object.freeze({
+      'Foreign Languages': 'Foreign Language',
+      'Fullstack Development': 'Full Stack Development'
+    });
+
+    const TRACKER_PASS_GRADES = new Set(['S', 'A', 'B', 'C', 'D']);
+    const TRACKER_PENDING_GRADES = new Set(['E', 'F', 'ABSENT', 'NOT ATTEMPTED', 'PENDING']);
+    const trackerExpandedState = {};
+    const trackerSectionState = {};
+
+    function normalizeTrackerBasketName(basket) {
+      return TRACKER_BASKET_ALIASES[basket] || basket;
+    }
+
+    function getTrackerBasketName(course) {
+      const found = courseBankUnique.find(c => c.code === course.code);
+      if (!found) return 'Open Elective';
+      return normalizeTrackerBasketName(found.basket || 'Open Elective');
+    }
+
+    function isTrackerCourseCompleted(course) {
+      if (!course) return false;
+      const grade = String(course.grade || '').trim().toUpperCase();
+      return grade !== '' && TRACKER_PASS_GRADES.has(grade);
+    }
+
+    function getTrackerCourseStatus(course) {
+      const grade = String(course.grade || '').trim().toUpperCase();
+      if (!grade) return 'not-started';
+      if (TRACKER_PASS_GRADES.has(grade)) return 'completed';
+      return 'pending';
+    }
+
+    function getTrackerBasketRequirement(basket) {
+      return TRACKER_CURRICULUM_REQUIREMENTS[normalizeTrackerBasketName(basket)] ?? 0;
+    }
+
+    function renderTrackerCourseList(courses, status) {
+      if (!Array.isArray(courses) || courses.length === 0) {
+        return '<div style="font-size:11px; color:var(--ink-soft); font-style:italic;">No courses found</div>';
+      }
+
+      return courses.map(c => {
+        const resolvedStatus = c._status || getTrackerCourseStatus(c);
+        const isPassed = resolvedStatus === 'completed';
+        const icon = resolvedStatus === 'completed' ? '✓' : resolvedStatus === 'pending' ? '⏳' : '○';
+        const gradeText = resolvedStatus === 'not-started'
+          ? 'Not Started'
+          : (c._grade || c.grade || 'Pending');
+
+        return `<div class="tracker-course-item">
+          <span><b>${icon} ${c.code}</b> ${c.name}</span>
+          <span style="font-weight:700; color:${isPassed ? 'var(--green)' : '#F59E0B'};">${gradeText} (${c.credits} Cr)</span>
+        </div>`;
+      }).join('');
+    }
+
+    function renderTrackerSection(sectionKey, label, courses, basketName) {
+      const sectionState = trackerSectionState[basketName] || (trackerSectionState[basketName] = {});
+      const expanded = Boolean(sectionState[sectionKey]);
+      const sectionIcon = expanded ? '▼' : '▶';
+      const sectionHtml = renderTrackerCourseList(courses, sectionKey);
+
+      return `
+        <div class="tracker-course-group">
+          <button class="tracker-course-section-btn" data-basket="${basketName}" data-section="${sectionKey}">
+            <span>${sectionIcon} ${label} (${courses.length})</span>
+          </button>
+          <div class="tracker-course-section-body ${expanded ? 'open' : ''}">
+            <div class="tracker-course-list">${sectionHtml}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* =========================================================
+       TIMETABLE SLOT MAPPING & CONSTANTS
+    ========================================================= */
+    const THEORY_SLOTS = [
+      'A1+TA1','B1+TB1','C1+TC1','A2+TA2','B2+TB2','C2+TC2',
+      'D1','D2','E1','E2','F1','F2','G1','G2'
+    ];
+    const LAB_SLOTS = [
+      'L1+L2','L3+L4','L5+L6','L7+L8','L9+L10','L11+L12','L13+L14','L15+L16','L17+L18','L19+L20',
+      'L21+L22','L23+L24','L25+L26','L27+L28','L29+L30','L31+L32','L33+L34','L35+L36','L37+L38','L39+L40'
+    ];
+
+    function getSlotParts(slotValue) {
+      if (!slotValue) return [];
+      return slotValue.split('+').map(p => p.trim()).filter(Boolean);
+    }
+
+    function getSlotConflictSet(slotValue) {
+      return new Set(getSlotParts(slotValue));
+    }
+
+    const SLOT_MAP = {
+      // 3-credit theory slots
+      'A1': [{d:'MON', c:0}, {d:'WED', c:1}, {d:'FRI', c:2}],
+      'B1': [{d:'TUE', c:0}, {d:'WED', c:3}, {d:'THU', c:1}],
+      'C1': [{d:'WED', c:0}, {d:'THU', c:3}, {d:'FRI', c:1}],
+      'D1': [{d:'MON', c:2}, {d:'THU', c:0}],
+      'E1': [{d:'TUE', c:2}, {d:'FRI', c:0}],
+      'F1': [{d:'MON', c:1}, {d:'WED', c:2}],
+      'G1': [{d:'TUE', c:1}, {d:'THU', c:2}],
+
+      'A2': [{d:'MON', c:5}, {d:'WED', c:6}, {d:'FRI', c:7}],
+      'B2': [{d:'TUE', c:5}, {d:'WED', c:8}, {d:'THU', c:6}],
+      'C2': [{d:'WED', c:5}, {d:'THU', c:8}, {d:'FRI', c:6}],
+      'D2': [{d:'MON', c:7}, {d:'THU', c:5}],
+      'E2': [{d:'TUE', c:7}, {d:'FRI', c:5}],
+      'F2': [{d:'MON', c:6}, {d:'WED', c:7}],
+      'G2': [{d:'TUE', c:6}, {d:'THU', c:7}],
+
+      // Extra 1-credit theory slots
+      'TA1': [{d:'TUE', c:3}], 'TA2': [{d:'TUE', c:8}],
+      'TB1': [{d:'FRI', c:3}], 'TB2': [{d:'FRI', c:8}],
+      'TC1': [{d:'MON', c:3}], 'TC2': [{d:'MON', c:8}],
+
+      // Individual Lab slots (L1 to L40)
+      'L1': [{d:'MON', c:0}], 'L2': [{d:'MON', c:1}], 'L3': [{d:'MON', c:2}], 'L4': [{d:'MON', c:3}],
+      'L5': [{d:'TUE', c:0}], 'L6': [{d:'TUE', c:1}], 'L7': [{d:'TUE', c:2}], 'L8': [{d:'TUE', c:3}],
+      'L9': [{d:'WED', c:0}], 'L10': [{d:'WED', c:1}], 'L11': [{d:'WED', c:2}], 'L12': [{d:'WED', c:3}],
+      'L13': [{d:'THU', c:0}], 'L14': [{d:'THU', c:1}], 'L15': [{d:'THU', c:2}], 'L16': [{d:'THU', c:3}],
+      'L17': [{d:'FRI', c:0}], 'L18': [{d:'FRI', c:1}], 'L19': [{d:'FRI', c:2}], 'L20': [{d:'FRI', c:3}],
+
+      'L21': [{d:'MON', c:5}], 'L22': [{d:'MON', c:6}], 'L23': [{d:'MON', c:7}], 'L24': [{d:'MON', c:8}],
+      'L25': [{d:'TUE', c:5}], 'L26': [{d:'TUE', c:6}], 'L27': [{d:'TUE', c:7}], 'L28': [{d:'TUE', c:8}],
+      'L29': [{d:'WED', c:5}], 'L30': [{d:'WED', c:6}], 'L31': [{d:'WED', c:7}], 'L32': [{d:'WED', c:8}],
+      'L33': [{d:'THU', c:5}], 'L34': [{d:'THU', c:6}], 'L35': [{d:'THU', c:7}], 'L36': [{d:'THU', c:8}],
+      'L37': [{d:'FRI', c:5}], 'L38': [{d:'FRI', c:6}], 'L39': [{d:'FRI', c:7}], 'L40': [{d:'FRI', c:8}],
+
+      // Paired backward compatibility
+      'L1+L2': [{d:'MON', c:0, span:2}], 'L3+L4': [{d:'MON', c:2, span:2}],
+      'L5+L6': [{d:'TUE', c:0, span:2}], 'L7+L8': [{d:'TUE', c:2, span:2}],
+      'L9+L10': [{d:'WED', c:0, span:2}], 'L11+L12': [{d:'WED', c:2, span:2}],
+      'L13+L14': [{d:'THU', c:0, span:2}], 'L15+L16': [{d:'THU', c:2, span:2}],
+      'L17+L18': [{d:'FRI', c:0, span:2}], 'L19+L20': [{d:'FRI', c:2, span:2}],
+      'L21+L22': [{d:'MON', c:5, span:2}], 'L23+L24': [{d:'MON', c:7, span:2}],
+      'L25+L26': [{d:'TUE', c:5, span:2}], 'L27+L28': [{d:'TUE', c:7, span:2}],
+      'L29+L30': [{d:'WED', c:5, span:2}], 'L31+L32': [{d:'WED', c:7, span:2}],
+      'L33+L34': [{d:'THU', c:5, span:2}], 'L35+L36': [{d:'THU', c:7, span:2}],
+      'L37+L38': [{d:'FRI', c:5, span:2}], 'L39+L40': [{d:'FRI', c:7, span:2}]
+    };
 
     /* =========================================================
        STATE & MONGODB API AUTO-SAVE MANAGEMENT
@@ -3158,6 +3723,8 @@
       else if (viewName === 'settings') renderSettingsView();
       else if (viewName === 'history') renderHistoryView();
       else if (viewName === 'gradesystem') renderGradeSystemView();
+      else if (viewName === 'timetable') renderTimetable();
+      else if (viewName === 'tracker') renderTracker();
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -3334,10 +3901,410 @@
       renderTrendChartSvg('dashboardTrendSvg');
     }
 
+    function renderTimetable() {
+      const semSelect = document.getElementById('timetableSemSelect');
+      const sem = parseInt(semSelect ? semSelect.value : state.currentSemester);
+      if (semSelect) semSelect.value = sem;
+      
+      const rows = state.semesters[sem] || [];
+
+      const getOccupiedSlots = (skipIdx) => {
+        const occupied = new Set();
+        rows.forEach((r, idx) => {
+          if (idx === skipIdx) return;
+          getSlotParts(r.theorySlot).forEach(slot => occupied.add(slot));
+          getSlotParts(r.labSlot).forEach(slot => occupied.add(slot));
+          getSlotParts(r.labSlot2).forEach(slot => occupied.add(slot));
+          const rLabs = Array.isArray(r.labSlots) ? r.labSlots : [];
+          rLabs.forEach(l => occupied.add(l));
+        });
+        return occupied;
+      };
+
+      // Render Course Slot Assignment Table
+      const assignBody = document.getElementById('timetableCourseAssignmentBody');
+      if (assignBody) {
+        if (rows.length === 0) {
+          assignBody.innerHTML = `<tr><td colspan="5" style="padding:12px; text-align:center; color:var(--ink-soft);">No subjects added for Semester ${sem} yet. Add subjects in the Grade Calculator dashboard.</td></tr>`;
+        } else {
+          assignBody.innerHTML = rows.map((r, i) => {
+            const isLabOnly = r.type === 'Lab';
+            const isTheoryOnly = r.type === 'Theory';
+
+            const typeOptions = ['Theory', 'Lab', 'Theory + Lab'].map(t => `<option value="${t}" ${t === (r.type || 'Theory') ? 'selected' : ''}>${t}</option>`).join('');
+            const tSlotOptions = '<option value="">None</option>' + THEORY_SLOTS.map(s => `<option value="${s}" ${s === r.theorySlot ? 'selected' : ''}>${s}</option>`).join('');
+            const lSlotOptions = '<option value="">None</option>' + LAB_SLOTS.map(s => `<option value="${s}" ${s === r.labSlot ? 'selected' : ''}>${s}</option>`).join('');
+            const lSlot2Options = '<option value="">None</option>' + LAB_SLOTS.map(s => `<option value="${s}" ${s === r.labSlot2 ? 'selected' : ''}>${s}</option>`).join('');
+
+            return `<tr style="border-bottom:1px solid rgba(140, 130, 255, .1);">
+              <td style="padding:8px;"><b style="color:var(--ink); font-size:13px;">${r.code}</b><br><span style="font-size:12px; color:var(--ink-soft);">${r.name}</span></td>
+              <td style="padding:8px;"><input type="text" class="form-input tt-inst" data-i="${i}" value="${r.instructor || ''}" placeholder="Instructor Name" style="width:140px; padding:4px 8px; font-size:12px;"></td>
+              <td style="padding:8px;"><select class="form-input tt-type" data-i="${i}" style="width:110px; padding:4px; font-size:12px;">${typeOptions}</select></td>
+              <td style="padding:8px;">
+                ${isLabOnly ? '<span style="color:var(--ink-soft); font-size:11px;">N/A (Lab Only)</span>' : `<select class="form-input tt-tslot" data-i="${i}" style="width:150px; padding:4px; font-size:12px;">${tSlotOptions}</select>`}
+              </td>
+              <td style="padding:8px;">
+                ${isTheoryOnly ? '<span style="color:var(--ink-soft); font-size:11px;">N/A (Theory Only)</span>' : `<div style="display:flex; flex-direction:column; gap:6px;"><select class="form-input tt-lslot" data-i="${i}" style="width:140px; padding:4px; font-size:12px;">${lSlotOptions}</select><select class="form-input tt-lslot2" data-i="${i}" style="width:140px; padding:4px; font-size:12px;">${lSlot2Options}</select></div>`}
+              </td>
+            </tr>`;
+          }).join('');
+
+          assignBody.querySelectorAll('.tt-inst').forEach(inp => {
+            inp.addEventListener('change', e => {
+              const idx = +e.target.dataset.i;
+              rows[idx].instructor = e.target.value;
+              triggerAutoSave();
+            });
+          });
+
+          assignBody.querySelectorAll('.tt-type').forEach(sel => {
+            sel.addEventListener('change', e => {
+              const idx = +e.target.dataset.i;
+              rows[idx].type = e.target.value;
+              triggerAutoSave();
+              renderTimetable();
+            });
+          });
+
+          assignBody.querySelectorAll('.tt-tslot').forEach(sel => {
+            sel.addEventListener('change', e => {
+              const idx = +e.target.dataset.i;
+              const newVal = e.target.value;
+              const nextSlots = getSlotConflictSet(newVal);
+              if (newVal) {
+                const occupied = getOccupiedSlots(idx);
+                const conflict = Array.from(nextSlots).find(slot => occupied.has(slot));
+                if (conflict) {
+                  alert(`Slot conflict detected. This slot is already assigned.`);
+                  e.target.value = rows[idx].theorySlot || '';
+                  return;
+                }
+              }
+              rows[idx].theorySlot = newVal;
+              triggerAutoSave();
+              renderTimetable();
+            });
+          });
+
+          assignBody.querySelectorAll('.tt-lslot').forEach(sel => {
+            sel.addEventListener('change', e => {
+              const idx = +e.target.dataset.i;
+              const newVal = e.target.value;
+              const nextSlots = getSlotConflictSet(newVal);
+              if (newVal) {
+                const occupied = getOccupiedSlots(idx);
+                const conflict = Array.from(nextSlots).find(slot => occupied.has(slot));
+                if (conflict) {
+                  alert(`Lab slot conflict detected. One or more slots in this combination are already assigned to another course.`);
+                  e.target.value = rows[idx].labSlot || '';
+                  return;
+                }
+              }
+              rows[idx].labSlot = newVal;
+              triggerAutoSave();
+              renderTimetable();
+            });
+          });
+
+          assignBody.querySelectorAll('.tt-lslot2').forEach(sel => {
+            sel.addEventListener('change', e => {
+              const idx = +e.target.dataset.i;
+              const newVal = e.target.value;
+              const nextSlots = getSlotConflictSet(newVal);
+              if (newVal) {
+                const occupied = getOccupiedSlots(idx);
+                const conflict = Array.from(nextSlots).find(slot => occupied.has(slot));
+                if (conflict) {
+                  alert(`Lab slot conflict detected. One or more slots in this combination are already assigned to another course.`);
+                  e.target.value = rows[idx].labSlot2 || '';
+                  return;
+                }
+              }
+              rows[idx].labSlot2 = newVal;
+              triggerAutoSave();
+              renderTimetable();
+            });
+          });
+        }
+      }
+
+      // Render Weekly Schedule Grid
+      const days = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
+      const grid = { MON: Array(9).fill(null), TUE: Array(9).fill(null), WED: Array(9).fill(null), THU: Array(9).fill(null), FRI: Array(9).fill(null) };
+      
+      rows.forEach(r => {
+         const typeColor = r.type === 'Theory + Lab' ? 'rgba(168,85,247,0.15)' : (r.type === 'Lab' ? 'rgba(34,197,94,0.15)' : 'rgba(56,189,248,0.15)');
+         const borderColor = r.type === 'Theory + Lab' ? '#A855F7' : (r.type === 'Lab' ? '#22C55E' : '#38BDF8');
+         
+         const renderCell = (mapping, slotName) => {
+             mapping.forEach(m => {
+                 if(grid[m.d]) {
+                     const cellHtml = `<div style="padding:6px; background:${typeColor}; border-left:3px solid ${borderColor}; border-radius:4px; font-size:11px; height:100%; display:flex; flex-direction:column; justify-content:center;">
+                         <b style="color:var(--ink); font-size:12px;">${r.code}</b>
+                         <span style="color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${r.name}">${r.name}</span>
+                         <div style="margin-top:4px; font-weight:600; color:${borderColor};">${slotName}</div>
+                         <div style="font-size:10px; color:var(--ink-soft); margin-top:2px;">${r.instructor || 'TBA'}</div>
+                     </div>`;
+                     
+                     if (m.span === 2) {
+                         grid[m.d][m.c] = { html: cellHtml, span: 2 };
+                         if (grid[m.d][m.c+1] === null) grid[m.d][m.c+1] = 'skip';
+                     } else {
+                         grid[m.d][m.c] = { html: cellHtml, span: 1 };
+                     }
+                 }
+             });
+         };
+
+         if (r.theorySlot) {
+             const theorySlots = getSlotParts(r.theorySlot);
+             theorySlots.forEach(slot => {
+                 if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+             });
+         }
+
+         if (r.labSlot) {
+             const labSlots = getSlotParts(r.labSlot);
+             labSlots.forEach(slot => {
+                 if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+             });
+         }
+
+         if (r.labSlot2) {
+             const labSlots2 = getSlotParts(r.labSlot2);
+             labSlots2.forEach(slot => {
+                 if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+             });
+         }
+      });
+      
+      const tbody = document.getElementById('timetableBody');
+      if (tbody) {
+          tbody.innerHTML = days.map(d => {
+              let tr = `<tr><td style="font-weight:700; padding:10px; border:1px solid rgba(140, 130, 255, .2);">${d}</td>`;
+              for(let c=0; c<9; c++) {
+                  if (c === 4) { // LUNCH
+                      if (d === 'MON') tr += `<td rowspan="5" style="border:1px solid rgba(140, 130, 255, .2); writing-mode:vertical-rl; transform:rotate(180deg); text-align:center; font-weight:700; color:var(--ink-soft); background:rgba(0,0,0,0.02);">LUNCH</td>`;
+                      continue;
+                  }
+                  const cell = grid[d][c];
+                  if (cell === 'skip') continue;
+                  if (cell) {
+                      tr += `<td colspan="${cell.span}" style="padding:4px; border:1px solid rgba(140, 130, 255, .2); min-width:100px; max-width:140px; vertical-align:top; height:80px;">${cell.html}</td>`;
+                  } else {
+                      tr += `<td style="border:1px solid rgba(140, 130, 255, .2); padding:10px; color:var(--ink-soft); font-size:11px; height:80px;">Free</td>`;
+                  }
+              }
+              return tr + '</tr>';
+          }).join('');
+      }
+    }
+
+    function renderTracker() {
+      const semesterFilterEl = document.getElementById('trackerSemesterFilter');
+      const basketFilterEl = document.getElementById('trackerBasketFilter');
+      const statusFilterEl = document.getElementById('trackerStatusFilter');
+
+      if (semesterFilterEl && !semesterFilterEl.dataset.boundTracker) {
+        semesterFilterEl.addEventListener('change', renderTracker);
+        semesterFilterEl.dataset.boundTracker = '1';
+      }
+      if (basketFilterEl && !basketFilterEl.dataset.boundTracker) {
+        basketFilterEl.addEventListener('change', renderTracker);
+        basketFilterEl.dataset.boundTracker = '1';
+      }
+      if (statusFilterEl && !statusFilterEl.dataset.boundTracker) {
+        statusFilterEl.addEventListener('change', renderTracker);
+        statusFilterEl.dataset.boundTracker = '1';
+      }
+
+      const selectedSemester = semesterFilterEl ? semesterFilterEl.value : 'all';
+      const selectedBasket = basketFilterEl ? basketFilterEl.value : 'all';
+      const selectedStatus = statusFilterEl ? statusFilterEl.value : 'all';
+
+      const gradeMap = new Map();
+      for (let s = 1; s <= 8; s++) {
+        if (!state.semesters[s]) continue;
+        state.semesters[s].forEach(r => {
+          const rowSemester = s;
+          const matchesSemester = selectedSemester === 'all' || selectedSemester === String(rowSemester);
+          if (!matchesSemester) return;
+          if (!gradeMap.has(r.code)) {
+            gradeMap.set(r.code, { ...r, _semester: rowSemester });
+          }
+        });
+      }
+
+      const totalEarned = Array.from(gradeMap.values())
+        .filter(isTrackerCourseCompleted)
+        .reduce((sum, r) => sum + r.credits, 0);
+      const degreeTotal = 160;
+      const overallPct = Math.min(100, Math.round((totalEarned / degreeTotal) * 100));
+      const currentSemCredits = Array.from(gradeMap.values())
+        .filter(r => r._semester === state.currentSemester && isTrackerCourseCompleted(r))
+        .reduce((sum, r) => sum + r.credits, 0);
+      const completedCourses = Array.from(gradeMap.values()).filter(isTrackerCourseCompleted).length;
+      const pendingCourses = Array.from(gradeMap.values()).filter(r => getTrackerCourseStatus(r) === 'pending').length;
+
+      document.getElementById('trackerRequiredCredits').textContent = degreeTotal;
+      document.getElementById('trackerCompletedCredits').textContent = totalEarned;
+      document.getElementById('trackerRemaining').textContent = Math.max(0, degreeTotal - totalEarned);
+      document.getElementById('trackerPct').textContent = `${overallPct}%`;
+      document.getElementById('trackerTotalProg').style.width = `${overallPct}%`;
+      document.getElementById('trackerCurrentSemCredits').textContent = currentSemCredits;
+      document.getElementById('trackerCompletedCourses').textContent = completedCourses;
+      document.getElementById('trackerPendingCourses').textContent = pendingCourses;
+
+      const basketStats = {};
+      courseBankUnique.forEach(course => {
+        const basket = normalizeTrackerBasketName(course.basket || 'Open Elective');
+        if (!basket || basket === 'Non-Credit' || Number(course.credits) <= 0) return;
+        if (!basketStats[basket]) {
+          basketStats[basket] = { required: getTrackerBasketRequirement(basket), earned: 0, courses: [] };
+        }
+        basketStats[basket].courses.push({ ...course, basket });
+      });
+
+      Object.keys(basketStats).forEach(b => {
+        const courses = basketStats[b].courses;
+        let earned = 0;
+        courses.forEach(c => {
+          const reg = gradeMap.get(c.code);
+          if (isTrackerCourseCompleted(reg)) earned += c.credits;
+        });
+        basketStats[b].earned = earned;
+      });
+
+      if (basketFilterEl && basketFilterEl.options.length <= 1) {
+        Object.keys(basketStats).sort().forEach(b => {
+          const opt = document.createElement('option');
+          opt.value = b;
+          opt.textContent = b;
+          basketFilterEl.appendChild(opt);
+        });
+      }
+
+      const gridHtml = Object.keys(basketStats).map(b => {
+        if (selectedBasket !== 'all' && selectedBasket !== b) return '';
+        const s = basketStats[b];
+        if (!s || s.courses.length === 0) return '';
+
+        const req = s.required || Math.max(s.earned, 1);
+        const pctRaw = (s.earned / req) * 100;
+        const pct = Math.min(100, Math.round(pctRaw));
+        const isComplete = s.earned >= req;
+        const isExpanded = trackerExpandedState[b] === true;
+        const remaining = Math.max(0, req - s.earned);
+        const ringFill = Math.min(360, Math.round(pct * 3.6));
+
+        const baseCourses = s.courses.map(course => {
+          const reg = gradeMap.get(course.code);
+          return {
+            ...course,
+            _status: reg ? getTrackerCourseStatus(reg) : 'not-started',
+            _grade: reg ? (reg.grade || reg._grade || 'Pending') : 'Not Started'
+          };
+        });
+
+        const completed = baseCourses.filter(c => c._status === 'completed');
+        const pending = baseCourses.filter(c => c._status === 'pending');
+        const notStarted = baseCourses.filter(c => c._status === 'not-started');
+
+        const displayStatus = selectedStatus;
+        const visibleSections = {
+          completed: displayStatus === 'all' || displayStatus === 'completed' ? completed : [],
+          pending: displayStatus === 'all' || displayStatus === 'pending' ? pending : [],
+          'not-started': displayStatus === 'all' || displayStatus === 'not-started' ? notStarted : []
+        };
+
+        const sectionMarkup = [
+          renderTrackerSection('completed', 'Completed Courses', completed, b),
+          renderTrackerSection('pending', 'Pending Courses', pending, b),
+          renderTrackerSection('not-started', 'Not Started Courses', notStarted, b)
+        ].join('');
+
+        return `<div class="glass spot card-pad tracker-basket-card">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:12px;">
+                  <h4 style="margin:0; font-size:15px; font-weight:700;">${b}</h4>
+                  <span class="badge-sm" style="background:${isComplete ? 'rgba(34,197,94,0.15)' : 'rgba(99,102,241,0.15)'}; color:${isComplete ? 'var(--green)' : 'var(--indigo)'}; border:1px solid ${isComplete ? 'var(--green)' : 'var(--indigo)'}; padding:2px 8px; border-radius:12px; font-weight:700; font-size:11px;">
+                    ${isComplete ? '✅ Complete' : `${pct}%`}
+                  </span>
+              </div>
+              <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+                <div class="tracker-ring" style="background: conic-gradient(var(--indigo) ${ringFill}deg, rgba(255,255,255,0.08) ${ringFill}deg 360deg);">
+                  <span>${pct}%</span>
+                </div>
+                <div>
+                  <div style="font-size:24px; font-weight:700;">${s.earned} <span style="font-size:14px; color:var(--ink-soft);">/ ${req} Credits</span></div>
+                  <div style="font-size:12px; color:var(--ink-soft); margin-top:4px;">${remaining} credits remaining</div>
+                </div>
+              </div>
+              <div class="prog-bar" style="height:8px; border-radius:4px; background:rgba(255,255,255,0.1); overflow:hidden; margin-bottom:14px;">
+                <div class="prog-fill" style="width:${pct}%; height:100%; background:${isComplete ? 'var(--green)' : 'var(--indigo)'}; transition: width 0.6s ease;"></div>
+              </div>
+            </div>
+            <div class="tracker-course-details ${isExpanded ? 'open' : ''}" data-basket="${b}">
+              <div class="tracker-course-details-inner">
+                ${sectionMarkup}
+              </div>
+            </div>
+            <button class="tracker-toggle-btn" data-basket="${b}">${isExpanded ? 'Hide Courses' : 'View Courses'}</button>
+        </div>`;
+      }).join('');
+
+      const elGrid = document.getElementById('trackerBasketsGrid');
+      if (elGrid) {
+        elGrid.innerHTML = gridHtml || '<div style="color:var(--ink-soft); text-align:center; padding:20px; grid-column:1/-1;">No curriculum baskets match the selected filters.</div>';
+        elGrid.querySelectorAll('.tracker-toggle-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const basket = btn.dataset.basket;
+            trackerExpandedState[basket] = !trackerExpandedState[basket];
+            renderTracker();
+          });
+        });
+        elGrid.querySelectorAll('.tracker-course-section-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const basket = btn.dataset.basket;
+            const section = btn.dataset.section;
+            if (!trackerSectionState[basket]) trackerSectionState[basket] = {};
+            trackerSectionState[basket][section] = !trackerSectionState[basket][section];
+            renderTracker();
+          });
+        });
+      }
+
+      renderSmartWarnings(basketStats);
+    }
+    
+    function renderSmartWarnings(basketStats) {
+       const wContainer = document.getElementById('smartWarningsContainer');
+       if (!wContainer) return;
+       let warns = [];
+       Object.keys(basketStats).forEach(b => {
+           const s = basketStats[b];
+           if (!s.required) return;
+           const deficit = s.earned - s.required;
+           if (deficit < 0) {
+               warns.push(`You still need <b>${Math.abs(deficit)}</b> credits in <b>${b}</b>.`);
+           } else if (deficit === 0) {
+               warns.push(`<b>${b}</b> requirement completed. ✅`);
+           } else {
+               warns.push(`You have exceeded the minimum requirement by <b>${deficit}</b> credits in <b>${b}</b>.`);
+           }
+       });
+       if (warns.length === 0) warns.push("You are on track with all your credit requirements.");
+       
+       wContainer.innerHTML = warns.slice(0, 4).map(w => `<div class="tip-row"><span class="b"></span>${w}</div>`).join('');
+    }
+
     function renderAll() {
       updateStudentNameDisplays();
       renderTable();
       renderStats();
+      if (typeof renderTimetable === 'function') renderTimetable();
+      if (typeof renderTracker === 'function') renderTracker();
+      if (typeof renderAnalyticsView === 'function') renderAnalyticsView();
     }
 
     /* =========================================================
@@ -3666,6 +4633,63 @@
       logHistory('Exported JSON data backup.');
     }
 
+    function openSemester(sem) {
+      state.currentSemester = sem;
+      const semSel = document.getElementById('semesterSelect');
+      if (semSel) semSel.value = sem;
+      switchView('dashboard');
+      logHistory(`Reopened Semester ${sem}.`);
+      triggerAutoSave();
+    }
+
+    function resetCurrentSemester() {
+      if (confirm(`Are you sure you want to reset all courses in Semester ${state.currentSemester}?`)) {
+        state.semesters[state.currentSemester] = [];
+        logHistory(`Reset all courses for Semester ${state.currentSemester}.`);
+        triggerAutoSave();
+        renderAll();
+        alert(`Semester ${state.currentSemester} has been reset.`);
+      }
+    }
+
+    function resetTimetable() {
+      if (confirm(`Are you sure you want to clear all slots in Semester ${state.currentSemester}?`)) {
+        (state.semesters[state.currentSemester] || []).forEach(r => {
+          r.theorySlot = '';
+          r.labSlot = '';
+          r.labSlot2 = '';
+        });
+        logHistory(`Cleared timetable slots for Semester ${state.currentSemester}.`);
+        triggerAutoSave();
+        renderAll();
+        if (typeof renderTimetable === 'function') renderTimetable();
+        alert(`Timetable slots cleared for Semester ${state.currentSemester}.`);
+      }
+    }
+
+    function importDataBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && imported.semesters) {
+            state.semesters = imported.semesters;
+            if (imported.theme) state.theme = imported.theme;
+            triggerAutoSave();
+            renderAll();
+            alert('Backup data successfully imported and synced!');
+          } else {
+            alert('Invalid backup file format.');
+          }
+        } catch (err) {
+          alert('Error parsing backup JSON file.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
     /* =========================================================
        HISTORY VIEW
     ========================================================= */
@@ -3796,7 +4820,18 @@
         if (takenMap.has(code)) return;
         const c = courseBankUnique.find(x => x.code === code);
         if (c) {
-          currentRows.push({ code: c.code, name: c.name, credits: c.credits, grade: 'S' });
+          currentRows.push({ 
+            code: c.code, 
+            name: c.name, 
+            credits: c.credits, 
+            grade: 'S', 
+            basket: c.basket || 'Open Elective',
+            type: 'Theory',
+            instructor: '',
+            theorySlot: '',
+            labSlot: '',
+            labSlot2: ''
+          });
           addedCount++;
         }
       });
@@ -3840,10 +4875,55 @@
       pWrap.appendChild(p);
     }
 
+    // Global Search Bar Handler
+    const topSearch = document.getElementById('topSearchInput');
+    if (topSearch) {
+      topSearch.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        if (!query) {
+          renderTable();
+          return;
+        }
+        const tbody = document.getElementById('tableBody');
+        if (!tbody) return;
+        const rows = tbody.querySelectorAll('tr');
+        rows.forEach(tr => {
+          const text = tr.textContent.toLowerCase();
+          tr.style.display = text.includes(query) ? '' : 'none';
+        });
+      });
+    }
+
     /* =========================================================
        INITIALIZATION
     ========================================================= */
     checkSavedSession();
+  </script>
+  <script>
+    // Ensure mobile bottom nav contains all primary dock views (fixes missing Timetable/Tracker on small screens)
+    (function rebuildMobileNav(){
+      const bottom = document.querySelector('.mobile-bottomnav');
+      if(!bottom) return;
+      const views = ['dashboard','semester','timetable','tracker','analytics','reports','settings'];
+      bottom.innerHTML = '';
+      views.forEach(v=>{
+        const dock = document.querySelector(`.dock-item[data-view="${v}"]`);
+        const div = document.createElement('div');
+        div.className = 'mnav-item';
+        div.dataset.view = v;
+        div.onclick = ()=> switchView(v);
+        if (typeof activeView !== 'undefined' && activeView === v) div.classList.add('active');
+        if (dock) {
+          const svg = dock.querySelector('svg');
+          if (svg) div.appendChild(svg.cloneNode(true));
+          const labelEl = dock.querySelector('.label');
+          div.appendChild(document.createTextNode(labelEl ? labelEl.textContent.trim() : v));
+        } else {
+          div.appendChild(document.createTextNode(v));
+        }
+        bottom.appendChild(div);
+      });
+    })();
   </script>
 </body>
 
