@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCFC Grade Calculator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --bg-1:#EEF4FF;
+  --bg-2:#E8ECFF;
+  --bg-3:#F8FAFF;
+  --indigo:#6C63FF;
+  --purple:#8B5CF6;
+  --cyan:#38BDF8;
+  --teal:#22D3EE;
+  --pink:#EC4899;
+  --ink:#111827;
+  --ink-soft:#6B7280;
+  --glass-bg: rgba(255,255,255,0.55);
+  --glass-bg-2: rgba(255,255,255,0.38);
+  --glass-border: rgba(255,255,255,0.65);
+  --glass-shadow: 0 20px 60px -20px rgba(76,60,180,0.28), 0 2px 10px rgba(76,60,180,0.08);
+  --radius-lg:28px;
+  --radius-md:20px;
+  --radius-sm:14px;
+  --dock-w:84px;
+  --dock-w-open:224px;
+  --sidebar-right:352px;
+}
+html[data-theme="dark"]{
+  --bg-1:#080B18;
+  --bg-2:#0C1024;
+  --bg-3:#0A0E1F;
+  --ink:#F3F5FF;
+  --ink-soft:#93A0C7;
+  --glass-bg: rgba(23,26,48,0.55);
+  --glass-bg-2: rgba(23,26,48,0.4);
+  --glass-border: rgba(255,255,255,0.10);
+  --glass-shadow: 0 20px 60px -18px rgba(0,0,0,0.6), 0 2px 14px rgba(0,0,0,0.35);
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%;}
+body{
+  font-family:'Inter', sans-serif;
+  color:var(--ink);
+  background:var(--bg-1);
+  overflow-x:hidden;
+  transition:background .5s ease, color .5s ease;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.display{ font-family:'Outfit', sans-serif; letter-spacing:-0.02em; }
+.mono{ font-family:'IBM Plex Mono', monospace; }
+::selection{ background:rgba(108,99,255,.25); }
+button{ font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+input,select{ font-family:inherit; color:inherit; }
+a{ color:inherit; text-decoration:none; }
+
+/* ---------------- AURORA BACKGROUND ---------------- */
+.aurora-wrap{
+  position:fixed; inset:0; z-index:0; overflow:hidden;
+  background:linear-gradient(160deg,var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+}
+.blob{
+  position:absolute; border-radius:50%;
+  filter:blur(90px);
+  opacity:.55;
+  will-change:transform;
+}
+html[data-theme="dark"] .blob{ opacity:.38; filter:blur(110px); }
+.blob-1{ width:620px; height:620px; top:-180px; left:-120px; background:radial-gradient(circle at 30% 30%, var(--indigo), transparent 70%); animation:drift1 26s ease-in-out infinite; }
+.blob-2{ width:560px; height:560px; top:-80px; right:-160px; background:radial-gradient(circle at 60% 40%, var(--purple), transparent 70%); animation:drift2 32s ease-in-out infinite; }
+.blob-3{ width:520px; height:520px; bottom:-200px; left:12%; background:radial-gradient(circle at 50% 50%, var(--cyan), transparent 70%); animation:drift3 30s ease-in-out infinite; }
+.blob-4{ width:460px; height:460px; bottom:-140px; right:8%; background:radial-gradient(circle at 40% 60%, var(--teal), transparent 70%); animation:drift1 24s ease-in-out infinite reverse; }
+.blob-5{ width:380px; height:380px; top:40%; left:44%; background:radial-gradient(circle, var(--pink), transparent 72%); opacity:.28; animation:drift2 36s ease-in-out infinite; }
+
+@keyframes drift1{ 0%,100%{transform:translate(0,0) scale(1);} 33%{transform:translate(60px,40px) scale(1.08);} 66%{transform:translate(-30px,60px) scale(.96);} }
+@keyframes drift2{ 0%,100%{transform:translate(0,0) scale(1);} 40%{transform:translate(-70px,50px) scale(1.05);} 75%{transform:translate(30px,-40px) scale(.94);} }
+@keyframes drift3{ 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(50px,-60px) scale(1.1);} }
+
+.grain{
+  position:absolute; inset:0; opacity:.4; mix-blend-mode:overlay; pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size:3px 3px;
+}
+.lightray{
+  position:absolute; top:-10%; width:2px; height:120%; opacity:0;
+  background:linear-gradient(180deg, transparent, rgba(255,255,255,.5), transparent);
+  transform:rotate(12deg);
+  animation:rayfade 9s ease-in-out infinite;
+}
+.lightray.r2{ left:62%; animation-delay:3s; }
+.lightray.r1{ left:22%; animation-delay:0s; }
+html[data-theme="dark"] .lightray{ background:linear-gradient(180deg, transparent, rgba(140,150,255,.35), transparent); }
+@keyframes rayfade{ 0%,100%{opacity:0;} 50%{opacity:.5;} }
+
+.particle{
+  position:absolute; width:4px; height:4px; border-radius:50%;
+  background:rgba(255,255,255,.8); box-shadow:0 0 8px rgba(255,255,255,.9);
+  animation:floatp linear infinite;
+  opacity:.5;
+}
+html[data-theme="dark"] .particle{ background:rgba(160,170,255,.9); box-shadow:0 0 8px rgba(140,150,255,.8); }
+@keyframes floatp{ from{transform:translateY(0);} to{transform:translateY(-1200px);} }
+
+/* ---------------- LAYOUT ---------------- */
+.app{ position:relative; z-index:1; min-height:100vh; padding:20px 24px 100px 24px; }
+.shell{
+  display:grid;
+  grid-template-columns: var(--dock-w) 1fr;
+  gap:20px;
+  max-width:1600px;
+  margin:0 auto;
+  transition:grid-template-columns .35s cubic-bezier(.22,1,.36,1);
+}
+
+/* ---------------- GLASS BASE ---------------- */
+.glass{
+  background:var(--glass-bg);
+  backdrop-filter:blur(40px) saturate(160%);
+  -webkit-backdrop-filter:blur(40px) saturate(160%);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--glass-shadow);
+  position:relative;
+}
+.glass::before{
+  content:'';
+  position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:linear-gradient(135deg, rgba(255,255,255,.5), rgba(255,255,255,0) 40%);
+  opacity:.6;
+}
+html[data-theme="dark"] .glass::before{ background:linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,0) 45%); }
+.glass.spot::after{
+  content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%), rgba(140,130,255,.16), transparent 60%);
+  opacity:0; transition:opacity .3s ease;
+}
+.glass.spot:hover::after{ opacity:1; }
+
+.tint-lavender{ background:linear-gradient(160deg, rgba(139,92,246,.14), var(--glass-bg)); }
+.tint-blue{ background:linear-gradient(160deg, rgba(56,189,248,.14), var(--glass-bg)); }
+.tint-cyan{ background:linear-gradient(160deg, rgba(34,211,238,.14), var(--glass-bg)); }
+.tint-indigo{ background:linear-gradient(160deg, rgba(108,99,255,.16), var(--glass-bg)); }
+
+/* ---------------- DOCK NAV ---------------- */
+.dock{
+  grid-row:1/3;
+  position:sticky; top:20px; align-self:start;
+  height:calc(100vh - 40px);
+  display:flex; flex-direction:column; align-items:flex-start;
+  padding:22px 14px;
+  overflow:hidden;
+  width:var(--dock-w);
+  transition:width .35s cubic-bezier(.22,1,.36,1);
+  z-index:30;
+}
+.dock:hover{ width:var(--dock-w-open); }
+.dock-logo{ display:flex; align-items:center; gap:12px; padding:0 6px 22px 6px; width:100%; cursor:pointer; }
+.dock-logo .mark{
+  width:38px; height:38px; min-width:38px; border-radius:12px;
+  background:linear-gradient(140deg,var(--indigo),var(--purple) 60%, var(--cyan));
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 20px -6px rgba(108,99,255,.6);
+}
+.dock-logo .txt{ opacity:0; white-space:nowrap; transition:opacity .25s ease .05s; }
+.dock:hover .dock-logo .txt{ opacity:1; }
+.dock-logo .txt b{ display:block; font-size:14px; font-weight:700; }
+.dock-logo .txt span{ font-size:11px; color:var(--ink-soft); }
+
+.dock-nav{ display:flex; flex-direction:column; gap:4px; width:100%; margin-top:8px; }
+.dock-item{
+  display:flex; align-items:center; gap:14px;
+  padding:11px 12px; border-radius:14px; width:100%;
+  color:var(--ink-soft); position:relative; white-space:nowrap; cursor:pointer;
+  transition:background .2s ease, color .2s ease;
+}
+.dock-item svg{ min-width:20px; }
+.dock-item:hover{ background:rgba(140,130,255,.12); color:var(--ink); }
+.dock-item.active{
+  background:linear-gradient(135deg, rgba(108,99,255,.22), rgba(56,189,248,.16));
+  color:var(--indigo);
+}
+html[data-theme="dark"] .dock-item.active{ color:#B9B3FF; }
+.dock-item .label{ opacity:0; transition:opacity .2s ease .05s; font-size:13.5px; font-weight:500; }
+.dock:hover .dock-item .label{ opacity:1; }
+
+.dock-spacer{ flex:1; }
+.dock-user{ width:100%; padding:12px 6px 0 6px; border-top:1px solid var(--glass-border); margin-top:10px; cursor:pointer; }
+.dock-quote{ font-size:11px; color:var(--ink-soft); padding:0 6px 10px 6px; opacity:0; transition:opacity .2s ease; line-height:1.5; }
+.dock:hover .dock-quote{ opacity:1; }
+.dock-userrow{ display:flex; align-items:center; gap:10px; padding:6px; }
+.avatar-sm{ width:34px; height:34px; min-width:34px; border-radius:11px; background:linear-gradient(140deg,var(--cyan),var(--indigo)); }
+.dock-userinfo{ opacity:0; transition:opacity .2s ease .05s; }
+.dock:hover .dock-userinfo{ opacity:1; }
+.dock-userinfo b{ font-size:12.5px; display:block; }
+.dock-userinfo span{ font-size:10.5px; color:var(--ink-soft); }
+
+/* ---------------- TOP BAR ---------------- */
+.topbar{
+  display:flex; align-items:center; gap:14px;
+  padding:12px 16px; margin-bottom:20px;
+}
+.search-pill{
+  flex:1; display:flex; align-items:center; gap:10px;
+  padding:11px 16px; border-radius:16px; color:var(--ink-soft);
+}
+.search-pill input{ background:none; border:none; outline:none; flex:1; font-size:13.5px; color:var(--ink); }
+.kbd{ font-size:11px; padding:2px 7px; border-radius:6px; background:rgba(140,130,255,.14); color:var(--indigo); }
+.icon-btn{
+  width:42px; height:42px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+  color:var(--ink-soft); position:relative; flex-shrink:0;
+  transition:transform .2s ease, color .2s ease;
+}
+.icon-btn:hover{ color:var(--ink); transform:translateY(-1px); }
+.dot-badge{ position:absolute; top:8px; right:9px; width:7px; height:7px; border-radius:50%; background:var(--pink); box-shadow:0 0 0 2px var(--glass-bg); }
+.profile-pill{ display:flex; align-items:center; gap:10px; padding:6px 14px 6px 6px; border-radius:18px; flex-shrink:0; cursor:pointer; }
+.profile-pill .av{ width:34px; height:34px; border-radius:12px; background:linear-gradient(140deg,var(--purple),var(--pink)); }
+.profile-pill b{ font-size:12.5px; display:block; }
+.profile-pill span{ font-size:10.5px; color:var(--ink-soft); }
+
+/* ---------------- HERO ---------------- */
+.hero{ padding:6px 10px 26px 10px; }
+.hero h1{ font-size:clamp(28px,3.6vw,42px); font-weight:700; line-height:1.05; }
+.hero h1 .grad{
+  background:linear-gradient(100deg,var(--indigo),var(--purple) 45%, var(--cyan));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero p{ margin-top:8px; color:var(--ink-soft); font-size:15px; max-width:560px; }
+
+/* ---------------- STAT CARDS ---------------- */
+.stats-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:20px; }
+.stat-card{ padding:20px 20px; display:flex; align-items:flex-start; gap:14px; }
+.stat-ic{ width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.stat-ic.p1{ background:linear-gradient(140deg,#8B5CF6,#6C63FF); }
+.stat-ic.p2{ background:linear-gradient(140deg,#38BDF8,#22D3EE); }
+.stat-ic.p3{ background:linear-gradient(140deg,#22D3EE,#34D399); }
+.stat-ic.p4{ background:linear-gradient(140deg,#EC4899,#8B5CF6); }
+.stat-label{ font-size:12.5px; color:var(--ink-soft); margin-bottom:2px; }
+.stat-value{ font-size:24px; font-weight:700; font-family:'Outfit',sans-serif; }
+.stat-sub{ font-size:11.5px; color:var(--ink-soft); margin-top:2px; }
+.stat-sub.good{ color:#16A34A; font-weight:600; }
+.stat-sub.great{ color:#7C3AED; font-weight:600; }
+
+/* ---------------- MAIN GRID ---------------- */
+.main-grid{ display:grid; grid-template-columns:1fr var(--sidebar-right); gap:20px; align-items:start; }
+
+.workspace{ padding:26px; }
+.ws-head{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:18px; }
+.ws-head h2{ font-size:18px; font-weight:700; }
+.ws-controls{ display:flex; align-items:center; gap:10px; }
+.select-glass{
+  display:flex; align-items:center; gap:8px; padding:9px 14px; border-radius:13px;
+  background:var(--glass-bg-2); border:1px solid var(--glass-border); font-size:13px; font-weight:600;
+  outline:none; cursor:pointer;
+}
+.btn{ display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; border-radius:13px; padding:10px 18px; transition:transform .2s ease, box-shadow .2s ease; }
+.btn:active{ transform:scale(.97); }
+.btn-primary{
+  background:linear-gradient(120deg,var(--indigo),var(--purple));
+  color:#fff; box-shadow:0 10px 24px -8px rgba(108,99,255,.6);
+}
+.btn-primary:hover{ box-shadow:0 14px 30px -8px rgba(108,99,255,.75); transform:translateY(-1px); }
+.btn-ghost{ background:var(--glass-bg-2); border:1px solid var(--glass-border); color:var(--ink); }
+.btn-ghost:hover{ background:rgba(140,130,255,.1); }
+
+.table-wrap{ overflow-x:auto; border-radius:18px; }
+table{ width:100%; border-collapse:collapse; min-width:640px; }
+thead th{
+  text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--ink-soft); font-weight:600; padding:10px 12px; border-bottom:1px solid var(--glass-border);
+}
+tbody td{ padding:12px; font-size:13.5px; border-bottom:1px solid var(--glass-border); vertical-align:middle; }
+tbody tr{ transition:background .2s ease; }
+tbody tr:hover{ background:rgba(140,130,255,.06); }
+tbody tr:last-child td{ border-bottom:none; }
+.course-name{ font-weight:600; }
+.course-code{ font-size:11px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; }
+
+.grade-select{
+  font-family:'Outfit',sans-serif; font-weight:700; font-size:13px;
+  padding:7px 10px; border-radius:10px; background:var(--glass-bg-2);
+  border:1.5px solid var(--glass-border); outline:none; cursor:pointer;
+  appearance:none; -webkit-appearance:none; min-width:64px; text-align:center;
+}
+.empty-row td{ text-align:center; padding:34px 12px; color:var(--ink-soft); font-size:13px; }
+.del-btn{ width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--ink-soft); }
+.del-btn:hover{ color:#EF4444; background:rgba(239,68,68,.1); }
+
+.ws-foot{ display:flex; align-items:center; justify-content:space-between; margin-top:18px; padding-top:18px; border-top:1px solid var(--glass-border); flex-wrap:wrap; gap:14px; }
+.foot-block span{ display:block; font-size:11.5px; color:var(--ink-soft); }
+.foot-block b{ font-size:20px; font-family:'Outfit',sans-serif; }
+.foot-block b .u{ font-size:12px; color:var(--ink-soft); font-weight:500;}
+.foot-block.grad b{ background:linear-gradient(100deg,var(--indigo),var(--cyan)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.expand-btn{ width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:var(--glass-bg-2); border:1px solid var(--glass-border); }
+
+.formula-note{ display:flex; align-items:center; gap:8px; margin-top:14px; font-size:11.5px; color:var(--ink-soft); background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:12px; padding:9px 14px; }
+
+/* ---------------- RIGHT SIDEBAR ---------------- */
+.rsidebar{ display:flex; flex-direction:column; gap:18px; }
+.card-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.card-title h3{ font-size:14.5px; font-weight:700; }
+.card-title .link{ font-size:11.5px; color:var(--indigo); font-weight:600; cursor:pointer; }
+.card-pad{ padding:22px; }
+
+/* gauge */
+.gauge-wrap{ display:flex; flex-direction:column; align-items:center; gap:16px; }
+.gauge{ position:relative; width:172px; height:172px; }
+.gauge svg{ transform:rotate(-90deg); }
+.gauge-ring-bg{ fill:none; stroke:var(--glass-border); stroke-width:14; }
+.gauge-ring-fg{ fill:none; stroke-width:14; stroke-linecap:round; filter:drop-shadow(0 0 10px rgba(108,99,255,.55)); transition:stroke-dashoffset .5s cubic-bezier(.22,1,.36,1); }
+.gauge-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.gauge-center b{ font-size:32px; font-family:'Outfit',sans-serif; font-weight:800; }
+.gauge-center span{ font-size:11px; color:var(--ink-soft); letter-spacing:.05em; }
+.legend{ display:flex; flex-direction:column; gap:8px; width:100%; }
+.legend-row{ display:flex; align-items:center; justify-content:space-between; font-size:11.5px; }
+.legend-row .lk{ display:flex; align-items:center; gap:8px; color:var(--ink-soft); }
+.dotc{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+.sum-row{ display:flex; align-items:center; gap:12px; padding:9px 0; }
+.sum-ic{ width:34px; height:34px; border-radius:10px; background:var(--glass-bg-2); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:center; }
+.sum-row .t{ flex:1; font-size:13px; color:var(--ink-soft); }
+.sum-row .v{ font-size:13.5px; font-weight:700; font-family:'IBM Plex Mono',monospace; }
+
+.chart-box{ height:130px; margin-top:4px; }
+.tasks-list{ display:flex; flex-direction:column; gap:12px; }
+.task-row{ display:flex; align-items:center; gap:10px; font-size:12.5px; cursor:pointer; }
+.task-check{ width:18px; height:18px; border-radius:6px; border:1.5px solid var(--glass-border); flex-shrink:0; }
+.task-check.done{ background:linear-gradient(140deg,var(--indigo),var(--purple)); border-color:transparent; display:flex; align-items:center; justify-content:center; }
+.task-row.strike .t{ text-decoration:line-through; color:var(--ink-soft); }
+.task-row .t{ flex:1; }
+.task-row .d{ font-size:10.5px; color:var(--ink-soft); }
+
+.qa-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.qa-btn{ display:flex; flex-direction:column; align-items:flex-start; gap:10px; padding:14px; border-radius:15px; background:var(--glass-bg-2); border:1px solid var(--glass-border); text-align:left; cursor:pointer; }
+.qa-btn:hover{ background:rgba(140,130,255,.1); }
+.qa-btn span{ font-size:11.5px; font-weight:600; }
+
+/* ---------------- PAGE VIEWS ---------------- */
+.page-view{ display:none; }
+.page-view.active{ display:block; }
+
+/* Semester View */
+.sem-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:20px; margin-top:20px; }
+.sem-card{ padding:22px; display:flex; flex-direction:column; gap:14px; }
+.sem-card-head{ display:flex; justify-content:space-between; align-items:center; }
+.sem-card-head h3{ font-size:18px; font-weight:700; }
+.sem-badge{ font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+.sem-badge.completed{ background:rgba(34,197,94,.16); color:#16A34A; }
+.sem-badge.empty{ background:rgba(107,114,128,.14); color:var(--ink-soft); }
+.sem-badge.active{ background:rgba(108,99,255,.18); color:var(--indigo); }
+.sem-stats-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; background:var(--glass-bg-2); padding:12px; border-radius:14px; border:1px solid var(--glass-border); }
+.sem-stat-item label{ font-size:11px; color:var(--ink-soft); display:block; }
+.sem-stat-item val{ font-size:18px; font-weight:700; font-family:'Outfit',sans-serif; }
+.sem-card-actions{ display:flex; gap:10px; margin-top:4px; }
+
+/* Analytics View */
+.analytics-hero{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:20px; }
+.analytics-card{ padding:20px; }
+
+/* Reports View */
+.report-paper{ background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:var(--radius-lg); padding:32px; max-width:850px; margin:0 auto; box-shadow:var(--glass-shadow); }
+
+/* Settings View */
+.settings-grid{ display:flex; flex-direction:column; gap:20px; max-width:720px; }
+.form-group{ display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+.form-group label{ font-size:13px; font-weight:600; color:var(--ink-soft); }
+.form-input{ padding:12px 16px; border-radius:14px; background:var(--glass-bg-2); border:1px solid var(--glass-border); outline:none; font-size:14px; color:var(--ink); width:100%; }
+
+/* History View */
+.history-list{ display:flex; flex-direction:column; gap:12px; }
+.history-item{ padding:14px 18px; border-radius:16px; background:var(--glass-bg-2); border:1px solid var(--glass-border); display:flex; justify-content:space-between; align-items:center; font-size:13px; }
+
+/* ---------------- BOTTOM ---------------- */
+.bottom-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:20px; }
+.bottom-card{ padding:22px; }
+.bc-head{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.bc-head .ic{ width:34px; height:34px; border-radius:11px; background:var(--glass-bg-2); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:center; }
+.bc-head h4{ font-size:14.5px; font-weight:700; }
+.step-row{ display:flex; gap:12px; margin-bottom:12px; }
+.step-num{ width:22px; height:22px; border-radius:7px; background:linear-gradient(140deg,var(--indigo),var(--cyan)); color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'Outfit',sans-serif;}
+.step-row p{ font-size:12.5px; color:var(--ink-soft); line-height:1.5; padding-top:1px; }
+.tip-row{ display:flex; align-items:flex-start; gap:10px; margin-bottom:11px; font-size:12.5px; color:var(--ink-soft); line-height:1.5; }
+.tip-row .b{ width:5px; height:5px; border-radius:50%; background:var(--purple); margin-top:7px; flex-shrink:0; }
+.announce-badge{ display:inline-block; font-size:10.5px; font-weight:700; padding:4px 10px; border-radius:20px; background:rgba(236,72,153,.14); color:#DB2777; margin-bottom:10px; }
+.bottom-card p.note{ font-size:12.5px; color:var(--ink-soft); line-height:1.6; }
+
+footer.foot{ text-align:center; padding:30px 0 6px 0; font-size:11.5px; color:var(--ink-soft); }
+
+/* ---------------- MODALS & AUTH ---------------- */
+.modal-overlay{
+  position:fixed; inset:0; z-index:100; background:rgba(10,10,25,.55); backdrop-filter:blur(10px);
+  display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s ease; padding:20px;
+}
+.modal-overlay.open{ opacity:1; pointer-events:auto; }
+.modal{
+  width:600px; max-width:100%; max-height:84vh; display:flex; flex-direction:column;
+  border-radius:26px; overflow:hidden; transform:translateY(24px) scale(.97); transition:transform .35s cubic-bezier(.22,1,.36,1);
+}
+.modal-overlay.open .modal{ transform:translateY(0) scale(1); }
+.modal-head{ padding:22px 24px 16px 24px; border-bottom:1px solid var(--glass-border); }
+.modal-head h3{ font-size:18px; font-weight:700; margin-bottom:14px; }
+.modal-search-row{ display:flex; gap:10px; }
+.modal-search{ flex:1; display:flex; align-items:center; gap:10px; padding:11px 16px; border-radius:14px; background:var(--glass-bg-2); border:1px solid var(--glass-border); }
+.modal-search input{ flex:1; background:none; border:none; outline:none; font-size:13.5px; color:var(--ink); }
+.basket-select{
+  padding:11px 14px; border-radius:14px; background:var(--glass-bg-2); border:1px solid var(--glass-border);
+  font-size:12.5px; font-weight:600; outline:none; appearance:none; -webkit-appearance:none; max-width:180px;
+}
+.modal-list{ flex:1; overflow-y:auto; padding:14px 24px 8px 24px; display:flex; flex-direction:column; gap:8px; }
+.course-row{
+  display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:16px;
+  border:1px solid var(--glass-border); background:var(--glass-bg-2); transition:background .2s ease, border-color .2s ease, transform .15s ease; cursor:pointer;
+}
+.course-row:hover{ transform:translateY(-1px); background:rgba(140,130,255,.1); }
+.course-row.selected{ border-color:rgba(108,99,255,.55); background:linear-gradient(120deg, rgba(108,99,255,.14), rgba(56,189,248,.1)); }
+.course-row.already{ opacity:.45; pointer-events:none; }
+.chk{ width:20px; height:20px; border-radius:7px; border:1.5px solid var(--glass-border); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:background .2s ease, border-color .2s ease; }
+.course-row.selected .chk{ background:linear-gradient(140deg,var(--indigo),var(--purple)); border-color:transparent; }
+.crow-info{ flex:1; min-width:0; }
+.crow-info b{ font-size:13.5px; display:block; }
+.crow-info span{ font-size:11px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; }
+.crow-badges{ display:flex; gap:6px; flex-shrink:0; }
+.badge-sm{ font-size:10px; font-weight:700; padding:4px 9px; border-radius:20px; white-space:nowrap; }
+.b-cr{ background:rgba(108,99,255,.14); color:var(--indigo); }
+.b-basket{ background:rgba(56,189,248,.16); color:#0284C7; }
+.modal-foot{ display:flex; align-items:center; justify-content:space-between; padding:16px 24px; border-top:1px solid var(--glass-border); gap:12px; }
+.sel-count{ font-size:12px; color:var(--ink-soft); }
+.sel-count b{ color:var(--ink); }
+.modal-btns{ display:flex; gap:10px; }
+.no-results{ text-align:center; padding:30px; color:var(--ink-soft); font-size:13px; }
+
+/* Auth Feedback Banner */
+.auth-banner{ padding:10px 14px; border-radius:12px; font-size:13px; font-weight:600; margin-bottom:14px; display:none; }
+.auth-banner.error{ background:rgba(239,68,68,.15); color:#EF4444; border:1px solid rgba(239,68,68,.3); display:block; }
+.auth-banner.success{ background:rgba(34,197,94,.15); color:#16A34A; border:1px solid rgba(34,197,94,.3); display:block; }
+
+/* ---------------- MOBILE ---------------- */
+.mobile-bottomnav, .fab{ display:none; }
+
+@media (max-width:1180px){
+  .main-grid{ grid-template-columns:1fr; }
+  .rsidebar{ display:grid; grid-template-columns:1fr 1fr; }
+  .analytics-hero{ grid-template-columns:1fr 1fr; }
+  :root{ --sidebar-right:auto; }
+}
+@media (max-width:860px){
+  .app{ padding:14px 14px 90px 14px; }
+  .shell{ grid-template-columns:1fr; }
+  .dock{ display:none; }
+  .stats-row{ grid-template-columns:1fr 1fr; }
+  .rsidebar{ grid-template-columns:1fr; }
+  .bottom-grid{ grid-template-columns:1fr; }
+  .topbar{ padding:10px 12px; }
+  .search-pill span, .kbd{ display:none; }
+  .profile-pill span, .profile-pill b{ display:none; }
+  .profile-pill{ padding:6px; }
+
+  .mobile-bottomnav{
+    display:flex; position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
+    z-index:60; padding:10px 18px; border-radius:22px; gap:18px; align-items:center;
+  }
+  .mnav-item{ display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--ink-soft); font-size:9.5px; cursor:pointer; }
+  .mnav-item.active{ color:var(--indigo); }
+  .fab{
+    display:flex; position:fixed; bottom:88px; right:20px; z-index:60;
+    width:56px; height:56px; border-radius:18px; align-items:center; justify-content:center;
+    background:linear-gradient(140deg,var(--indigo),var(--purple)); box-shadow:0 14px 30px -8px rgba(108,99,255,.65);
+    color:#fff;
+  }
+  table{ min-width:520px; }
+  .modal-search-row{ flex-direction:column; }
+  .basket-select{ max-width:none; }
+}
+@media (max-width:520px){
+  .stats-row{ grid-template-columns:1fr; }
+  .analytics-hero{ grid-template-columns:1fr; }
+  .hero h1{ font-size:26px; }
+}
+
+.theme-icon-sun{ display:none; }
+html[data-theme="dark"] .theme-icon-moon{ display:none; }
+html[data-theme="dark"] .theme-icon-sun{ display:block; }
+
+.fade-up{ animation:fadeUp .6s cubic-bezier(.22,1,.36,1) both; }
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(14px);} to{ opacity:1; transform:translateY(0);} }
+
+/* ---------------- PRINT LAYOUT STYLES ---------------- */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .aurora-wrap, .dock, .topbar, .app, .mobile-bottomnav, .fab, .modal-overlay {
+    display: none !important;
+  }
+  #printableReport {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: #ffffff !important;
+  }
+  @page {
+    size: auto;
+    margin: 12mm;
+  }
+}
+@media screen {
+  #printableReport {
+    display: none !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="aurora-wrap" id="auroraWrap">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+  <div class="lightray r1"></div>
+  <div class="lightray r2"></div>
+  <div class="grain"></div>
+  <div id="particles"></div>
+</div>
+
+<div class="app" id="mainAppShell" style="display:none;">
+  <div class="shell">
+
+    <!-- DOCK NAV -->
+    <nav class="glass dock">
+      <div class="dock-logo" onclick="switchView('dashboard')">
+        <div class="mark">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/><path d="M2 17L12 22L22 17" stroke="white" stroke-width="1.8" stroke-linejoin="round"/><path d="M2 12L12 17L22 12" stroke="white" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="txt"><b>SCFC</b><span>Grade Calculator</span></div>
+      </div>
+
+      <div class="dock-nav">
+        <a class="dock-item active" data-view="dashboard" onclick="switchView('dashboard')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+          <span class="label">Dashboard</span>
+        </a>
+        <a class="dock-item" data-view="dashboard" onclick="switchView('dashboard')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h2m3 0h2M8 16h2m3 0h2"/></svg>
+          <span class="label">Calculator</span>
+        </a>
+        <a class="dock-item" id="navAddSubjects">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+          <span class="label">Add Subjects</span>
+        </a>
+        <a class="dock-item" data-view="semester" onclick="switchView('semester')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 3v3M16 3v3"/></svg>
+          <span class="label">Semester</span>
+        </a>
+        <a class="dock-item" data-view="analytics" onclick="switchView('analytics')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+          <span class="label">Analytics</span>
+        </a>
+        <a class="dock-item" data-view="gradesystem" onclick="switchView('gradesystem')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3a2 2 0 00-2 2v14l4-2 4 2 4-2 4 2V5a2 2 0 00-2-2H6z"/></svg>
+          <span class="label">Grade System</span>
+        </a>
+        <a class="dock-item" data-view="reports" onclick="switchView('reports')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6z"/><path d="M14 3v6h6M9 13h6M9 17h6"/></svg>
+          <span class="label">Reports</span>
+        </a>
+        <a class="dock-item" data-view="history" onclick="switchView('history')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <span class="label">History</span>
+        </a>
+        <a class="dock-item" data-view="settings" onclick="switchView('settings')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.34 1.87l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.7 1.7 0 00-1.87-.34 1.7 1.7 0 00-1 1.55V21a2 2 0 11-4 0v-.09a1.7 1.7 0 00-1-1.55 1.7 1.7 0 00-1.87.34l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.7 1.7 0 004.6 15a1.7 1.7 0 00-1.55-1H3a2 2 0 010-4h.09a1.7 1.7 0 001.55-1 1.7 1.7 0 00-.34-1.87l-.06-.06a2 2 0 112.83-2.83l.06.06A1.7 1.7 0 009 4.6a1.7 1.7 0 001-1.55V3a2 2 0 014 0v.09a1.7 1.7 0 001 1.55 1.7 1.7 0 001.87-.34l.06-.06a2 2 0 112.83 2.83l-.06.06A1.7 1.7 0 0019.4 9a1.7 1.7 0 001.55 1H21a2 2 0 010 4h-.09a1.7 1.7 0 00-1.55 1z"/></svg>
+          <span class="label">Settings</span>
+        </a>
+      </div>
+
+      <div class="dock-spacer"></div>
+
+      <div class="dock-user" onclick="switchView('settings')">
+        <div class="dock-quote">"Track Today, Achieve Tomorrow"</div>
+        <div class="dock-userrow">
+          <div class="avatar-sm"></div>
+          <div class="dock-userinfo"><b class="student-name-display">Student</b><span class="student-usn-display">USN: N/A</span></div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- RIGHT COLUMN (topbar + content) -->
+    <div>
+      <!-- TOP BAR -->
+      <div class="glass topbar">
+        <div class="search-pill">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" placeholder="Search subjects, semesters, reports..." id="topSearchInput">
+          <span class="kbd">⌘K</span>
+        </div>
+        <button class="icon-btn" id="themeToggle" title="Toggle theme">
+          <svg class="theme-icon-moon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5A8.5 8.5 0 1111.5 3 7 7 0 0021 12.5z"/></svg>
+          <svg class="theme-icon-sun" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
+        </button>
+        <button class="icon-btn" title="Logout" onclick="logoutStudent()">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+        <div class="profile-pill" onclick="switchView('settings')">
+          <div class="av"></div>
+          <div><b class="student-name-display">Student</b><span class="student-usn-display">USN: N/A</span></div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+
+      <!-- VIEW 1: DASHBOARD / CALCULATOR -->
+      <div id="view-dashboard" class="page-view active">
+        <!-- HERO -->
+        <div class="hero fade-up">
+          <h1>Welcome, <span class="student-name-display grad">Student</span></h1>
+          <p>Pick a grade for each subject — SGPA and CGPA are calculated live from the official SCFC grading system.</p>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-row">
+          <div class="glass spot stat-card fade-up" style="animation-delay:.05s">
+            <div class="stat-ic p1"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+            <div><div class="stat-label">Subjects</div><div class="stat-value" id="statSubjects">0</div><div class="stat-sub">Active Semester</div></div>
+          </div>
+          <div class="glass spot stat-card fade-up" style="animation-delay:.1s">
+            <div class="stat-ic p2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></div>
+            <div><div class="stat-label">Total Credits</div><div class="stat-value"><span id="statCredits">0</span><span style="font-size:13px;color:var(--ink-soft);font-weight:500;">/160</span></div></div>
+          </div>
+          <div class="glass spot stat-card tint-lavender fade-up" style="animation-delay:.15s">
+            <div class="stat-ic p3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div>
+            <div><div class="stat-label">Current SGPA</div><div class="stat-value" id="statSGPA">0.00</div><div class="stat-sub good" id="statSGPALabel">N/A</div></div>
+          </div>
+          <div class="glass spot stat-card tint-indigo fade-up" style="animation-delay:.2s">
+            <div class="stat-ic p4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <div><div class="stat-label">Overall CGPA</div><div class="stat-value" id="statCGPA">0.00</div><div class="stat-sub great" id="statCGPALabel">N/A</div></div>
+          </div>
+        </div>
+
+        <!-- MAIN GRID -->
+        <div class="main-grid">
+          <!-- WORKSPACE -->
+          <div class="glass spot workspace fade-up" style="animation-delay:.25s">
+            <div class="ws-head">
+              <h2>Workspace</h2>
+              <div class="ws-controls">
+                <select class="select-glass" id="semesterSelect" title="Select Semester">
+                  <option value="1">Semester 1</option>
+                  <option value="2">Semester 2</option>
+                  <option value="3">Semester 3</option>
+                  <option value="4">Semester 4</option>
+                  <option value="5">Semester 5</option>
+                  <option value="6">Semester 6</option>
+                  <option value="7">Semester 7</option>
+                  <option value="8">Semester 8</option>
+                </select>
+                <button class="btn btn-primary" id="openModalBtn">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+                  Add Subjects
+                </button>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th><th>Course</th><th>Credits</th><th>Grade</th><th>GP</th><th>CP</th><th></th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  <!-- rows injected by JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="ws-foot">
+              <div class="foot-block">
+                <span>Total Credits</span>
+                <b><span id="footCredits">0</span> <span class="u">/ 160</span></b>
+              </div>
+              <div class="foot-block grad">
+                <span>SGPA</span>
+                <b id="footSGPA">0.00</b>
+              </div>
+              <button class="expand-btn" title="Export Report" onclick="switchView('reports')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6z"/><path d="M14 3v6h6M9 13h6M9 17h6"/></svg>
+              </button>
+            </div>
+
+            <div class="formula-note">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
+              SGPA = Σ(Credits × Grade Point) ÷ Σ Credits. CGPA is the average of completed semester SGPAs.
+            </div>
+          </div>
+
+          <!-- RIGHT SIDEBAR -->
+          <div class="rsidebar">
+
+            <div class="glass spot card-pad fade-up" style="animation-delay:.3s">
+              <div class="card-title"><h3>SGPA Overview</h3></div>
+              <div class="gauge-wrap">
+                <div class="gauge">
+                  <svg width="172" height="172" viewBox="0 0 172 172">
+                    <defs>
+                      <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#6C63FF"/>
+                        <stop offset="55%" stop-color="#8B5CF6"/>
+                        <stop offset="100%" stop-color="#38BDF8"/>
+                      </linearGradient>
+                    </defs>
+                    <circle class="gauge-ring-bg" cx="86" cy="86" r="72"/>
+                    <circle class="gauge-ring-fg" id="gaugeFg" cx="86" cy="86" r="72" stroke="url(#gaugeGrad)"
+                      stroke-dasharray="452.4" stroke-dashoffset="452.4" />
+                  </svg>
+                  <div class="gauge-center"><b id="gaugeSGPA">0.00</b><span>SGPA</span></div>
+                </div>
+                <div class="legend">
+                  <div class="legend-row"><span class="lk"><span class="dotc" style="background:#22C55E"></span>S = 10</span><span>Outstanding</span></div>
+                  <div class="legend-row"><span class="lk"><span class="dotc" style="background:#38BDF8"></span>A = 9</span><span>Excellent</span></div>
+                  <div class="legend-row"><span class="lk"><span class="dotc" style="background:#8B5CF6"></span>B = 8</span><span>Very Good</span></div>
+                  <div class="legend-row"><span class="lk"><span class="dotc" style="background:#F59E0B"></span>C = 7</span><span>Good</span></div>
+                  <div class="legend-row"><span class="lk"><span class="dotc" style="background:#FB923C"></span>D = 6</span><span>Average</span></div>
+                  <div class="legend-row"><span class="lk"><span class="dotc" style="background:#F87171"></span>E = 5</span><span>Pass</span></div>
+                  <div class="legend-row"><span class="lk"><span class="dotc" style="background:#EF4444"></span>F = 0</span><span>Fail</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass spot card-pad fade-up" style="animation-delay:.35s">
+              <div class="card-title"><h3>Credits Summary</h3><span class="link" onclick="switchView('analytics')">View All</span></div>
+              <div class="sum-row"><div class="sum-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg></div><div class="t">Total Credits (Overall)</div><div class="v" id="sumTotalCredits">0 / 160</div></div>
+              <div class="sum-row"><div class="sum-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20V4H6.5A2.5 2.5 0 004 6.5v13z"/></svg></div><div class="t">Earned Credits (Sem)</div><div class="v" id="sumEarned">0</div></div>
+              <div class="sum-row"><div class="sum-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div class="t">Remaining Credits</div><div class="v" id="sumRemaining">160</div></div>
+              <div class="sum-row"><div class="sum-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/></svg></div><div class="t">Credit Points (Sem)</div><div class="v" id="sumPoints">0.0</div></div>
+            </div>
+
+            <div class="glass spot card-pad fade-up" style="animation-delay:.4s">
+              <div class="card-title"><h3>Performance Trend</h3><span class="link" onclick="switchView('analytics')">View Report</span></div>
+              <svg class="chart-box" viewBox="0 0 300 130" preserveAspectRatio="none" width="100%" height="130" id="dashboardTrendSvg">
+                <!-- Injected via JS -->
+              </svg>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink-soft);margin-top:4px;">
+                <span>S1</span><span>S2</span><span>S3</span><span>S4</span><span>S5</span><span>S6</span><span>S7</span><span>S8</span>
+              </div>
+            </div>
+
+            <div class="glass spot card-pad fade-up" style="animation-delay:.45s">
+              <div class="card-title"><h3>Grade Distribution</h3></div>
+              <div style="display:flex; align-items:center; gap:18px;">
+                <svg width="110" height="110" viewBox="0 0 42 42">
+                  <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="var(--glass-border)" stroke-width="6"></circle>
+                  <g id="donutCircles"></g>
+                  <text x="21" y="20" text-anchor="middle" font-size="7" font-weight="700" fill="var(--ink)" id="donutCount">0</text>
+                  <text x="21" y="26" text-anchor="middle" font-size="3.6" fill="var(--ink-soft)">Subjects</text>
+                </svg>
+                <div style="flex:1;display:flex;flex-direction:column;gap:7px;" id="donutLegend"></div>
+              </div>
+            </div>
+
+            <div class="glass spot card-pad fade-up" style="animation-delay:.5s">
+              <div class="card-title"><h3>Tasks & Checklists</h3></div>
+              <div class="tasks-list" id="taskList">
+                <!-- tasks injected -->
+              </div>
+            </div>
+
+            <div class="glass spot card-pad fade-up" style="animation-delay:.55s">
+              <div class="card-title"><h3>Quick Actions</h3></div>
+              <div class="qa-grid">
+                <button class="qa-btn" id="qaAdd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg><span>Add Subject</span></button>
+                <button class="qa-btn" onclick="switchView('reports')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="1.8"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6z"/><path d="M14 3v6h6"/></svg><span>Export Report</span></button>
+                <button class="qa-btn" onclick="switchView('semester')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18"/></svg><span>All Semesters</span></button>
+                <button class="qa-btn" onclick="switchView('history')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>View History</span></button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BOTTOM CARDS -->
+        <div class="bottom-grid">
+          <div class="glass spot bottom-card fade-up">
+            <div class="bc-head"><div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 12.5l2 2 4-4.5"/></svg></div><h4>How it Works</h4></div>
+            <div class="step-row"><div class="step-num">1</div><p>Select your semester from the dropdown in the workspace header.</p></div>
+            <div class="step-row"><div class="step-num">2</div><p>Add subjects from the official SCFC curriculum via "Add Subjects".</p></div>
+            <div class="step-row"><div class="step-num">3</div><p>Pick your grade (S–F) for each subject.</p></div>
+            <div class="step-row"><div class="step-num">4</div><p>SGPA & CGPA update live. CGPA equals the average of completed semester SGPAs.</p></div>
+          </div>
+
+          <div class="glass spot bottom-card fade-up" style="animation-delay:.05s">
+            <div class="bc-head"><div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg></div><h4>Key Features</h4></div>
+            <div class="tip-row"><span class="b"></span>MongoDB real-time automatic synchronization.</div>
+            <div class="tip-row"><span class="b"></span>Grade points follow the 10-point scale: S=10 … F=0.</div>
+            <div class="tip-row"><span class="b"></span>Student account authentication with unique USN validation.</div>
+            <div class="tip-row"><span class="b"></span>Clean single-page printable report export with USN.</div>
+          </div>
+
+          <div class="glass spot bottom-card fade-up" style="animation-delay:.1s">
+            <div class="bc-head"><div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 00-12 0c0 5-2 6-2 6h16s-2-1-2-6z"/><path d="M10 20a2 2 0 004 0"/></svg></div><h4>Announcements</h4></div>
+            <span class="announce-badge">Active</span>
+            <p class="note">MongoDB integration and Student USN authentication are active. All changes auto-save instantly to the database.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 2: SEMESTER MANAGEMENT -->
+      <div id="view-semester" class="page-view">
+        <div class="hero fade-up">
+          <h1>Semester <span class="grad">Overview</span></h1>
+          <p>View and manage all 8 academic semesters. Each semester maintains completely independent subjects, credits, and grades.</p>
+        </div>
+        <div class="sem-grid" id="semGridContainer">
+          <!-- Cards 1 to 8 injected by JS -->
+        </div>
+      </div>
+
+      <!-- VIEW 3: ANALYTICS -->
+      <div id="view-analytics" class="page-view">
+        <div class="hero fade-up">
+          <h1>Academic <span class="grad">Analytics</span></h1>
+          <p>Track your SGPA progression, grade distributions, and degree completion across all completed semesters.</p>
+        </div>
+
+        <div class="analytics-hero">
+          <div class="glass spot stat-card">
+            <div><div class="stat-label">Highest Semester SGPA</div><div class="stat-value" id="analyticHighestSgpa">0.00</div></div>
+          </div>
+          <div class="glass spot stat-card">
+            <div><div class="stat-label">Average SGPA (CGPA)</div><div class="stat-value" id="analyticCgpa">0.00</div></div>
+          </div>
+          <div class="glass spot stat-card">
+            <div><div class="stat-label">Completed Semesters</div><div class="stat-value" id="analyticCompletedSems">0 / 8</div></div>
+          </div>
+          <div class="glass spot stat-card">
+            <div><div class="stat-label">Total Earned Credits</div><div class="stat-value" id="analyticTotalCredits">0 / 160</div></div>
+          </div>
+        </div>
+
+        <div class="glass spot card-pad" style="margin-bottom:20px;">
+          <div class="card-title"><h3>Multi-Semester SGPA Progression</h3></div>
+          <div style="height:220px; width:100%;" id="analyticsChartWrap">
+            <!-- Detailed Chart SVG injected -->
+          </div>
+        </div>
+
+        <div class="glass spot card-pad">
+          <div class="card-title"><h3>Semester Breakdown Table</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Semester</th>
+                  <th>Subjects</th>
+                  <th>Credits</th>
+                  <th>SGPA</th>
+                  <th>CGPA After Semester</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="analyticsTableBody">
+                <!-- rows injected -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 4: REPORTS -->
+      <div id="view-reports" class="page-view">
+        <div class="hero fade-up">
+          <h1>Grade <span class="grad">Reports</span></h1>
+          <p>Preview and print official clean grade cards for any semester.</p>
+        </div>
+
+        <div class="glass spot card-pad" style="margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <label style="font-size:13px; font-weight:600;">Select Report Semester:</label>
+            <select class="select-glass" id="reportSemSelect" onchange="renderReportPreview()">
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+              <option value="3">Semester 3</option>
+              <option value="4">Semester 4</option>
+              <option value="5">Semester 5</option>
+              <option value="6">Semester 6</option>
+              <option value="7">Semester 7</option>
+              <option value="8">Semester 8</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="triggerPrintSelectedReport()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+            Print Clean Report
+          </button>
+        </div>
+
+        <div class="report-paper" id="reportPreviewContainer">
+          <!-- Report card preview injected -->
+        </div>
+      </div>
+
+      <!-- VIEW 5: SETTINGS -->
+      <div id="view-settings" class="page-view">
+        <div class="hero fade-up">
+          <h1>Application <span class="grad">Settings</span></h1>
+          <p>Customize student information, preferences, and data backups.</p>
+        </div>
+
+        <div class="settings-grid">
+          <div class="glass spot card-pad">
+            <h3 style="margin-bottom:16px; font-size:16px; font-weight:700;">Student Profile</h3>
+            <div class="form-group">
+              <label>Student Full Name</label>
+              <input type="text" id="settingsNameInput" class="form-input" placeholder="Enter student name...">
+            </div>
+            <div class="form-group">
+              <label>University Serial Number (USN)</label>
+              <input type="text" id="settingsUsnInput" class="form-input" disabled style="opacity:0.7;">
+            </div>
+            <button class="btn btn-primary" onclick="saveStudentNameSettings()">Save Name</button>
+          </div>
+
+          <div class="glass spot card-pad">
+            <h3 style="margin-bottom:16px; font-size:16px; font-weight:700;">Appearance & Theme</h3>
+            <p style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">Switch between high-contrast dark mode and vibrant light mode.</p>
+            <button class="btn btn-ghost" onclick="toggleTheme()">Toggle Dark / Light Mode</button>
+          </div>
+
+          <div class="glass spot card-pad">
+            <h3 style="margin-bottom:16px; font-size:16px; font-weight:700;">Data Management & Account</h3>
+            <p style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">Your data is continuously auto-saved to MongoDB. You can also export a JSON backup.</p>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button class="btn btn-ghost" onclick="exportDataBackup()">Export Backup (JSON)</button>
+              <button class="btn btn-ghost" style="color:#EF4444; border-color:rgba(239,68,68,.3);" onclick="logoutStudent()">Logout Session</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 6: HISTORY -->
+      <div id="view-history" class="page-view">
+        <div class="hero fade-up">
+          <h1>Activity <span class="grad">History</span></h1>
+          <p>Chronological log of grade modifications, course updates, and semester calculations.</p>
+        </div>
+
+        <div class="glass spot card-pad">
+          <div class="card-title">
+            <h3>Recent Activity Logs</h3>
+            <button class="btn btn-ghost" style="padding:6px 12px; font-size:12px;" onclick="clearHistoryLogs()">Clear History</button>
+          </div>
+          <div class="history-list" id="historyListContainer">
+            <!-- logs injected -->
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 7: GRADE SYSTEM -->
+      <div id="view-gradesystem" class="page-view">
+        <div class="hero fade-up">
+          <h1>SCFC <span class="grad">Grade Scale</span></h1>
+          <p>Official 10-point scale grading rules and calculation mathematical formulas.</p>
+        </div>
+
+        <div class="glass spot card-pad" style="margin-bottom:20px;">
+          <h3 style="margin-bottom:16px;">10-Point Grade Reference Table</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Letter Grade</th>
+                  <th>Grade Points (GP)</th>
+                  <th>Performance Standard</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><strong style="color:#22C55E">S</strong></td><td><strong>10</strong></td><td>Outstanding</td></tr>
+                <tr><td><strong style="color:#38BDF8">A</strong></td><td><strong>9</strong></td><td>Excellent</td></tr>
+                <tr><td><strong style="color:#8B5CF6">B</strong></td><td><strong>8</strong></td><td>Very Good</td></tr>
+                <tr><td><strong style="color:#F59E0B">C</strong></td><td><strong>7</strong></td><td>Good</td></tr>
+                <tr><td><strong style="color:#FB923C">D</strong></td><td><strong>6</strong></td><td>Average</td></tr>
+                <tr><td><strong style="color:#F87171">E</strong></td><td><strong>5</strong></td><td>Pass</td></tr>
+                <tr><td><strong style="color:#EF4444">F</strong></td><td><strong>0</strong></td><td>Fail</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="glass spot card-pad">
+          <h3 style="margin-bottom:16px;">Calculation Rules & Formulas</h3>
+          <div style="display:flex; flex-direction:column; gap:14px; font-size:13.5px; line-height:1.6; color:var(--ink-soft);">
+            <p><strong style="color:var(--ink)">Semester Grade Point Average (SGPA):</strong> Calculated as the weighted sum of credit points earned in a specific semester divided by total credits attempted in that semester.</p>
+            <div style="background:var(--glass-bg-2); padding:12px 16px; border-radius:12px; border:1px solid var(--glass-border); font-family:monospace; color:var(--ink);">
+              SGPA = Σ (Course Credits × Grade Point) ÷ Σ (Course Credits)
+            </div>
+            <p><strong style="color:var(--ink)">Cumulative Grade Point Average (CGPA):</strong> Calculated as the arithmetic average of SGPAs of all completed semesters (semesters with registered subjects and non-zero credits).</p>
+            <div style="background:var(--glass-bg-2); padding:12px 16px; border-radius:12px; border:1px solid var(--glass-border); font-family:monospace; color:var(--ink);">
+              CGPA = (SGPA₁ + SGPA₂ + ... + SGPAₙ) ÷ n &nbsp; [for all completed semesters n]
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="foot">SCFC Grade Calculator &nbsp;•&nbsp; Built for Students, Designed for Success</footer>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="glass mobile-bottomnav">
+  <div class="mnav-item active" data-view="dashboard" onclick="switchView('dashboard')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>Home</div>
+  <div class="mnav-item" data-view="semester" onclick="switchView('semester')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18"/></svg>Sem</div>
+  <div class="mnav-item" data-view="analytics" onclick="switchView('analytics')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>Stats</div>
+  <div class="mnav-item" data-view="reports" onclick="switchView('reports')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6z"/></svg>Reports</div>
+  <div class="mnav-item" data-view="settings" onclick="switchView('settings')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.34 1.87"/></svg>Settings</div>
+</nav>
+<button class="fab" id="fabAdd">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+</button>
+
+<!-- ADD SUBJECTS MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="glass modal">
+    <div class="modal-head">
+      <h3>Add Subjects</h3>
+      <div class="modal-search-row">
+        <div class="modal-search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" id="modalSearchInput" placeholder="Search course code or name...">
+        </div>
+        <select class="basket-select" id="basketSelect">
+          <option value="all">All Baskets</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-list" id="modalList">
+      <!-- rows injected -->
+    </div>
+    <div class="modal-foot">
+      <div class="sel-count"><b id="selCount">0</b> subjects selected</div>
+      <div class="modal-btns">
+        <button class="btn btn-ghost" id="cancelModalBtn">Cancel</button>
+        <button class="btn btn-primary" id="addSelectedBtn">Add Selected Subjects</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT AUTH MODAL OVERLAY (LOGIN / REGISTER) -->
+<div class="modal-overlay open" id="authScreenOverlay">
+  <div class="glass modal" style="width:480px;">
+    <!-- LOGIN TAB -->
+    <div id="authLoginBox">
+      <div class="modal-head" style="text-align:center;">
+        <h3 style="font-size:24px; margin-bottom:6px;">Student Login</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft);">Enter your registered Student Name and USN to load your saved MongoDB profile.</p>
+      </div>
+      <div style="padding:24px;">
+        <div class="auth-banner" id="loginBanner"></div>
+        <div class="form-group">
+          <label>Student Full Name</label>
+          <input type="text" id="loginNameInput" class="form-input" placeholder="e.g. Umadevi" autofocus>
+        </div>
+        <div class="form-group">
+          <label>USN (University Serial Number)</label>
+          <input type="text" id="loginUsnInput" class="form-input" placeholder="e.g. 1SC21CS001" style="text-transform:uppercase;">
+        </div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="handleLoginSubmit()">Login to Dashboard</button>
+        <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
+          Student not found? <a href="#" style="color:var(--indigo); font-weight:700;" onclick="switchAuthTab('register')">Please Register here</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTER TAB -->
+    <div id="authRegisterBox" style="display:none;">
+      <div class="modal-head" style="text-align:center;">
+        <h3 style="font-size:24px; margin-bottom:6px;">Student Registration</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft);">Register your unique USN to create a new profile in MongoDB.</p>
+      </div>
+      <div style="padding:24px;">
+        <div class="auth-banner" id="registerBanner"></div>
+        <div class="form-group">
+          <label>Student Full Name</label>
+          <input type="text" id="registerNameInput" class="form-input" placeholder="e.g. Umadevi">
+        </div>
+        <div class="form-group">
+          <label>USN (University Serial Number)</label>
+          <input type="text" id="registerUsnInput" class="form-input" placeholder="e.g. 1SC21CS001" style="text-transform:uppercase;">
+        </div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="handleRegisterSubmit()">Create Student Account</button>
+        <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
+          Already registered? <a href="#" style="color:var(--indigo); font-weight:700;" onclick="switchAuthTab('login')">Login here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRINTABLE CLEAN REPORT CONTAINER (PRINT ONLY) -->
+<div id="printableReport">
+  <!-- Dynamic clean print template -->
+</div>
+
+<script>
+/* =========================================================
+   GRADE SCALE (S=10 … F=0, 10-point scale)
+========================================================= */
+const GRADES = [
+  {g:'S', gp:10, color:'#22C55E'},
+  {g:'A', gp:9,  color:'#38BDF8'},
+  {g:'B', gp:8,  color:'#8B5CF6'},
+  {g:'C', gp:7,  color:'#F59E0B'},
+  {g:'D', gp:6,  color:'#FB923C'},
+  {g:'E', gp:5,  color:'#F87171'},
+  {g:'F', gp:0,  color:'#EF4444'},
+];
+const gpFor = g => (GRADES.find(x=>x.g===g)||GRADES[0]).gp;
+const colorFor = g => (GRADES.find(x=>x.g===g)||GRADES[0]).color;
+
+/* =========================================================
+   FULL COURSE BANK — Complete SCFC Curriculum
+========================================================= */
+const courseBank = [
+  // School Core — A
+  {code:'CSE1037', name:'Programming in Python', credits:3, basket:'School Core'},
+  {code:'CSE1018', name:'Object Oriented Programming with Java', credits:4, basket:'School Core'},
+  {code:'CSE1017', name:'Programming in C and C++', credits:4, basket:'School Core'},
+  {code:'CSE2001', name:'Data Structures and Algorithms', credits:4, basket:'School Core'},
+  {code:'MAT1014', name:'Linear Algebra and Calculus using Matlab', credits:4, basket:'School Core'},
+  {code:'MAT1002', name:'Differential Equations and Transform Techniques', credits:3, basket:'School Core'},
+  {code:'MAT1013', name:'Statistics and Probability', credits:3, basket:'School Core'},
+  {code:'MAT1012', name:'Numerical Techniques', credits:3, basket:'School Core'},
+  {code:'MGT1101', name:'Digital Entrepreneurship', credits:2, basket:'School Core'},
+  {code:'BIT1002', name:'Basic Human Nutrition', credits:2, basket:'School Core'},
+  {code:'ECE1008', name:'Innovation Project Using Arduino', credits:1, basket:'School Core'},
+  {code:'ECE1009', name:'Innovation Project Using Raspberry Pi', credits:1, basket:'School Core'},
+  {code:'CSE4001', name:'B.Tech. Capstone Project', credits:4, basket:'School Core'},
+  {code:'CSE4002', name:'B.Tech. Internship', credits:6, basket:'School Core'},
+  // Electrical & Electronics — B
+  {code:'ECE1002', name:'Elements of Electronics Engineering', credits:4, basket:'Electrical & Electronics'},
+  {code:'ECE1001', name:'Fundamentals of Electrical and Electronics Engineering', credits:4, basket:'Electrical & Electronics'},
+  // Modern Physics — C
+  {code:'PHY1001', name:'Physics of Opto-electronic Devices', credits:3, basket:'Modern Physics'},
+  {code:'PHY1002', name:'Semiconductor Physics', credits:3, basket:'Modern Physics'},
+  // English — D
+  {code:'ENG1001', name:'Foundational English', credits:1, basket:'English'},
+  {code:'ENG1002', name:'Communicative English', credits:1, basket:'English'},
+  {code:'ENG1003', name:'Professional English', credits:1, basket:'English'},
+  // Foreign Languages — E
+  {code:'GER1002', name:'Communicative German', credits:1, basket:'Foreign Languages'},
+  {code:'FRE1002', name:'Communicative French', credits:1, basket:'Foreign Languages'},
+  {code:'SPA1001', name:'Communicative Spanish', credits:1, basket:'Foreign Languages'},
+  // Behavioural Science — F
+  {code:'PSY1001', name:'Understanding Self for Effectiveness', credits:1, basket:'Behavioural Science'},
+  {code:'PSY1002', name:'Dynamics of Human Behaviour', credits:1, basket:'Behavioural Science'},
+  // Soft Skills — G
+  {code:'SSK2002', name:'Being Corporate Ready', credits:1, basket:'Soft Skills'},
+  {code:'SSK3001', name:'Problem Solving through Aptitude', credits:1, basket:'Soft Skills'},
+  {code:'CSE3050', name:'Programming Skills for Employment', credits:1, basket:'Soft Skills'},
+  // Non-credit
+  {code:'CHE1001', name:'Environmental Studies', credits:0, basket:'Non-Credit'},
+  {code:'CEA1001', name:'Co-/ Extra-curricular Activities', credits:0, basket:'Non-Credit'},
+
+  // Program Core
+  {code:'CSE1006', name:'Software Engineering', credits:3, basket:'Program Core'},
+  {code:'CSE2002', name:'Web Technology', credits:3, basket:'Program Core'},
+  {code:'CSE2045', name:'Algorithmic Design and Analysis', credits:4, basket:'Program Core'},
+  {code:'ECE2006', name:'Computer Architecture and Organization', credits:3, basket:'Program Core'},
+  {code:'CSE2046', name:'Operating Systems with Linux Internals', credits:3, basket:'Program Core'},
+  {code:'CSE2006', name:'Communication Networks', credits:3, basket:'Program Core'},
+  {code:'CSE2007', name:'Relational Database Management System', credits:3, basket:'Program Core'},
+  {code:'CSE2008', name:'Cloud Computing', credits:3, basket:'Program Core'},
+  {code:'CSE2009', name:'Data Analytics and Visualization', credits:3, basket:'Program Core'},
+  {code:'CSE1035', name:'Fundamentals of Artificial Intelligence and Machine Learning', credits:3, basket:'Program Core'},
+  {code:'CSE3003', name:'Cryptography and Network Security', credits:3, basket:'Program Core'},
+  {code:'MAT2002', name:'Discrete Mathematics and Graph Theory', credits:3, basket:'Program Core'},
+  {code:'CSE2015', name:'Source Code Management', credits:1, basket:'Program Core'},
+  {code:'CSE3011', name:'Machine Learning Techniques', credits:3, basket:'Program Core'},
+
+  // Common Electives
+  {code:'CSE1007', name:'Programming in C# and .NET Framework', credits:2, basket:'Common Elective'},
+  {code:'CSE1009', name:'Linux Internals', credits:3, basket:'Common Elective'},
+  {code:'CSE2044', name:'Computer Graphics with OpenGL', credits:3, basket:'Common Elective'},
+  {code:'CSE3016', name:'Object Oriented Modelling and Design using UML', credits:3, basket:'Common Elective'},
+  {code:'CSE2011', name:'Advanced Java', credits:2, basket:'Common Elective'},
+  {code:'CSE2012', name:'Advanced Database Management System', credits:3, basket:'Common Elective'},
+  {code:'CSE2013', name:'Mobile Adhoc Networks', credits:3, basket:'Common Elective'},
+  {code:'CSE2014', name:'Compiler Design', credits:3, basket:'Common Elective'},
+  {code:'CSE2016', name:'Software Quality Assurance', credits:3, basket:'Common Elective'},
+  {code:'CSE2017', name:'UI/UX', credits:3, basket:'Common Elective'},
+  {code:'CSE2018', name:'Service-oriented Architecture', credits:3, basket:'Common Elective'},
+  {code:'CSE2019', name:'Wearable Computing', credits:3, basket:'Common Elective'},
+  {code:'CSE2020', name:'IT Infrastructure Management', credits:3, basket:'Common Elective'},
+  {code:'CSE2021', name:'Data Mining and Data Warehousing', credits:3, basket:'Common Elective'},
+  {code:'CSE3005', name:'Wireless Sensor Network', credits:3, basket:'Common Elective'},
+  {code:'CSE3006', name:'Quantum Computing', credits:2, basket:'Common Elective'},
+  {code:'CSE3007', name:'AR/ VR/ XR', credits:3, basket:'Common Elective'},
+  {code:'CSE3008', name:'Human Computer Interaction', credits:3, basket:'Common Elective'},
+  {code:'CSE3009', name:'Digital Imaging', credits:3, basket:'Common Elective'},
+  {code:'CSE2010', name:'Mobile Application Development', credits:3, basket:'Common Elective'},
+  {code:'CSE3004', name:'Parallel and Distributed Computing', credits:3, basket:'Common Elective'},
+  {code:'CSE3001', name:'Theory of Computation', credits:3, basket:'Common Elective'},
+  {code:'MAT2001', name:'Advanced Statistics', credits:3, basket:'Common Elective'},
+
+  // Specialization Baskets
+  {code:'CSE3010', name:'AI & ML Applications', credits:3, basket:'AI & ML'},
+  {code:'CSE3015', name:'Natural Language Processing', credits:3, basket:'AI & ML'},
+  {code:'CSE3013', name:'Deep Neural Networks', credits:3, basket:'AI & ML'},
+  {code:'CSE3021', name:'Ethical Hacking', credits:3, basket:'Cyber Security'},
+  {code:'CSE2022', name:'Front End Engineering', credits:3, basket:'Fullstack Development'},
+  {code:'CSE2023', name:'Backend Engineering', credits:3, basket:'Fullstack Development'},
+  {code:'CSE2035', name:'DevOps', credits:3, basket:'DevOps'},
+];
+
+const seen = new Set();
+const courseBankUnique = courseBank.filter(c=>{
+  if(seen.has(c.code)) return false;
+  seen.add(c.code); return true;
+});
+
+/* =========================================================
+   STATE & MONGODB API AUTO-SAVE MANAGEMENT
+========================================================= */
+let state = {
+  studentName: '',
+  usn: '',
+  theme: 'light',
+  currentSemester: 1,
+  semesters: {
+    1: [],
+    2: [],
+    3: [],
+    4: [],
+    5: [],
+    6: [],
+    7: [],
+    8: []
+  },
+  history: [],
+  tasks: []
+};
+
+let autoSaveTimer = null;
+
+function triggerAutoSave(){
+  if(!state.usn) return;
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(async () => {
+    try {
+      await fetch(`/api/student/${encodeURIComponent(state.usn)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: state.studentName,
+          theme: state.theme,
+          currentSemester: state.currentSemester,
+          semesters: state.semesters,
+          history: state.history,
+          tasks: state.tasks
+        })
+      });
+    } catch(e) {
+      console.error('MongoDB Auto-save error:', e);
+    }
+  }, 350);
+}
+
+function logHistory(text){
+  state.history.unshift({
+    timestamp: new Date().toLocaleString(),
+    text: text
+  });
+  if(state.history.length > 50) state.history.pop();
+  triggerAutoSave();
+  if(activeView === 'history') renderHistoryView();
+}
+
+/* =========================================================
+   CALCULATIONS (SGPA & ARITHMETIC AVERAGE CGPA)
+========================================================= */
+function calculateSemStats(courses){
+  if(!courses || courses.length === 0) return { credits: 0, points: 0, sgpa: null };
+  let credits = 0;
+  let points = 0;
+  courses.forEach(r => {
+    credits += r.credits;
+    points += r.credits * gpFor(r.grade);
+  });
+  if(credits === 0) return { credits: 0, points: 0, sgpa: null };
+  return { credits, points, sgpa: points / credits };
+}
+
+function computeAllStats(){
+  const semStats = {};
+  const completedSgpas = [];
+  let totalOverallCredits = 0;
+
+  for(let s=1; s<=8; s++){
+    const courses = state.semesters[s] || [];
+    const stat = calculateSemStats(courses);
+    semStats[s] = stat;
+    if(stat.sgpa !== null){
+      completedSgpas.push(stat.sgpa);
+      totalOverallCredits += stat.credits;
+    }
+  }
+
+  const cgpa = completedSgpas.length > 0
+    ? (completedSgpas.reduce((a, b) => a + b, 0) / completedSgpas.length)
+    : 0;
+
+  const currentStat = semStats[state.currentSemester] || { credits: 0, points: 0, sgpa: null };
+
+  return {
+    semStats,
+    completedCount: completedSgpas.length,
+    cgpa: cgpa,
+    currentCredits: currentStat.credits,
+    currentPoints: currentStat.points,
+    currentSgpa: currentStat.sgpa || 0,
+    totalOverallCredits
+  };
+}
+
+function bandLabel(v){
+  if(v>=9) return {t:'Outstanding', c:'good'};
+  if(v>=7.5) return {t:'Excellent', c:'good'};
+  if(v>=6) return {t:'Good', c:''};
+  if(v>=5) return {t:'Average', c:''};
+  return {t:'Needs Improvement', c:''};
+}
+
+/* =========================================================
+   AUTHENTICATION & SESSION HANDLERS
+========================================================= */
+function switchAuthTab(tab){
+  const loginBox = document.getElementById('authLoginBox');
+  const regBox = document.getElementById('authRegisterBox');
+  document.getElementById('loginBanner').className = 'auth-banner';
+  document.getElementById('registerBanner').className = 'auth-banner';
+
+  if(tab === 'login'){
+    loginBox.style.display = 'block';
+    regBox.style.display = 'none';
+  } else {
+    loginBox.style.display = 'none';
+    regBox.style.display = 'block';
+  }
+}
+
+async function handleLoginSubmit(){
+  const name = document.getElementById('loginNameInput').value.trim();
+  const usn = document.getElementById('loginUsnInput').value.trim();
+  const banner = document.getElementById('loginBanner');
+
+  if(!name || !usn){
+    banner.textContent = 'Please fill in both Student Name and USN.';
+    banner.className = 'auth-banner error';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, usn })
+    });
+    const data = await res.json();
+
+    if(!res.ok || !data.success){
+      banner.textContent = data.message || 'Student not found. Please Register.';
+      banner.className = 'auth-banner error';
+      return;
+    }
+
+    // Success Login
+    applyStudentData(data.student);
+    localStorage.setItem('scfc_active_usn', data.student.usn);
+    document.getElementById('authScreenOverlay').classList.remove('open');
+    document.getElementById('mainAppShell').style.display = 'block';
+  } catch(e) {
+    banner.textContent = 'Server connection error. Please try again.';
+    banner.className = 'auth-banner error';
+  }
+}
+
+async function handleRegisterSubmit(){
+  const name = document.getElementById('registerNameInput').value.trim();
+  const usn = document.getElementById('registerUsnInput').value.trim();
+  const banner = document.getElementById('registerBanner');
+
+  if(!name || !usn){
+    banner.textContent = 'Please fill in both Student Name and USN.';
+    banner.className = 'auth-banner error';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, usn })
+    });
+    const data = await res.json();
+
+    if(!res.ok || !data.success){
+      banner.textContent = data.message || 'This USN is already registered. Please Login.';
+      banner.className = 'auth-banner error';
+      return;
+    }
+
+    // Success Register -> Redirect to Login
+    const loginBanner = document.getElementById('loginBanner');
+    loginBanner.textContent = 'Registration successful! Please login now.';
+    loginBanner.className = 'auth-banner success';
+    
+    document.getElementById('loginNameInput').value = name;
+    document.getElementById('loginUsnInput').value = usn.toUpperCase();
+    switchAuthTab('login');
+  } catch(e) {
+    banner.textContent = 'Server connection error. Please try again.';
+    banner.className = 'auth-banner error';
+  }
+}
+
+function applyStudentData(student){
+  state.studentName = student.name;
+  state.usn = student.usn;
+  state.theme = student.theme || 'light';
+  state.currentSemester = student.currentSemester || 1;
+  state.semesters = student.semesters || {};
+  
+  // Ensure all 8 semesters exist
+  for(let s=1; s<=8; s++){
+    if(!state.semesters[s]) state.semesters[s] = [];
+  }
+
+  state.history = student.history || [];
+  state.tasks = student.tasks || [];
+
+  const root = document.documentElement;
+  root.setAttribute('data-theme', state.theme);
+
+  updateStudentNameDisplays();
+  renderAll();
+}
+
+function logoutStudent(){
+  localStorage.removeItem('scfc_active_usn');
+  state.usn = '';
+  document.getElementById('mainAppShell').style.display = 'none';
+  document.getElementById('authScreenOverlay').classList.add('open');
+  switchAuthTab('login');
+}
+
+async function checkSavedSession(){
+  const activeUsn = localStorage.getItem('scfc_active_usn');
+  if(activeUsn){
+    try {
+      const res = await fetch(`/api/student/${encodeURIComponent(activeUsn)}`);
+      const data = await res.json();
+      if(res.ok && data.success && data.student){
+        applyStudentData(data.student);
+        document.getElementById('authScreenOverlay').classList.remove('open');
+        document.getElementById('mainAppShell').style.display = 'block';
+        return;
+      }
+    } catch(e) {
+      console.error('Session restore error:', e);
+    }
+  }
+  document.getElementById('mainAppShell').style.display = 'none';
+  document.getElementById('authScreenOverlay').classList.add('open');
+}
+
+function updateStudentNameDisplays(){
+  const name = state.studentName || 'Student';
+  const usn = state.usn ? `USN: ${state.usn}` : 'USN: N/A';
+
+  document.querySelectorAll('.student-name-display').forEach(el => { el.textContent = name; });
+  document.querySelectorAll('.student-usn-display').forEach(el => { el.textContent = usn; });
+}
+
+/* =========================================================
+   VIEW ROUTER & NAVIGATION
+========================================================= */
+let activeView = 'dashboard';
+
+function switchView(viewName){
+  activeView = viewName;
+  document.querySelectorAll('.page-view').forEach(el => {
+    el.classList.remove('active');
+  });
+
+  const target = document.getElementById(`view-${viewName}`);
+  if(target){
+    target.classList.add('active');
+  }
+
+  document.querySelectorAll('.dock-item[data-view]').forEach(item => {
+    if(item.dataset.view === viewName) item.classList.add('active');
+    else item.classList.remove('active');
+  });
+
+  document.querySelectorAll('.mnav-item[data-view]').forEach(item => {
+    if(item.dataset.view === viewName) item.classList.add('active');
+    else item.classList.remove('active');
+  });
+
+  if(viewName === 'dashboard') renderAll();
+  else if(viewName === 'semester') renderSemesterView();
+  else if(viewName === 'analytics') renderAnalyticsView();
+  else if(viewName === 'reports') renderReportsView();
+  else if(viewName === 'settings') renderSettingsView();
+  else if(viewName === 'history') renderHistoryView();
+  else if(viewName === 'gradesystem') renderGradeSystemView();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* =========================================================
+   WORKSPACE TABLE & DASHBOARD RENDERING
+========================================================= */
+const tbody = document.getElementById('tableBody');
+const semesterSelect = document.getElementById('semesterSelect');
+
+semesterSelect.addEventListener('change', (e)=>{
+  const newSem = parseInt(e.target.value);
+  state.currentSemester = newSem;
+  logHistory(`Switched active workspace to Semester ${newSem}.`);
+  triggerAutoSave();
+  renderAll();
+});
+
+function renderTable(){
+  const currentRows = state.semesters[state.currentSemester] || [];
+  if(currentRows.length === 0){
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No subjects added for Semester ${state.currentSemester} yet — tap "Add Subjects" to pick courses.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = currentRows.map((r,i)=>{
+    const gp = gpFor(r.grade);
+    const cp = r.credits * gp;
+    const options = GRADES.map(g=>`<option value="${g.g}" ${g.g===r.grade?'selected':''}>${g.g}</option>`).join('');
+    return `<tr>
+      <td class="mono">${i+1}</td>
+      <td><div class="course-name">${r.name}</div><div class="course-code">${r.code}</div></td>
+      <td class="mono">${r.credits}</td>
+      <td><select class="grade-select" data-i="${i}" style="border-color:${colorFor(r.grade)}66; color:${colorFor(r.grade)}">${options}</select></td>
+      <td class="mono">${gp}</td>
+      <td class="mono">${cp}</td>
+      <td><button class="del-btn" data-del="${i}" title="Remove subject"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2m2 0v13a2 2 0 01-2 2H8a2 2 0 01-2-2V7h12z"/></svg></button></td>
+    </tr>`;
+  }).join('');
+
+  tbody.querySelectorAll('.grade-select').forEach(sel=>{
+    sel.addEventListener('change', e=>{
+      const idx = +e.target.dataset.i;
+      const oldGrade = currentRows[idx].grade;
+      const newGrade = e.target.value;
+      currentRows[idx].grade = newGrade;
+      logHistory(`Updated ${currentRows[idx].code} grade from ${oldGrade} to ${newGrade} in Semester ${state.currentSemester}.`);
+      triggerAutoSave();
+      renderAll();
+    });
+  });
+
+  tbody.querySelectorAll('[data-del]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const idx = +btn.dataset.del;
+      const removed = currentRows.splice(idx, 1)[0];
+      logHistory(`Removed ${removed.code} (${removed.name}) from Semester ${state.currentSemester}.`);
+      triggerAutoSave();
+      renderAll();
+    });
+  });
+}
+
+function renderDonut(){
+  const currentRows = state.semesters[state.currentSemester] || [];
+  const counts = {}; GRADES.forEach(g=>counts[g.g]=0);
+  currentRows.forEach(r=>counts[r.grade]++);
+  const total = currentRows.length;
+  let acc = 0;
+  let circles = '';
+  let legend = '';
+  GRADES.forEach(g=>{
+    const count = counts[g.g];
+    if(count>0 && total>0){
+      const pct = (count/total)*100;
+      circles += `<circle cx="21" cy="21" r="15.9" fill="transparent" stroke="${g.color}" stroke-width="6" stroke-dasharray="${pct} ${100-pct}" stroke-dashoffset="${25-acc}" stroke-linecap="round"></circle>`;
+      acc += pct;
+    }
+    if(total>0 && count>0){
+      legend += `<div class="legend-row"><span class="lk"><span class="dotc" style="background:${g.color}"></span>${g.g} (GP ${g.gp})</span><span>${count} (${Math.round(count/total*100)}%)</span></div>`;
+    }
+  });
+  document.getElementById('donutCircles').innerHTML = circles;
+  document.getElementById('donutCount').textContent = total;
+  document.getElementById('donutLegend').innerHTML = legend || '<div class="legend-row"><span class="lk">No subjects in semester</span></div>';
+}
+
+function renderTasks(){
+  const container = document.getElementById('taskList');
+  container.innerHTML = state.tasks.map((t,i)=>`
+    <div class="task-row ${t.done?'strike':''}" onclick="toggleTask(${i})">
+      <div class="task-check ${t.done?'done':''}">${t.done?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>':''}</div>
+      <div class="t">${t.text}</div>
+      <div class="d">${t.date}</div>
+    </div>
+  `).join('');
+}
+
+function toggleTask(i){
+  state.tasks[i].done = !state.tasks[i].done;
+  triggerAutoSave();
+  renderTasks();
+}
+
+function renderTrendChartSvg(svgId){
+  const stats = computeAllStats();
+  const svg = document.getElementById(svgId);
+  if(!svg) return;
+
+  const pointsArr = [];
+  for(let s=1; s<=8; s++){
+    const sg = stats.semStats[s].sgpa;
+    const val = sg !== null ? sg : 0;
+    const x = 10 + (s - 1) * 38;
+    const y = 110 - (val / 10) * 95;
+    pointsArr.push({ x, y, val, s, hasVal: sg !== null });
+  }
+
+  const polylinePts = pointsArr.map(p => `${p.x},${p.y}`).join(' ');
+  const polygonPts = `${pointsArr[0].x},120 ` + polylinePts + ` ${pointsArr[7].x},120`;
+
+  let circlesHtml = pointsArr.map(p => `
+    <circle cx="${p.x}" cy="${p.y}" r="${p.s === state.currentSemester ? 5.5 : 3.5}" 
+      fill="${p.hasVal ? '#6C63FF' : '#9CA3AF'}" stroke="#fff" stroke-width="2">
+      <title>Sem ${p.s}: ${p.hasVal ? p.val.toFixed(2) : 'No Data'}</title>
+    </circle>
+  `).join('');
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="lineFill_${svgId}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="lineStroke_${svgId}" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#6C63FF"/>
+        <stop offset="100%" stop-color="#38BDF8"/>
+      </linearGradient>
+    </defs>
+    <polygon points="${polygonPts}" fill="url(#lineFill_${svgId})"/>
+    <polyline points="${polylinePts}" fill="none" stroke="url(#lineStroke_${svgId})" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <g>${circlesHtml}</g>
+  `;
+}
+
+function renderStats(){
+  const allStats = computeAllStats();
+  const currentRows = state.semesters[state.currentSemester] || [];
+  
+  semesterSelect.value = state.currentSemester;
+  document.getElementById('statSubjects').textContent = currentRows.length;
+  document.getElementById('statCredits').textContent = allStats.currentCredits;
+  document.getElementById('statSGPA').textContent = allStats.currentSgpa.toFixed(2);
+  document.getElementById('statCGPA').textContent = allStats.cgpa.toFixed(2);
+  
+  document.getElementById('footCredits').textContent = allStats.currentCredits;
+  document.getElementById('footSGPA').textContent = allStats.currentSgpa.toFixed(2);
+  document.getElementById('gaugeSGPA').textContent = allStats.currentSgpa.toFixed(2);
+
+  const sBand = bandLabel(allStats.currentSgpa), cBand = bandLabel(allStats.cgpa);
+  document.getElementById('statSGPALabel').textContent = currentRows.length ? sBand.t : 'No Data';
+  document.getElementById('statCGPALabel').textContent = allStats.completedCount ? cBand.t : 'No Data';
+
+  const circumference = 452.4;
+  const offset = circumference - Math.max(0, Math.min(1, allStats.currentSgpa/10)) * circumference;
+  document.getElementById('gaugeFg').setAttribute('stroke-dashoffset', offset);
+
+  document.getElementById('sumTotalCredits').textContent = `${allStats.totalOverallCredits} / 160`;
+  document.getElementById('sumEarned').textContent = allStats.currentCredits;
+  document.getElementById('sumRemaining').textContent = Math.max(0, 160 - allStats.totalOverallCredits);
+  document.getElementById('sumPoints').textContent = allStats.currentPoints.toFixed(1);
+
+  renderDonut();
+  renderTasks();
+  renderTrendChartSvg('dashboardTrendSvg');
+}
+
+function renderAll(){
+  updateStudentNameDisplays();
+  renderTable();
+  renderStats();
+}
+
+/* =========================================================
+   SEMESTER VIEW
+========================================================= */
+function renderSemesterView(){
+  const container = document.getElementById('semGridContainer');
+  const allStats = computeAllStats();
+
+  let html = '';
+  for(let s=1; s<=8; s++){
+    const courses = state.semesters[s] || [];
+    const stat = allStats.semStats[s];
+    const isCurrent = (s === state.currentSemester);
+    const isCompleted = (stat.sgpa !== null);
+
+    let badgeClass = 'empty', badgeText = 'Empty';
+    if(isCurrent) { badgeClass = 'active'; badgeText = 'Active'; }
+    else if(isCompleted) { badgeClass = 'completed'; badgeText = 'Completed'; }
+
+    html += `
+      <div class="glass spot sem-card">
+        <div class="sem-card-head">
+          <h3>Semester ${s}</h3>
+          <span class="sem-badge ${badgeClass}">${badgeText}</span>
+        </div>
+        <div class="sem-stats-row">
+          <div class="sem-stat-item"><label>Subjects</label><val>${courses.length}</val></div>
+          <div class="sem-stat-item"><label>Credits</label><val>${stat.credits}</val></div>
+          <div class="sem-stat-item"><label>SGPA</label><val style="color:var(--indigo);">${stat.sgpa !== null ? stat.sgpa.toFixed(2) : 'N/A'}</val></div>
+          <div class="sem-stat-item"><label>Points</label><val>${stat.points.toFixed(1)}</val></div>
+        </div>
+        <div class="sem-card-actions">
+          <button class="btn btn-primary" style="flex:1;" onclick="openSemester(${s})">Open Workspace</button>
+          <button class="btn btn-ghost" onclick="printReportForSem(${s})">Report</button>
+        </div>
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+}
+
+function openSemester(s){
+  state.currentSemester = s;
+  logHistory(`Switched to Semester ${s} from Semester Overview.`);
+  triggerAutoSave();
+  switchView('dashboard');
+}
+
+function printReportForSem(s){
+  document.getElementById('reportSemSelect').value = s;
+  switchView('reports');
+}
+
+/* =========================================================
+   ANALYTICS VIEW
+========================================================= */
+function renderAnalyticsView(){
+  const allStats = computeAllStats();
+  
+  let highest = 0;
+  for(let s=1; s<=8; s++){
+    const sg = allStats.semStats[s].sgpa;
+    if(sg !== null && sg > highest) highest = sg;
+  }
+
+  document.getElementById('analyticHighestSgpa').textContent = highest ? highest.toFixed(2) : '0.00';
+  document.getElementById('analyticCgpa').textContent = allStats.cgpa.toFixed(2);
+  document.getElementById('analyticCompletedSems').textContent = `${allStats.completedCount} / 8`;
+  document.getElementById('analyticTotalCredits').textContent = `${allStats.totalOverallCredits} / 160`;
+
+  const svgWrap = document.getElementById('analyticsChartWrap');
+  svgWrap.innerHTML = `<svg viewBox="0 0 800 200" preserveAspectRatio="none" width="100%" height="200" id="analyticsBigSvg"></svg>`;
+  renderTrendChartSvg('analyticsBigSvg');
+
+  const tbodyEl = document.getElementById('analyticsTableBody');
+  let cumulativeSum = 0;
+  let cumulativeCount = 0;
+
+  let rowsHtml = '';
+  for(let s=1; s<=8; s++){
+    const courses = state.semesters[s] || [];
+    const stat = allStats.semStats[s];
+    if(stat.sgpa !== null){
+      cumulativeSum += stat.sgpa;
+      cumulativeCount++;
+    }
+    const currentCgpa = cumulativeCount > 0 ? (cumulativeSum / cumulativeCount) : 0;
+
+    rowsHtml += `<tr>
+      <td><strong>Semester ${s}</strong> ${s === state.currentSemester ? '<span class="badge-sm b-basket">Active</span>' : ''}</td>
+      <td class="mono">${courses.length}</td>
+      <td class="mono">${stat.credits}</td>
+      <td class="mono" style="font-weight:700; color:var(--indigo);">${stat.sgpa !== null ? stat.sgpa.toFixed(2) : 'N/A'}</td>
+      <td class="mono" style="font-weight:700;">${cumulativeCount > 0 ? currentCgpa.toFixed(2) : 'N/A'}</td>
+      <td><button class="btn btn-ghost" style="padding:4px 10px; font-size:11px;" onclick="openSemester(${s})">Open</button></td>
+    </tr>`;
+  }
+  tbodyEl.innerHTML = rowsHtml;
+}
+
+/* =========================================================
+   REPORTS VIEW & CLEAN PRINTING (WITH USN)
+========================================================= */
+function renderReportsView(){
+  const select = document.getElementById('reportSemSelect');
+  select.value = state.currentSemester;
+  renderReportPreview();
+}
+
+function renderReportPreview(){
+  const semToPrint = parseInt(document.getElementById('reportSemSelect').value);
+  const courses = state.semesters[semToPrint] || [];
+  const stat = calculateSemStats(courses);
+  const allStats = computeAllStats();
+
+  let rowsHtml = '';
+  if(courses.length === 0){
+    rowsHtml = `<tr><td colspan="6" style="text-align:center; padding:20px; color:var(--ink-soft);">No courses registered for Semester ${semToPrint}.</td></tr>`;
+  } else {
+    rowsHtml = courses.map((c, i) => {
+      const gp = gpFor(c.grade);
+      const cp = c.credits * gp;
+      return `<tr>
+        <td class="mono">${i+1}</td>
+        <td><strong>${c.name}</strong><br><small style="color:var(--ink-soft);">${c.code}</small></td>
+        <td class="mono" style="text-align:center;">${c.credits}</td>
+        <td class="mono" style="text-align:center; font-weight:700;">${c.grade}</td>
+        <td class="mono" style="text-align:center;">${gp}</td>
+        <td class="mono" style="text-align:center;">${cp}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  const preview = document.getElementById('reportPreviewContainer');
+  preview.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--glass-border); padding-bottom:14px; margin-bottom:20px;">
+      <div>
+        <h2 style="font-size:22px; font-weight:800; text-transform:uppercase;">SCFC Academic Grade Report</h2>
+        <p style="font-size:13px; color:var(--ink-soft); margin-top:2px;">Official Semester Performance Transcript</p>
+      </div>
+      <div style="text-align:right;">
+        <span style="font-size:11px; color:var(--ink-soft); display:block;">Date</span>
+        <strong style="font-size:13px;">${new Date().toLocaleDateString()}</strong>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:16px; margin-bottom:24px;">
+      <div>
+        <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Student Name</span>
+        <strong style="font-size:16px;" class="student-name-display">${state.studentName || 'Student'}</strong>
+      </div>
+      <div>
+        <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">USN</span>
+        <strong style="font-size:16px;" class="student-usn-display">${state.usn || 'N/A'}</strong>
+      </div>
+      <div>
+        <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Semester</span>
+        <strong style="font-size:16px;">Semester ${semToPrint}</strong>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-bottom:24px;">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Course Title & Code</th>
+            <th style="text-align:center;">Credits</th>
+            <th style="text-align:center;">Grade</th>
+            <th style="text-align:center;">GP</th>
+            <th style="text-align:center;">CP</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml}
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:16px;">
+      <div>
+        <span style="font-size:11px; color:var(--ink-soft); display:block;">Total Credits (Sem)</span>
+        <strong style="font-size:18px;">${stat.credits}</strong>
+      </div>
+      <div style="text-align:center;">
+        <span style="font-size:11px; color:var(--ink-soft); display:block;">Semester SGPA</span>
+        <strong style="font-size:22px; color:var(--indigo);">${stat.sgpa !== null ? stat.sgpa.toFixed(2) : 'N/A'}</strong>
+      </div>
+      <div style="text-align:right;">
+        <span style="font-size:11px; color:var(--ink-soft); display:block;">Overall CGPA</span>
+        <strong style="font-size:22px; color:var(--purple);">${allStats.cgpa.toFixed(2)}</strong>
+      </div>
+    </div>
+  `;
+  updateStudentNameDisplays();
+}
+
+function triggerPrintSelectedReport(){
+  const semToPrint = parseInt(document.getElementById('reportSemSelect').value);
+  printCleanReport(semToPrint);
+}
+
+function printCleanReport(semNum){
+  const courses = state.semesters[semNum] || [];
+  const stat = calculateSemStats(courses);
+  const allStats = computeAllStats();
+
+  let rowsHtml = '';
+  if(courses.length === 0){
+    rowsHtml = `<tr><td colspan="6" style="text-align:center; padding:15px; color:#666;">No courses registered for Semester ${semNum}.</td></tr>`;
+  } else {
+    rowsHtml = courses.map((c, i) => {
+      const gp = gpFor(c.grade);
+      const cp = c.credits * gp;
+      return `<tr>
+        <td style="padding:8px; border-bottom:1px solid #ddd; font-family:monospace;">${i+1}</td>
+        <td style="padding:8px; border-bottom:1px solid #ddd;">
+          <strong>${c.name}</strong><br><small style="color:#666;">${c.code}</small>
+        </td>
+        <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${c.credits}</td>
+        <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center; font-weight:bold;">${c.grade}</td>
+        <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${gp}</td>
+        <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${cp}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  const printArea = document.getElementById('printableReport');
+  printArea.innerHTML = `
+    <div style="font-family:'Inter', Arial, sans-serif; max-width:800px; margin:0 auto; padding:20px; color:#000; background:#fff;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #000; padding-bottom:12px; margin-bottom:20px;">
+        <div>
+          <h1 style="font-size:22px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.05em;">SCFC Academic Grade Report</h1>
+          <p style="margin:4px 0 0 0; font-size:13px; color:#444;">School of Computer Science & Engineering</p>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px; color:#666;">Date Generated</div>
+          <div style="font-size:13px; font-weight:600;">${new Date().toLocaleDateString()}</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:8px; padding:16px; margin-bottom:24px;">
+        <div>
+          <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Student Name</span>
+          <strong style="font-size:16px; color:#111;">${state.studentName || 'N/A'}</strong>
+        </div>
+        <div>
+          <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">USN</span>
+          <strong style="font-size:16px; color:#111;">${state.usn || 'N/A'}</strong>
+        </div>
+        <div>
+          <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Semester</span>
+          <strong style="font-size:16px; color:#111;">Semester ${semNum}</strong>
+        </div>
+      </div>
+
+      <table style="width:100%; border-collapse:collapse; margin-bottom:24px; font-size:13px;">
+        <thead>
+          <tr style="background:#f1f3f5; border-bottom:2px solid #dee2e6; text-align:left;">
+            <th style="padding:10px 8px; width:40px;">#</th>
+            <th style="padding:10px 8px;">Course Title & Code</th>
+            <th style="padding:10px 8px; text-align:center;">Credits</th>
+            <th style="padding:10px 8px; text-align:center;">Grade</th>
+            <th style="padding:10px 8px; text-align:center;">GP</th>
+            <th style="padding:10px 8px; text-align:center;">CP</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml}
+        </tbody>
+      </table>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#f8f9fa; border:1.5px solid #000; border-radius:8px; padding:16px; margin-top:20px;">
+        <div>
+          <span style="font-size:12px; color:#444; display:block;">Total Credits</span>
+          <strong style="font-size:18px;">${stat.credits}</strong>
+        </div>
+        <div style="text-align:center;">
+          <span style="font-size:12px; color:#444; display:block;">Semester SGPA</span>
+          <strong style="font-size:22px; color:#2563eb;">${stat.sgpa !== null ? stat.sgpa.toFixed(2) : 'N/A'}</strong>
+        </div>
+        <div style="text-align:right;">
+          <span style="font-size:12px; color:#444; display:block;">Overall CGPA</span>
+          <strong style="font-size:22px; color:#7c3aed;">${allStats.cgpa.toFixed(2)}</strong>
+        </div>
+      </div>
+
+      <div style="margin-top:40px; border-top:1px solid #eee; padding-top:12px; font-size:11px; color:#888; text-align:center;">
+        Computer-generated Official Transcript • SCFC Grade Calculator
+      </div>
+    </div>
+  `;
+
+  window.print();
+}
+
+/* =========================================================
+   SETTINGS VIEW
+========================================================= */
+function renderSettingsView(){
+  document.getElementById('settingsNameInput').value = state.studentName || '';
+  document.getElementById('settingsUsnInput').value = state.usn || '';
+}
+
+function saveStudentNameSettings(){
+  const input = document.getElementById('settingsNameInput');
+  const name = input.value.trim();
+  if(name){
+    state.studentName = name;
+    logHistory(`Updated student name to "${name}" from Settings.`);
+    triggerAutoSave();
+    updateStudentNameDisplays();
+    alert('Student Name updated successfully in MongoDB!');
+  }
+}
+
+function exportDataBackup(){
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", `scfc_grade_data_${state.usn || 'student'}_${new Date().toISOString().slice(0,10)}.json`);
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+  logHistory('Exported JSON data backup.');
+}
+
+/* =========================================================
+   HISTORY VIEW
+========================================================= */
+function renderHistoryView(){
+  const container = document.getElementById('historyListContainer');
+  if(!state.history || state.history.length === 0){
+    container.innerHTML = `<div style="color:var(--ink-soft); font-size:13px; text-align:center; padding:20px;">No activity history recorded yet.</div>`;
+    return;
+  }
+  container.innerHTML = state.history.map(item => `
+    <div class="history-item">
+      <div>
+        <strong>${item.text}</strong>
+      </div>
+      <span class="mono" style="font-size:11px; color:var(--ink-soft);">${item.timestamp}</span>
+    </div>
+  `).join('');
+}
+
+function clearHistoryLogs(){
+  state.history = [];
+  triggerAutoSave();
+  renderHistoryView();
+}
+
+/* =========================================================
+   GRADE SYSTEM VIEW
+========================================================= */
+function renderGradeSystemView(){
+  // Static view
+}
+
+/* =========================================================
+   ADD SUBJECTS MODAL & CROSS-SEMESTER SELECTION LOCKING
+========================================================= */
+const overlay = document.getElementById('modalOverlay');
+const modalList = document.getElementById('modalList');
+const basketSelect = document.getElementById('basketSelect');
+const searchInput = document.getElementById('modalSearchInput');
+let pendingSelected = new Set();
+
+[...new Set(courseBankUnique.map(c=>c.basket))].sort().forEach(b=>{
+  const opt = document.createElement('option');
+  opt.value = b; opt.textContent = b;
+  basketSelect.appendChild(opt);
+});
+
+function getTakenCourseMap(){
+  const takenMap = new Map();
+  for(let s=1; s<=8; s++){
+    const list = state.semesters[s] || [];
+    list.forEach(r => takenMap.set(r.code, s));
+  }
+  return takenMap;
+}
+
+function renderModal(){
+  const q = searchInput.value.trim().toLowerCase();
+  const basket = basketSelect.value;
+  const takenMap = getTakenCourseMap();
+
+  const filtered = courseBankUnique.filter(c=>{
+    const matchesQ = !q || c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q);
+    const matchesB = basket==='all' || c.basket===basket;
+    return matchesQ && matchesB;
+  });
+
+  if(filtered.length===0){
+    modalList.innerHTML = `<div class="no-results">No subjects match your search.</div>`;
+  } else {
+    modalList.innerHTML = filtered.map(c=>{
+      const takenInSem = takenMap.get(c.code);
+      const already = (takenInSem !== undefined);
+      const selected = pendingSelected.has(c.code);
+      
+      let badgeInfo = '';
+      if(already) {
+        badgeInfo = ` · taken in Semester ${takenInSem}`;
+      }
+
+      return `<div class="course-row ${selected?'selected':''} ${already?'already':''}" data-code="${c.code}">
+        <div class="chk">${selected?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>':''}</div>
+        <div class="crow-info"><b>${c.name}</b><span>${c.code}${badgeInfo}</span></div>
+        <div class="crow-badges">
+          <span class="badge-sm b-cr">${c.credits} CR</span>
+          <span class="badge-sm b-basket">${c.basket}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  modalList.querySelectorAll('.course-row:not(.already)').forEach(row=>{
+    row.addEventListener('click', ()=>{
+      const code = row.dataset.code;
+      if(pendingSelected.has(code)) pendingSelected.delete(code); else pendingSelected.add(code);
+      renderModal();
+    });
+  });
+  document.getElementById('selCount').textContent = pendingSelected.size;
+}
+
+function openModal(){
+  pendingSelected = new Set();
+  searchInput.value = '';
+  basketSelect.value = 'all';
+  renderModal();
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){ overlay.classList.remove('open'); document.body.style.overflow=''; }
+
+document.getElementById('openModalBtn').addEventListener('click', openModal);
+document.getElementById('navAddSubjects').addEventListener('click', (e)=>{ e.preventDefault(); openModal(); });
+document.getElementById('qaAdd').addEventListener('click', openModal);
+const fab = document.getElementById('fabAdd');
+if(fab) fab.addEventListener('click', openModal);
+document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
+overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeModal(); });
+searchInput.addEventListener('input', renderModal);
+basketSelect.addEventListener('change', renderModal);
+
+document.getElementById('addSelectedBtn').addEventListener('click', ()=>{
+  const currentRows = state.semesters[state.currentSemester] || [];
+  const takenMap = getTakenCourseMap();
+  let addedCount = 0;
+  
+  pendingSelected.forEach(code=>{
+    if(takenMap.has(code)) return;
+    const c = courseBankUnique.find(x=>x.code===code);
+    if(c) {
+      currentRows.push({code:c.code, name:c.name, credits:c.credits, grade:'S'});
+      addedCount++;
+    }
+  });
+  if(addedCount > 0){
+    logHistory(`Added ${addedCount} subject(s) to Semester ${state.currentSemester}.`);
+    triggerAutoSave();
+  }
+  closeModal();
+  renderAll();
+});
+
+// Theme toggle
+const root = document.documentElement;
+function toggleTheme(){
+  const nextTheme = root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', nextTheme);
+  state.theme = nextTheme;
+  triggerAutoSave();
+}
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+// Spot tracking
+document.querySelectorAll('.spot').forEach(card=>{
+  card.addEventListener('mousemove', (e)=>{
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX-rect.left)+'px');
+    card.style.setProperty('--my', (e.clientY-rect.top)+'px');
+  });
+});
+
+// Floating particles
+const pWrap = document.getElementById('particles');
+for(let i=0;i<22;i++){
+  const p = document.createElement('div');
+  p.className='particle';
+  p.style.left = Math.random()*100+'%';
+  p.style.top = (100+Math.random()*20)+'%';
+  p.style.animationDuration = (14+Math.random()*14)+'s';
+  p.style.animationDelay = (Math.random()*14)+'s';
+  p.style.width = p.style.height = (2+Math.random()*3)+'px';
+  pWrap.appendChild(p);
+}
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+checkSavedSession();
+</script>
+</body>
+</html>
