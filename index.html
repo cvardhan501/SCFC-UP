@@ -2992,7 +2992,42 @@
       }
     }
 
-    async function handleLoginSubmit() {
+    // async function handleLoginSubmit() {
+    //   const name = document.getElementById('loginNameInput').value.trim();
+    //   const usn = document.getElementById('loginUsnInput').value.trim();
+    //   const banner = document.getElementById('loginBanner');
+
+    //   if (!name || !usn) {
+    //     banner.textContent = 'Please fill in both Student Name and USN.';
+    //     banner.className = 'auth-banner error';
+    //     return;
+    //   }
+
+    //   try {
+    //     const res = await fetch('/api/auth/login', {
+    //       method: 'POST',
+    //       headers: { 'Content-Type': 'application/json' },
+    //       body: JSON.stringify({ name, usn })
+    //     });
+    //     const data = await res.json();
+
+    //     if (!res.ok || !data.success) {
+    //       banner.textContent = data.message || 'Student not found. Please Register.';
+    //       banner.className = 'auth-banner error';
+    //       return;
+    //     }
+
+    //     // Success Login
+    //     applyStudentData(data.student);
+    //     localStorage.setItem('scfc_active_usn', data.student.usn);
+    //     document.getElementById('authScreenOverlay').classList.remove('open');
+    //     document.getElementById('mainAppShell').style.display = 'block';
+    //   } catch (e) {
+    //     banner.textContent = 'Server connection error. Please try again.';
+    //     banner.className = 'auth-banner error';
+    //   }
+    // }
+async function handleLoginSubmit() {
       const name = document.getElementById('loginNameInput').value.trim();
       const usn = document.getElementById('loginUsnInput').value.trim();
       const banner = document.getElementById('loginBanner');
@@ -3012,7 +3047,8 @@
         const data = await res.json();
 
         if (!res.ok || !data.success) {
-          banner.textContent = data.message || 'Student not found. Please Register.';
+          // This line makes sure it uses the exact error message from your server code
+          banner.textContent = data.message || 'Login failed.';
           banner.className = 'auth-banner error';
           return;
         }
