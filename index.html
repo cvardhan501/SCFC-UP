@@ -1182,7 +1182,7 @@
 
     .dash-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 18px;
       align-items: stretch;
     }
@@ -1190,14 +1190,79 @@
     .dash-grid .glass.p-6 {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      align-items: flex-start;
-      text-align: left;
+      justify-content: center;
+      align-items: stretch;
+      text-align: center;
+      min-height: 0px;
+      padding: 18px 22px;
+      gap: 10px;
+    }
+
+    .dash-grid .glass.p-6 > * {
+      width: 100%;
+    }
+
+    .dash-grid .glass.p-6 h3 {
+      margin: 0;
+      line-height: 1.2;
+      font-size: 1.05rem;
+      font-weight: 700;
     }
 
     .dash-grid .glass.p-6 .val {
       width: 100%;
-      text-align: left;
+      text-align: center;
+      margin: 0;
+      font-size: 2.4rem;
+      line-height: 1.05;
+    }
+    @media (max-width: 640px) {
+      .dash-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .dash-grid .glass.p-6 {
+        min-height: 120px;
+        padding: 12px 14px;
+      }
+      .dash-grid .glass.p-6 .val {
+        font-size: 1.8rem;
+      }
+    }
+    /* Print layout adjustments to avoid overlapping header/text */
+    @media print {
+      * { -webkit-print-color-adjust: exact; color-adjust: exact; }
+      body { background: #fff !important; color: #000 !important; }
+      /* leave space for browser print header to avoid overlap */
+      body, #printableReport { padding-top: 22mm !important; }
+      /* Hide non-essential UI */
+      .dock, .topbar, .rsidebar, .ws-controls, .dock-logo, .dock-user { display: none !important; }
+      /* Use single-column shell for print */
+      .shell { grid-template-columns: 1fr !important; max-width: 100% !important; padding: 0 !important; }
+      /* Reduce hero size so header doesn't overlap */
+      .hero h1 { font-size: 20px !important; line-height: 1.1 !important; }
+      .hero p { font-size: 12px !important; color: #333 !important; }
+      /* Make cards print-friendly */
+      .dash-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+      .dash-grid .glass.p-6 { min-height: 120px !important; padding: 12px !important; background: transparent !important; box-shadow: none !important; border: 1px solid #ddd !important; }
+      .dash-grid .glass.p-6 .val { font-size: 1.6rem !important; color: #000 !important; }
+      .glass::before, .glass.spot::after { display: none !important; }
+      /* hide large hero/banner that collides with browser print header */
+      .hero { display: none !important; }
+      /* Prevent page breaks inside cards */
+      .glass { page-break-inside: avoid; break-inside: avoid; }
+    }
+
+    .dash-grid .glass.p-6 p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .dash-grid .glass.p-6 .prog-bar {
+      width: 100%;
+      max-width: 100%;
     }
 
     .grid-3 {
@@ -1212,7 +1277,7 @@
       flex-direction: column;
       gap: 14px;
       height: 100%;
-      min-height: 360px;
+      min-height: 200px;
       overflow: hidden;
     }
 
@@ -2048,13 +2113,18 @@
         display: block !important;
       }
 
+      /* Only show the clean printable report; hide other page elements to avoid duplicates */
+      body > *:not(#printableReport) { display: none !important; }
       #printableReport {
         display: block !important;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        width: auto !important;
+        max-width: 100% !important;
         background: #ffffff !important;
+        margin: 0 auto !important;
+        padding: 8mm !important;
       }
 
       @page {
@@ -2203,7 +2273,7 @@
               <path d="M21 21l-4.3-4.3" />
             </svg>
             <input type="text" placeholder="Search subjects, semesters, reports..." id="topSearchInput">
-            <span class="kbd">⌘K</span>
+            <span class="kbd"></span>
           </div>
           <button class="icon-btn" id="themeToggle" title="Toggle theme">
             <svg class="theme-icon-moon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -2716,7 +2786,7 @@
                 <option value="not-started">Not Started</option>
               </select>
             </div>
-            <button class="btn btn-ghost" onclick="window.print()">Export Tracker Report</button>
+            <button class="btn btn-ghost" onclick="printTrackerReport()">Export Tracker Report</button>
           </div>
 
           <h2 style="margin:24px 0 16px 0; font-size:20px;">Basket Progress</h2>
@@ -3278,15 +3348,145 @@
       { code: 'CSE3001', name: 'Theory of Computation', credits: 3, basket: 'Common Elective' },
       { code: 'MAT2001', name: 'Advanced Statistics', credits: 3, basket: 'Common Elective' },
 
-      // Specialization Baskets
-      { code: 'CSE3010', name: 'AI & ML Applications', credits: 3, basket: 'AI & ML' },
-      { code: 'CSE3015', name: 'Natural Language Processing', credits: 3, basket: 'AI & ML' },
-      { code: 'CSE3013', name: 'Deep Neural Networks', credits: 3, basket: 'AI & ML' },
-      { code: 'CSE3021', name: 'Ethical Hacking', credits: 3, basket: 'Cyber Security' },
-      { code: 'CSE2022', name: 'Front End Engineering', credits: 3, basket: 'Fullstack Development' },
-      { code: 'CSE2023', name: 'Backend Engineering', credits: 3, basket: 'Fullstack Development' },
-      { code: 'CSE2035', name: 'DevOps', credits: 3, basket: 'DevOps' },
-    ];
+      // // Specialization Baskets
+      // { code: 'CSE3010', name: 'AI & ML Applications', credits: 3, basket: 'AI & ML' },
+      // { code: 'CSE3015', name: 'Natural Language Processing', credits: 3, basket: 'AI & ML' },
+      // { code: 'CSE3013', name: 'Deep Neural Networks', credits: 3, basket: 'AI & ML' },
+      // { code: 'CSE3012', name: 'Optimization Techniques in machine Learning', credits: 3, basket: 'AI & ML' },
+      // { code: 'CSE3014', name: 'Reinforcement Learning Techniques', credits: 3, basket: 'AI & ML' },
+      // { code: 'CSE4005', name: 'Industrial Applications of AI & ML', credits: 3, basket: 'AI & ML' },
+      // { code: 'CSE3021', name: 'Ethical Hacking', credits: 3, basket: 'Cyber Security' },
+      // { code: 'CSE3022', name: 'Intrusion Detection and Prevention System', credits: 3, basket: 'Cyber Security' },
+      // { code: 'CSE2022', name: 'Front End Engineering', credits: 3, basket: 'Fullstack Development' },
+      // { code: 'CSE2023', name: 'Backend Engineering', credits: 3, basket: 'Fullstack Development' },
+      // { code: 'CSE2035', name: 'DevOps', credits: 3, basket: 'DevOps' },
+  
+  // AI & ML
+  { code: "CSE3010", name: "AI & ML Applications", credits: 3, basket: "AI & ML" },
+  { code: "CSE3015", name: "Natural Language Processing", credits: 3, basket: "AI & ML" },
+  { code: "CSE3013", name: "Deep Neural Networks", credits: 3, basket: "AI & ML" },
+  { code: "CSE3012", name: "Optimization Techniques in Machine Learning", credits: 3, basket: "AI & ML" },
+  { code: "CSE3014", name: "Reinforcement Learning Techniques", credits: 3, basket: "AI & ML" },
+  { code: "CSE4005", name: "Industrial Applications of AI & ML", credits: 3, basket: "AI & ML" },
+
+  // Cyber Security
+  { code: "CSE3022", name: "Intrusion Detection and Prevention System", credits: 3, basket: "Cyber Security" },
+  { code: "CSE3021", name: "Ethical Hacking", credits: 3, basket: "Cyber Security" },
+  { code: "CSE3025", name: "Networking and System Administration", credits: 3, basket: "Cyber Security" },
+  { code: "CSE3020", name: "Social Media Privacy and Security", credits: 3, basket: "Cyber Security" },
+  { code: "CSE3023", name: "Fundamentals of Cloud Security", credits: 3, basket: "Cyber Security" },
+  { code: "CSE3024", name: "Penetration Testing and Incident Response", credits: 3, basket: "Cyber Security" },
+  { code: "CSE3026", name: "Blockchain and Distributed Ledger Technology", credits: 3, basket: "Cyber Security" },
+  { code: "CSE4009", name: "Industrial Applications of Cyber Security", credits: 3, basket: "Cyber Security" },
+
+  // Data Analytics
+  { code: "CSE1008", name: "Statistical Foundations of Data Analytics", credits: 3, basket: "Data Analytics" },
+  { code: "CSE1012", name: "R Programming for Data Analytics", credits: 3, basket: "Data Analytics" },
+  { code: "CSE1013", name: "Exploratory Data Analysis", credits: 3, basket: "Data Analytics" },
+  { code: "CSE2024", name: "Web Data Analytics", credits: 3, basket: "Data Analytics" },
+  { code: "CSE2025", name: "Predictive Analytics", credits: 3, basket: "Data Analytics" },
+  { code: "CSE2026", name: "Social Media Analytics", credits: 3, basket: "Data Analytics" },
+  { code: "CSE2027", name: "Healthcare Analytics", credits: 3, basket: "Data Analytics" },
+  { code: "CSE2028", name: "Big Data Analytics", credits: 3, basket: "Data Analytics" },
+  { code: "CSE2029", name: "Business Analytics Fundamentals", credits: 3, basket: "Data Analytics" },
+  { code: "CSE4010", name: "Industrial Applications of Data Analytics", credits: 3, basket: "Data Analytics" },
+
+  // IoT
+  { code: "ECE2004", name: "Sensor Technology, Embedded Systems and User Interface", credits: 3, basket: "IoT" },
+  { code: "ECE2002", name: "IoT Platforms and Application Development", credits: 3, basket: "IoT" },
+  { code: "CSE2031", name: "Wireless Communication in IoT", credits: 3, basket: "IoT" },
+  { code: "ECE2001", name: "IoT Architecture and Protocols", credits: 3, basket: "IoT" },
+  { code: "CSE2032", name: "Mobile Application for IoT", credits: 3, basket: "IoT" },
+  { code: "CSE2033", name: "Cloud Computing for IoT", credits: 3, basket: "IoT" },
+  { code: "CSE2030", name: "Big Data Analytics for IoT", credits: 3, basket: "IoT" },
+  { code: "ECE2003", name: "Industrial Internet of Things", credits: 3, basket: "IoT" },
+  { code: "ECE2005", name: "Internet of Medical Things", credits: 3, basket: "IoT" },
+
+  // Cloud Computing
+  { code: "CSE2037", name: "Database and Network Management", credits: 3, basket: "Cloud Computing" },
+  { code: "CSE2036", name: "Cloud Services and APIs", credits: 3, basket: "Cloud Computing" },
+  { code: "CSE2034", name: "Design and Operation of Data Center", credits: 3, basket: "Cloud Computing" },
+  { code: "CSE2076", name: "System Provisioning and Monitoring", credits: 3, basket: "Cloud Computing" },
+  { code: "CSE2038", name: "Cloud Computing Platforms", credits: 3, basket: "Cloud Computing" },
+  { code: "CSE3028", name: "Edge Computing Paradigms", credits: 3, basket: "Cloud Computing" },
+  { code: "CSE2039", name: "Middleware Technologies", credits: 3, basket: "Cloud Computing" },
+  { code: "CSE4003", name: "Industrial Applications of Cloud Computing", credits: 3, basket: "Cloud Computing" },
+
+  // Robotics
+  { code: "ECE5002", name: "Principles of Robotics and RoS", credits: 3, basket: "Robotics" },
+  { code: "ECE2037", name: "Drone Technology", credits: 3, basket: "Robotics" },
+  { code: "CSE5096", name: "Robotic Process Automation", credits: 3, basket: "Robotics" },
+  { code: "CSE5099", name: "Robot Motion Planning", credits: 3, basket: "Robotics" },
+  { code: "ECE5005", name: "Robot Kinematics", credits: 3, basket: "Robotics" },
+  { code: "ECE3023", name: "Mechatronic System Design", credits: 3, basket: "Robotics" },
+  { code: "CSE5098", name: "Computer Vision", credits: 3, basket: "Robotics" },
+  { code: "ECE3026", name: "Building Robots", credits: 3, basket: "Robotics" },
+  { code: "CSE3031", name: "Autonomous Mobile Robots", credits: 3, basket: "Robotics" },
+  { code: "CSE3032", name: "Human-Robot Interaction", credits: 3, basket: "Robotics" },
+  { code: "CSE3033", name: "Microrobotics", credits: 3, basket: "Robotics" },
+  { code: "CSE4004", name: "Industrial Applications of Robotics", credits: 3, basket: "Robotics" },
+
+  // Big Data
+  { code: "CSE3019", name: "Big Data Security and Privacy", credits: 3, basket: "Big Data" },
+  { code: "CSE1011", name: "Information Visualization", credits: 3, basket: "Big Data" },
+  { code: "CSE2080", name: "Data Engineering Pipelines", credits: 3, basket: "Big Data" },
+  { code: "CSE3034", name: "Data Ingestion Techniques", credits: 3, basket: "Big Data" },
+  { code: "CSE4011", name: "Industrial Applications of Big Data", credits: 3, basket: "Big Data" },
+
+  // Full Stack Development
+  { code: "CSE2022", name: "Front End Engineering", credits: 3, basket: "Full Stack Development" },
+  { code: "CSE2023", name: "Backend Engineering", credits: 3, basket: "Full Stack Development" },
+  { code: "CSE2041", name: "NoSQL Data Bases and Retrieval Augmented Generation", credits: 3, basket: "Full Stack Development" },
+  { code: "CSE3017", name: "Java, Springboot and Microservices", credits: 3, basket: "Full Stack Development" },
+  { code: "CSE3018", name: "MEAN/MERN Stack", credits: 3, basket: "Full Stack Development" },
+  { code: "CSE4008", name: "Industrial Applications of Full Stack Development", credits: 3, basket: "Full Stack Development" },
+  { code: "CSE4012", name: "Cross Platform Mobile App Development", credits: 3, basket: "Full Stack Development" },
+  { code: "CSE4013", name: "Full Stack AI", credits: 3, basket: "Full Stack Development" },
+
+  // DevOps
+  { code: "CSE2035", name: "DevOps", credits: 3, basket: "DevOps" },
+  { code: "CSE2042", name: "Development Automation", credits: 3, basket: "DevOps" },
+  { code: "CSE2043", name: "Advanced Linux and Shell Scripting", credits: 3, basket: "DevOps" },
+  { code: "CSE2040", name: "Continuous Integration and Continuous Deployment", credits: 3, basket: "DevOps" },
+  { code: "CSE2048", name: "Microservices and Service Oriented Architecture", credits: 3, basket: "DevOps" },
+  { code: "CSE2077", name: "Infrastructure Provisioning", credits: 3, basket: "DevOps" },
+  { code: "CSE2078", name: "Build and Release Management", credits: 3, basket: "DevOps" },
+  { code: "CSE2079", name: "Containerization and Orchestration", credits: 3, basket: "DevOps" },
+  { code: "CSE4007", name: "Industrial Applications of DevOps", credits: 3, basket: "DevOps" },
+
+  //open electives
+   { code: "PSY1102", name: "Consumer Behaviour", credits: 2, basket: "Open Elective" },
+  { code: "SSK3002", name: "Public Speaking and Personality Development", credits: 1, basket: "Open Elective" },
+  { code: "KAN1005", name: "Kannada Kali", credits: 1, basket: "Open Elective" },
+  { code: "KAN1004", name: "Kannada Literature", credits: 3, basket: "Open Elective" },
+
+  { code: "POS1101", name: "Cinematic Politics and Affective Governance", credits: 3, basket: "Open Elective" },
+  { code: "SOC1101", name: "Foundations for Applied Sociology", credits: 3, basket: "Open Elective" },
+  { code: "POS1102", name: "Ethics and Values", credits: 0, basket: "Open Elective" },
+
+  { code: "PHY1004", name: "Engineering Physics", credits: 3, basket: "Open Elective" },
+  { code: "CHE1006", name: "Sustainable Electronic Waste Management", credits: 3, basket: "Open Elective" },
+  { code: "CHE1007", name: "Chemistry for Computer Applications", credits: 3, basket: "Open Elective" },
+
+  { code: "MGT2104", name: "Introduction to Digital Marketing", credits: 3, basket: "Open Elective" },
+
+  { code: "CSE5008", name: "Data Communications and Networks", credits: 3, basket: "Open Elective" },
+  { code: "CSE5024", name: "Advanced Software Testing", credits: 3, basket: "Open Elective" },
+  { code: "CSE5007", name: "Software Development Framework", credits: 3, basket: "Open Elective" },
+  { code: "CSE5013", name: "C# and .NET Framework", credits: 2, basket: "Open Elective" },
+  { code: "CSE5060", name: "Operating Systems and Virtual Machines", credits: 3, basket: "Open Elective" },
+  { code: "CSE5064", name: "Cryptography and Information Security", credits: 3, basket: "Open Elective" },
+
+  { code: "DES1015", name: "Fashion and Visual Merchandising", credits: 3, basket: "Open Elective" },
+  { code: "DES2019", name: "Fashion Communication", credits: 2, basket: "Open Elective" },
+  { code: "DES2021", name: "Traditional Indian Textile", credits: 2, basket: "Open Elective" },
+  { code: "DES2020", name: "World Costume", credits: 4, basket: "Open Elective" },
+  { code: "DES1009", name: "Pattern Making and Garment Construction - Children", credits: 2, basket: "Open Elective" },
+  { code: "DES1007", name: "Textile Manufacturing", credits: 3, basket: "Open Elective" },
+  { code: "DES4001", name: "Quality Assurance and Production Management", credits: 3, basket: "Open Elective" },
+  { code: "DES4002", name: "Fashion Marketing Management", credits: 3, basket: "Open Elective" },
+  { code: "DES2002", name: "Social and Psychological Aspects of Clothing", credits: 2, basket: "Open Elective" },
+];
 
     const seen = new Set();
     const courseBankUnique = courseBank.filter(c => {
@@ -4712,6 +4912,91 @@
     </div>
   `;
 
+      window.print();
+    }
+
+    function printTrackerReport() {
+      // collect all courses across semesters
+      let rows = '';
+      for (let s = 1; s <= 8; s++) {
+        const courses = state.semesters[s] || [];
+        courses.forEach((c, i) => {
+          const gp = gpFor(c.grade);
+          const cp = c.credits * gp;
+          rows += `<tr>
+            <td style="padding:8px; border-bottom:1px solid #ddd;">${s}</td>
+            <td style="padding:8px; border-bottom:1px solid #ddd;">${c.name}<br><small style="color:#666;">${c.code}</small></td>
+            <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${c.credits}</td>
+            <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center; font-weight:bold;">${c.grade}</td>
+            <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${gp}</td>
+            <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${cp}</td>
+          </tr>`;
+        });
+      }
+
+      const allStats = computeAllStats();
+      const printArea = document.getElementById('printableReport');
+      printArea.innerHTML = `
+      <div style="font-family:'Inter', Arial, sans-serif; max-width:900px; margin:0 auto; padding:16px; color:#000; background:#fff;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #000; padding-bottom:12px; margin-bottom:20px;">
+          <div>
+            <h1 style="font-size:20px; font-weight:800; margin:0; text-transform:uppercase;">SCFC Tracker Report</h1>
+            <p style="margin:4px 0 0 0; font-size:12px; color:#444;">Student progress across semesters</p>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px; color:#666;">Date Generated</div>
+            <div style="font-size:13px; font-weight:600;">${new Date().toLocaleDateString()}</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px; display:flex; gap:12px;">
+          <div style="flex:1;">
+            <span style="font-size:11px; text-transform:uppercase; color:#6c757d; display:block;">Student</span>
+            <strong style="font-size:14px;">${state.studentName || 'N/A'}</strong>
+          </div>
+          <div style="flex:1; text-align:center;">
+            <span style="font-size:11px; text-transform:uppercase; color:#6c757d; display:block;">USN</span>
+            <strong style="font-size:14px;">${state.usn || 'N/A'}</strong>
+          </div>
+          <div style="flex:1; text-align:right;">
+            <span style="font-size:11px; text-transform:uppercase; color:#6c757d; display:block;">Overall CGPA</span>
+            <strong style="font-size:14px; color:#7c3aed;">${allStats.cgpa.toFixed(2)}</strong>
+          </div>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+          <thead>
+            <tr style="background:#f1f3f5; border-bottom:2px solid #dee2e6; text-align:left;">
+              <th style="padding:10px; width:60px;">Sem</th>
+              <th style="padding:10px;">Course</th>
+              <th style="padding:10px; text-align:center;">Cr</th>
+              <th style="padding:10px; text-align:center;">Gr</th>
+              <th style="padding:10px; text-align:center;">GP</th>
+              <th style="padding:10px; text-align:center;">CP</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows || '<tr><td colspan="6" style="padding:12px; text-align:center; color:#666;">No courses available</td></tr>'}
+          </tbody>
+        </table>
+
+        <div style="margin-top:18px; display:flex; justify-content:space-between; gap:12px;">
+          <div style="flex:1;">
+            <span style="font-size:11px; color:#444; display:block;">Total Credits</span>
+            <strong style="font-size:16px;">${allStats.totalOverallCredits}</strong>
+          </div>
+          <div style="flex:1; text-align:center;">
+            <span style="font-size:11px; color:#444; display:block;">Semesters Completed</span>
+            <strong style="font-size:16px;">${allStats.completedCount}</strong>
+          </div>
+          <div style="flex:1; text-align:right;">
+            <span style="font-size:11px; color:#444; display:block;">Overall CGPA</span>
+            <strong style="font-size:16px; color:#7c3aed;">${allStats.cgpa.toFixed(2)}</strong>
+          </div>
+        </div>
+      </div>`;
+
+      // trigger print
       window.print();
     }
 
