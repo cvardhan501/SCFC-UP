@@ -5,9 +5,18 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "lint": "echo \"no lint configured\"",
+    "test": "echo \"no tests specified\" && exit 0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/<your-username>/scfc-grade-calculator.git"
+  },
+  "author": "",
+  "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",

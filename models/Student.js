@@ -31,6 +31,12 @@ const StudentSchema = new mongoose.Schema({
     trim: true,
     uppercase: true
   },
+  // Store hashed password; never return by default
+  password: {
+    type: String,
+    required: false,
+    select: false
+  },
   theme: {
     type: String,
     default: 'light'
@@ -39,10 +45,13 @@ const StudentSchema = new mongoose.Schema({
     type: Number,
     default: 1
   },
+  // Use a flexible structure to preserve existing frontend expectations
   semesters: {
-    type: Map,
-    of: [CourseSchema],
-    default: {}
+    type: mongoose.Schema.Types.Mixed,
+    default: {
+      "1": [], "2": [], "3": [], "4": [],
+      "5": [], "6": [], "7": [], "8": []
+    }
   },
   history: {
     type: [HistorySchema],
@@ -53,7 +62,8 @@ const StudentSchema = new mongoose.Schema({
     default: []
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  minimize: false
 });
 
-module.exports = mongoose.model('Student', StudentSchema);
+module.exports = mongoose.models.Student || mongoose.model('Student', StudentSchema);

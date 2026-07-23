@@ -1,5 +1,6 @@
 const connectDB = require('../../lib/mongodb');
 const Student = require('../../models/Student');
+const bcrypt = require('bcrypt');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -9,20 +10,33 @@ module.exports = async function handler(req, res) {
   try {
     await connectDB();
 
-    const { name, usn } = req.body;
-    if (!name || !usn) {
-      return res.status(400).json({ message: 'Both Student Name and USN are required.' });
+    const { usn, password } = req.body;
+    if (!usn || !password) {
+      return res.status(400).json({ message: 'Invalid USN or Password.' });
     }
 
     const cleanUsn = usn.trim().toUpperCase();
-    const cleanName = name.trim();
 
-    const student = await Student.findOne({ usn: cleanUsn });
-    if (!student || student.name.toLowerCase() !== cleanName.toLowerCase()) {
-      return res.status(404).json({ message: 'Student not found. Please Register.' });
+    // Retrieve hashed password explicitly
+    const student = await Student.findOne({ usn: cleanUsn }).select('+password');
+    if (!student) {
+      return res.status(400).json({ message: 'Invalid USN or Password.' });
     }
 
-    return res.json({ success: true, message: 'Login successful.', student: student });
+    // If password is not set, prompt migration
+    if (!student.password) {
+      return res.json({ success: false, migrationRequired: true, message: 'Your account needs to be secured. Please create a password.' });
+    }
+
+    const match = await bcrypt.compare(password, student.password || '');
+    if (!match) {
+      return res.status(400).json({ message: 'Invalid USN or Password.' });
+    }
+
+    const studentObj = student.toObject();
+    delete studentObj.password;
+
+    return res.json({ success: true, message: 'Login successful.', student: studentObj });
 
   } catch (error) {
     console.error('Login error:', error);

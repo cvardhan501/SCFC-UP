@@ -3085,25 +3085,52 @@
       <div id="authLoginBox">
         <div class="modal-head" style="text-align:center;">
           <h3 style="font-size:24px; margin-bottom:6px;">Student Login</h3>
-          <p style="font-size:13.5px; color:var(--ink-soft);">Enter your registered Student Name and USN to load your
-            saved MongoDB profile.</p>
+          <p style="font-size:13.5px; color:var(--ink-soft);">Enter your registered USN and Password to load your
+            saved profile.</p>
         </div>
         <div style="padding:24px;">
           <div class="auth-banner" id="loginBanner"></div>
           <div class="form-group">
-            <label>Student Full Name</label>
-            <input type="text" id="loginNameInput" class="form-input" placeholder="e.g. student name" autofocus>
-          </div>
-          <div class="form-group">
             <label>USN (University Serial Number)</label>
             <input type="text" id="loginUsnInput" class="form-input" placeholder="e.g. 1SC21CS001"
-              style="text-transform:uppercase;">
+              style="text-transform:uppercase;" autofocus>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPasswordInput" class="form-input" placeholder="Enter your password">
           </div>
           <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;"
             onclick="handleLoginSubmit()">Login to Dashboard</button>
           <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
             Student not found? <a href="#" style="color:var(--indigo); font-weight:700;"
               onclick="switchAuthTab('register')">Please Register here</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETUP PASSWORD TAB -->
+      <div id="authSetupBox" style="display:none;">
+        <div class="modal-head" style="text-align:center;">
+          <h3 style="font-size:24px; margin-bottom:6px;">Secure Your Account</h3>
+          <p style="font-size:13.5px; color:var(--ink-soft);">Create a password to secure your existing account.</p>
+        </div>
+        <div style="padding:24px;">
+          <div class="auth-banner" id="setupBanner"></div>
+          <div class="form-group">
+            <label>USN</label>
+            <input type="text" id="setupUsnInput" class="form-input" placeholder="e.g. 1SC21CS001" style="text-transform:uppercase;" disabled>
+          </div>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="setupPasswordInput" class="form-input" placeholder="Enter a new password">
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="setupConfirmPasswordInput" class="form-input" placeholder="Confirm password">
+          </div>
+          <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="handleSetupPasswordSubmit()">Create Password</button>
+          <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
+            Already secured? <a href="#" style="color:var(--indigo); font-weight:700;" onclick="switchAuthTab('login')">Login here</a>
           </div>
         </div>
       </div>
@@ -3125,6 +3152,14 @@
             <label>USN (University Serial Number)</label>
             <input type="text" id="registerUsnInput" class="form-input" placeholder="e.g. 1SC21CS001"
               style="text-transform:uppercase;">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="registerPasswordInput" class="form-input" placeholder="Enter a password">
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="registerConfirmPasswordInput" class="form-input" placeholder="Confirm password">
           </div>
           <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;"
             onclick="handleRegisterSubmit()">Create Student Account</button>
@@ -3545,25 +3580,31 @@
     function switchAuthTab(tab) {
       const loginBox = document.getElementById('authLoginBox');
       const regBox = document.getElementById('authRegisterBox');
+      const setupBox = document.getElementById('authSetupBox');
       document.getElementById('loginBanner').className = 'auth-banner';
       document.getElementById('registerBanner').className = 'auth-banner';
+      document.getElementById('setupBanner').className = 'auth-banner';
+
+      loginBox.style.display = 'none';
+      regBox.style.display = 'none';
+      setupBox.style.display = 'none';
 
       if (tab === 'login') {
         loginBox.style.display = 'block';
-        regBox.style.display = 'none';
-      } else {
-        loginBox.style.display = 'none';
+      } else if (tab === 'register') {
         regBox.style.display = 'block';
+      } else if (tab === 'setup') {
+        setupBox.style.display = 'block';
       }
     }
 
     async function handleLoginSubmit() {
-      const name = document.getElementById('loginNameInput').value.trim();
       const usn = document.getElementById('loginUsnInput').value.trim();
+      const password = document.getElementById('loginPasswordInput').value || '';
       const banner = document.getElementById('loginBanner');
 
-      if (!name || !usn) {
-        banner.textContent = 'Please fill in both Student Name and USN.';
+      if (!usn || !password) {
+        banner.textContent = 'Please enter both USN and Password.';
         banner.className = 'auth-banner error';
         return;
       }
@@ -3572,12 +3613,20 @@
         const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, usn })
+          body: JSON.stringify({ usn, password })
         });
         const data = await res.json();
+        if (data && data.migrationRequired) {
+          // Show password setup screen
+          document.getElementById('setupUsnInput').value = usn.toUpperCase();
+          document.getElementById('setupBanner').textContent = data.message || 'Please create a password to secure your account.';
+          document.getElementById('setupBanner').className = 'auth-banner';
+          switchAuthTab('setup');
+          return;
+        }
 
         if (!res.ok || !data.success) {
-          banner.textContent = data.message || 'Student not found. Please Register.';
+          banner.textContent = data.message || 'Invalid USN or Password.';
           banner.className = 'auth-banner error';
           return;
         }
@@ -3593,13 +3642,78 @@
       }
     }
 
+    async function handleSetupPasswordSubmit() {
+      const usn = document.getElementById('setupUsnInput').value.trim();
+      const password = document.getElementById('setupPasswordInput').value || '';
+      const confirmPassword = document.getElementById('setupConfirmPasswordInput').value || '';
+      const banner = document.getElementById('setupBanner');
+
+      if (!usn || !password || !confirmPassword) {
+        banner.textContent = 'Please fill in all fields.';
+        banner.className = 'auth-banner error';
+        return;
+      }
+
+      if (password.length < 8) {
+        banner.textContent = 'Password must be at least 8 characters.';
+        banner.className = 'auth-banner error';
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        banner.textContent = 'Password and Confirm Password must match.';
+        banner.className = 'auth-banner error';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/setup-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usn, password, confirmPassword })
+        });
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          banner.textContent = data.message || 'Failed to create password.';
+          banner.className = 'auth-banner error';
+          return;
+        }
+
+        // Success - redirect to login
+        const loginBanner = document.getElementById('loginBanner');
+        loginBanner.textContent = 'Password created successfully. Please login.';
+        loginBanner.className = 'auth-banner success';
+        document.getElementById('loginUsnInput').value = usn.toUpperCase();
+        document.getElementById('loginPasswordInput').value = '';
+        switchAuthTab('login');
+      } catch (e) {
+        banner.textContent = 'Server connection error. Please try again.';
+        banner.className = 'auth-banner error';
+      }
+    }
+
     async function handleRegisterSubmit() {
       const name = document.getElementById('registerNameInput').value.trim();
       const usn = document.getElementById('registerUsnInput').value.trim();
+      const password = document.getElementById('registerPasswordInput').value || '';
+      const confirmPassword = document.getElementById('registerConfirmPasswordInput').value || '';
       const banner = document.getElementById('registerBanner');
 
-      if (!name || !usn) {
-        banner.textContent = 'Please fill in both Student Name and USN.';
+      if (!name || !usn || !password || !confirmPassword) {
+        banner.textContent = 'Please fill in all registration fields.';
+        banner.className = 'auth-banner error';
+        return;
+      }
+
+      if (password.length < 8) {
+        banner.textContent = 'Password must be at least 8 characters.';
+        banner.className = 'auth-banner error';
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        banner.textContent = 'Password and Confirm Password must match.';
         banner.className = 'auth-banner error';
         return;
       }
@@ -3608,7 +3722,7 @@
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, usn })
+          body: JSON.stringify({ name, usn, password, confirmPassword })
         });
         const data = await res.json();
 
@@ -3623,7 +3737,6 @@
         loginBanner.textContent = 'Registration successful! Please login now.';
         loginBanner.className = 'auth-banner success';
 
-        document.getElementById('loginNameInput').value = name;
         document.getElementById('loginUsnInput').value = usn.toUpperCase();
         switchAuthTab('login');
       } catch (e) {

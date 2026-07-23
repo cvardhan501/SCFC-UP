@@ -1,5 +1,6 @@
 const connectDB = require('../../lib/mongodb');
 const Student = require('../../models/Student');
+const bcrypt = require('bcrypt');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -9,24 +10,36 @@ module.exports = async function handler(req, res) {
   try {
     await connectDB();
 
-    const { name, usn } = req.body;
-    if (!name || !usn) {
-      return res.status(400).json({ message: 'Both Student Name and USN are required.' });
+    const { name, usn, password, confirmPassword } = req.body;
+    if (!name || !usn || !password || !confirmPassword) {
+      return res.status(400).json({ message: 'All fields are required.' });
     }
 
     const cleanUsn = usn.trim().toUpperCase();
     const cleanName = name.trim();
 
+    // Check if USN already exists
     const existingStudent = await Student.findOne({ usn: cleanUsn });
     if (existingStudent) {
       return res.status(400).json({ message: 'This USN is already registered. Please Login.' });
     }
 
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: 'Password and Confirm Password must match.' });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters.' });
+    }
+
     const initialSemesters = { "1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [] };
+
+    const hashed = await bcrypt.hash(password, 10);
 
     const newStudent = new Student({
       name: cleanName,
       usn: cleanUsn,
+      password: hashed,
       currentSemester: 1,
       theme: 'light',
       semesters: initialSemesters,
@@ -41,7 +54,11 @@ module.exports = async function handler(req, res) {
     });
 
     await newStudent.save();
-    return res.status(201).json({ success: true, message: 'Registration successful. Please login.', student: newStudent });
+
+    const studentObj = newStudent.toObject();
+    delete studentObj.password;
+
+    return res.status(201).json({ success: true, message: 'Registration successful. Please login.', student: studentObj });
 
   } catch (error) {
     console.error('Registration error:', error);
