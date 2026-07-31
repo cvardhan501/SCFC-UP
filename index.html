@@ -3048,14 +3048,23 @@
                 <span class="announce-badge" id="adminTabBadge">CA1</span>
               </div>
               <div style="overflow-x:auto;">
-                <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+                <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:center;">
                   <thead>
-                    <tr style="border-bottom:2px solid var(--glass-border); text-align:left;">
-                      <th style="padding:8px;">Session</th>
-                      <th style="padding:8px;">Slot</th>
-                      <th style="padding:8px;">Fixed Time</th>
-                      <th style="padding:8px;">Exam Date</th>
-                      <th style="padding:8px;">Day</th>
+                    <tr style="background:rgba(108,99,255,0.12); border-bottom:1px solid var(--glass-border);">
+                      <th colspan="3" style="padding:8px; border-right:2px solid var(--glass-border); font-size:13.5px; font-weight:800; color:var(--indigo);">Forenoon</th>
+                      <th colspan="3" style="padding:8px; font-size:13.5px; font-weight:800; color:var(--purple);">Afternoon</th>
+                    </tr>
+                    <tr style="background:rgba(0,0,0,0.06); border-bottom:1px solid var(--glass-border); font-size:11px; color:var(--ink-soft);">
+                      <th colspan="3" style="padding:6px; border-right:2px solid var(--glass-border); font-weight:600;">10:00 am to 11:30 am</th>
+                      <th colspan="3" style="padding:6px; font-weight:600;">02:00 pm to 03:30 pm</th>
+                    </tr>
+                    <tr style="border-bottom:2px solid var(--glass-border); font-size:11px; text-transform:uppercase; color:var(--ink-soft);">
+                      <th style="padding:6px; width:50px;">Slot</th>
+                      <th style="padding:6px;">Exam Date</th>
+                      <th style="padding:6px; border-right:2px solid var(--glass-border); width:85px;">Day</th>
+                      <th style="padding:6px; width:50px;">Slot</th>
+                      <th style="padding:6px;">Exam Date</th>
+                      <th style="padding:6px; width:85px;">Day</th>
                     </tr>
                   </thead>
                   <tbody id="adminExamSlotTableBody">
@@ -3075,13 +3084,19 @@
                 <span style="font-size:11px; color:var(--green); font-weight:700;">● Auto-synced from Workspace</span>
               </div>
               <div style="overflow-x:auto;">
-                <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+                <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:center;">
                   <thead>
-                    <tr style="border-bottom:2px solid var(--glass-border); text-align:left;">
-                      <th style="padding:8px;">Course</th>
-                      <th style="padding:8px;">Slot</th>
-                      <th style="padding:8px;">Exam Date & Time</th>
-                      <th style="padding:8px;">Status</th>
+                    <tr style="background:rgba(108,99,255,0.12); border-bottom:1px solid var(--glass-border);">
+                      <th colspan="3" style="padding:8px; border-right:2px solid var(--glass-border); font-size:13.5px; font-weight:800; color:var(--indigo);">Forenoon (10:00 am - 11:30 am)</th>
+                      <th colspan="3" style="padding:8px; font-size:13.5px; font-weight:800; color:var(--purple);">Afternoon (02:00 pm - 03:30 pm)</th>
+                    </tr>
+                    <tr style="border-bottom:2px solid var(--glass-border); font-size:11px; text-transform:uppercase; color:var(--ink-soft);">
+                      <th style="padding:6px; width:45px;">Slot</th>
+                      <th style="padding:6px;">Course Title & Code</th>
+                      <th style="padding:6px; border-right:2px solid var(--glass-border);">Exam Date & Day</th>
+                      <th style="padding:6px; width:45px;">Slot</th>
+                      <th style="padding:6px;">Course Title & Code</th>
+                      <th style="padding:6px;">Exam Date & Day</th>
                     </tr>
                   </thead>
                   <tbody id="studentExamScheduleBody">
@@ -5862,64 +5877,94 @@
       const adminTabBadge = document.getElementById('adminTabBadge');
       if (adminTabBadge) adminTabBadge.textContent = caTab;
 
-      // Render Admin Slot Table Body
+      // Render Admin Slot Table Body (Forenoon & Afternoon Paired with Holiday)
       const adminBody = document.getElementById('adminExamSlotTableBody');
       const caSchedule = (state.examConfig.schedules[caTab] && state.examConfig.schedules[caTab].slotDates) ? state.examConfig.schedules[caTab].slotDates : {};
-
-      const morningSlots = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
-      const afternoonSlots = ['A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2'];
-
       const todayStr = new Date().toISOString().split('T')[0];
 
+      const slotPairs = [
+        { fn: 'A1', an: 'A2' },
+        { fn: 'B1', an: 'B2' },
+        { fn: 'C1', an: 'C2' },
+        { fn: 'D1', an: 'D2' },
+        { fn: 'E1', an: 'E2' },
+        'HOLIDAY',
+        { fn: 'F1', an: 'F2' },
+        { fn: 'G1', an: 'G2' }
+      ];
+
       let adminRowsHtml = '';
+      slotPairs.forEach(pair => {
+        if (pair === 'HOLIDAY') {
+          adminRowsHtml += `<tr style="background:rgba(245,158,11,0.14); border-top:1.5px solid var(--glass-border); border-bottom:1.5px solid var(--glass-border);">
+            <td colspan="6" style="padding:8px; text-align:center; font-weight:800; font-size:13px; color:#F59E0B; letter-spacing:0.12em; text-transform:uppercase;">
+              Holiday
+            </td>
+          </tr>`;
+        } else {
+          const fnDate = caSchedule[pair.fn] || '';
+          const fnDay = getDayOfWeek(fnDate);
+          const anDate = caSchedule[pair.an] || '';
+          const anDay = getDayOfWeek(anDate);
 
-      const buildAdminRowHtml = (slot, sessionLabel) => {
-        const dateVal = caSchedule[slot] || '';
-        const dayBadge = getDayOfWeek(dateVal);
-        const timeMeta = EXAM_SLOT_TIMES[slot];
-
-        return `<tr style="border-bottom:1px solid var(--glass-border);">
-          <td style="padding:8px;"><span class="badge-sm" style="background:${sessionLabel === 'Morning' ? 'rgba(56,189,248,0.15)' : 'rgba(245,158,11,0.15)'}; color:${sessionLabel === 'Morning' ? '#38BDF8' : '#F59E0B'}; font-weight:700;">${sessionLabel}</span></td>
-          <td style="padding:8px;"><strong>${slot}</strong></td>
-          <td style="padding:8px; color:var(--ink-soft); font-size:12px;">${timeMeta.timeStr}</td>
-          <td style="padding:8px;">
-            <input type="date" min="${todayStr}" value="${dateVal}" class="form-input" style="padding:4px 8px; font-size:12px; width:150px;" onchange="updateExamSlotDate('${caTab}', '${slot}', this.value)" />
-          </td>
-          <td style="padding:8px;">
-            <span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${dayBadge}</span>
-          </td>
-        </tr>`;
-      };
-
-      morningSlots.forEach(s => adminRowsHtml += buildAdminRowHtml(s, 'Morning'));
-      afternoonSlots.forEach(s => adminRowsHtml += buildAdminRowHtml(s, 'Afternoon'));
+          adminRowsHtml += `<tr style="border-bottom:1px solid var(--glass-border);">
+            <td style="padding:6px; font-weight:800; color:var(--indigo); background:rgba(56,189,248,0.05);">${pair.fn}</td>
+            <td style="padding:6px;">
+              <input type="date" min="${todayStr}" value="${fnDate}" class="form-input" style="padding:4px 6px; font-size:12px; width:135px;" onchange="updateExamSlotDate('${caTab}', '${pair.fn}', this.value)" />
+            </td>
+            <td style="padding:6px; border-right:2px solid var(--glass-border);">
+              <span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${fnDay}</span>
+            </td>
+            <td style="padding:6px; font-weight:800; color:var(--purple); background:rgba(245,158,11,0.05);">${pair.an}</td>
+            <td style="padding:6px;">
+              <input type="date" min="${todayStr}" value="${anDate}" class="form-input" style="padding:4px 6px; font-size:12px; width:135px;" onchange="updateExamSlotDate('${caTab}', '${pair.an}', this.value)" />
+            </td>
+            <td style="padding:6px;">
+              <span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${anDay}</span>
+            </td>
+          </tr>`;
+        }
+      });
 
       if (adminBody) adminBody.innerHTML = adminRowsHtml;
 
-      // Render Mapped Student Exams
+      // Render Mapped Student Exams (Matching Image Structure)
       const mappedExams = getMappedExamsForCA(caTab);
       const studentBody = document.getElementById('studentExamScheduleBody');
       if (studentBody) {
-        if (mappedExams.length === 0) {
-          studentBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:16px; color:var(--ink-soft);">No subjects registered in Semester ${state.currentSemester} workspace.</td></tr>`;
-        } else {
-          studentBody.innerHTML = mappedExams.map(m => {
-            let statusColor = '#38BDF8', statusBg = 'rgba(56,189,248,0.15)';
-            if (m.status === 'Completed') { statusColor = 'var(--green)'; statusBg = 'rgba(34,197,94,0.15)'; }
-            else if (m.status === 'Today') { statusColor = '#EF4444'; statusBg = 'rgba(239,68,68,0.15)'; }
-
-            return `<tr style="border-bottom:1px solid var(--glass-border);">
-              <td style="padding:8px;"><strong>${m.course.code}</strong><br><span style="font-size:12px; color:var(--ink-soft);">${m.course.name}</span></td>
-              <td style="padding:8px;"><span class="badge-sm b-cr">${m.slot}</span></td>
-              <td style="padding:8px;">
-                ${m.dateVal ? `<strong>${m.formattedDate} (${m.dayName})</strong><br><small style="color:var(--ink-soft);">${m.timeStr}</small>` : '<span style="color:var(--ink-soft); font-style:italic;">Exam date not configured by Admin</span>'}
-              </td>
-              <td style="padding:8px;">
-                <span class="badge-sm" style="background:${statusBg}; color:${statusColor}; font-weight:700;">${m.status}</span>
+        let studentRowsHtml = '';
+        slotPairs.forEach(pair => {
+          if (pair === 'HOLIDAY') {
+            studentRowsHtml += `<tr style="background:rgba(245,158,11,0.14); border-top:1.5px solid var(--glass-border); border-bottom:1.5px solid var(--glass-border);">
+              <td colspan="6" style="padding:8px; text-align:center; font-weight:800; font-size:13px; color:#F59E0B; letter-spacing:0.12em; text-transform:uppercase;">
+                Holiday
               </td>
             </tr>`;
-          }).join('');
-        }
+          } else {
+            const fnMatch = mappedExams.find(m => m.slot === pair.fn);
+            const anMatch = mappedExams.find(m => m.slot === pair.an);
+
+            studentRowsHtml += `<tr style="border-bottom:1px solid var(--glass-border);">
+              <!-- Forenoon Slot -->
+              <td style="padding:6px; font-weight:800; color:var(--indigo); background:rgba(56,189,248,0.05);">${pair.fn}</td>
+              <td style="padding:6px; text-align:left;">
+                ${fnMatch ? `<strong>${fnMatch.course.code}</strong><br><small style="color:var(--ink-soft);">${fnMatch.course.name}</small>` : '<span style="color:var(--ink-soft); font-style:italic;">No Course</span>'}
+              </td>
+              <td style="padding:6px; border-right:2px solid var(--glass-border);">
+                ${fnMatch && fnMatch.dateVal ? `<strong>${fnMatch.formattedDate}</strong><br><small style="color:var(--indigo); font-weight:600;">${fnMatch.dayName}</small>` : '<span style="color:var(--ink-soft); font-style:italic;">Unscheduled</span>'}
+              </td>
+              <!-- Afternoon Slot -->
+              <td style="padding:6px; font-weight:800; color:var(--purple); background:rgba(245,158,11,0.05);">${pair.an}</td>
+              <td style="padding:6px; text-align:left;">
+                ${anMatch ? `<strong>${anMatch.course.code}</strong><br><small style="color:var(--ink-soft);">${anMatch.course.name}</small>` : '<span style="color:var(--ink-soft); font-style:italic;">No Course</span>'}
+              </td>
+              <td style="padding:6px;">
+                ${anMatch && anMatch.dateVal ? `<strong>${anMatch.formattedDate}</strong><br><small style="color:var(--purple); font-weight:600;">${anMatch.dayName}</small>` : '<span style="color:var(--ink-soft); font-style:italic;">Unscheduled</span>'}
+              </td>
+            </tr>`;
+          }
+        });
+        studentBody.innerHTML = studentRowsHtml;
       }
 
       // Update Statistics
@@ -6258,27 +6303,56 @@
       const caTab = (state.examConfig && state.examConfig.activeExamTab) ? state.examConfig.activeExamTab : 'CA1';
       const mappedExams = getMappedExamsForCA(caTab);
 
+      const slotPairs = [
+        { fn: 'A1', an: 'A2' },
+        { fn: 'B1', an: 'B2' },
+        { fn: 'C1', an: 'C2' },
+        { fn: 'D1', an: 'D2' },
+        { fn: 'E1', an: 'E2' },
+        'HOLIDAY',
+        { fn: 'F1', an: 'F2' },
+        { fn: 'G1', an: 'G2' }
+      ];
+
       let rowsHtml = '';
-      if (mappedExams.length === 0) {
-        rowsHtml = `<tr><td colspan="5" style="text-align:center; padding:12px; color:#666;">No subjects registered in Semester ${state.currentSemester}.</td></tr>`;
-      } else {
-        rowsHtml = mappedExams.map((m, i) => {
-          return `<tr>
-            <td style="padding:8px; border-bottom:1px solid #ddd;">${i + 1}</td>
-            <td style="padding:8px; border-bottom:1px solid #ddd;"><strong>${m.course.code}</strong><br><small style="color:#666;">${m.course.name}</small></td>
-            <td style="padding:8px; border-bottom:1px solid #ddd;">${m.slot}</td>
-            <td style="padding:8px; border-bottom:1px solid #ddd;">${m.dateVal ? `<strong>${m.formattedDate}</strong> (${m.dayName})` : 'Unscheduled'}</td>
-            <td style="padding:8px; border-bottom:1px solid #ddd;">${m.timeStr}</td>
+      slotPairs.forEach(pair => {
+        if (pair === 'HOLIDAY') {
+          rowsHtml += `<tr style="background:#fff3cd; border-top:1.5px solid #000; border-bottom:1.5px solid #000;">
+            <td colspan="6" style="padding:10px; text-align:center; font-weight:800; font-size:14px; color:#856404; letter-spacing:0.15em; text-transform:uppercase;">
+              Holiday
+            </td>
           </tr>`;
-        }).join('');
-      }
+        } else {
+          const fnMatch = mappedExams.find(m => m.slot === pair.fn);
+          const anMatch = mappedExams.find(m => m.slot === pair.an);
+
+          rowsHtml += `<tr style="border-bottom:1px solid #ddd; font-size:12px;">
+            <!-- Forenoon -->
+            <td style="padding:8px; font-weight:800; text-align:center; background:#f8f9fa; border-right:1px solid #eee;">${pair.fn}</td>
+            <td style="padding:8px;">
+              ${fnMatch ? `<strong>${fnMatch.course.code}</strong><br><small style="color:#555;">${fnMatch.course.name}</small>` : '<span style="color:#999; font-style:italic;">No Course</span>'}
+            </td>
+            <td style="padding:8px; border-right:2px solid #000; text-align:center;">
+              ${fnMatch && fnMatch.dateVal ? `<strong>${fnMatch.formattedDate}</strong><br><small style="color:#444;">${fnMatch.dayName}</small>` : '<span style="color:#999; font-style:italic;">Unscheduled</span>'}
+            </td>
+            <!-- Afternoon -->
+            <td style="padding:8px; font-weight:800; text-align:center; background:#f8f9fa; border-right:1px solid #eee;">${pair.an}</td>
+            <td style="padding:8px;">
+              ${anMatch ? `<strong>${anMatch.course.code}</strong><br><small style="color:#555;">${anMatch.course.name}</small>` : '<span style="color:#999; font-style:italic;">No Course</span>'}
+            </td>
+            <td style="padding:8px; text-align:center;">
+              ${anMatch && anMatch.dateVal ? `<strong>${anMatch.formattedDate}</strong><br><small style="color:#444;">${anMatch.dayName}</small>` : '<span style="color:#999; font-style:italic;">Unscheduled</span>'}
+            </td>
+          </tr>`;
+        }
+      });
 
       const printArea = document.getElementById('printableReport');
       printArea.innerHTML = `
-        <div style="font-family:'Inter', Arial, sans-serif; max-width:900px; margin:0 auto; padding:20px; color:#000; background:#fff;">
+        <div style="font-family:'Inter', Arial, sans-serif; max-width:950px; margin:0 auto; padding:20px; color:#000; background:#fff;">
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #000; padding-bottom:12px; margin-bottom:20px;">
             <div>
-              <h1 style="font-size:22px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.05em;">SCFC Official ${caTab} Exam Schedule</h1>
+              <h1 style="font-size:22px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.05em;">SCFC Official ${caTab} Examination Timetable</h1>
               <p style="margin:4px 0 0 0; font-size:13px; color:#444;">School of Computer Science & Engineering</p>
             </div>
             <div style="text-align:right;">
@@ -6287,30 +6361,38 @@
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:8px; padding:16px; margin-bottom:24px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; background:#f8f9fa; border:1px solid #000; border-radius:8px; padding:14px; margin-bottom:24px;">
             <div>
               <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Student Name</span>
-              <strong style="font-size:16px; color:#111;">${state.studentName || 'N/A'}</strong>
+              <strong style="font-size:15px; color:#111;">${state.studentName || 'N/A'}</strong>
             </div>
             <div>
               <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">USN</span>
-              <strong style="font-size:16px; color:#111;">${state.usn || 'N/A'}</strong>
+              <strong style="font-size:15px; color:#111;">${state.usn || 'N/A'}</strong>
             </div>
             <div>
               <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Semester & Series</span>
-              <strong style="font-size:16px; color:#111;">Semester ${state.currentSemester || 1} • ${caTab}</strong>
+              <strong style="font-size:15px; color:#111;">Semester ${state.currentSemester || 1} • ${caTab}</strong>
             </div>
           </div>
 
-          <h3 style="font-size:16px; margin-bottom:10px; text-transform:uppercase;">Examination Schedule Table</h3>
-          <table style="width:100%; border-collapse:collapse; margin-bottom:24px; font-size:13px;">
+          <table style="width:100%; border-collapse:collapse; margin-bottom:24px; border:2px solid #000;">
             <thead>
-              <tr style="background:#f1f3f5; border-bottom:2px solid #dee2e6; text-align:left;">
-                <th style="padding:8px; width:40px;">#</th>
-                <th style="padding:8px;">Course Title & Code</th>
-                <th style="padding:8px;">Slot</th>
-                <th style="padding:8px;">Exam Date & Day</th>
-                <th style="padding:8px;">Session Time</th>
+              <tr style="background:#e9ecef; border-bottom:1px solid #000;">
+                <th colspan="3" style="padding:8px; border-right:2px solid #000; font-size:14px; font-weight:800; text-align:center;">Forenoon</th>
+                <th colspan="3" style="padding:8px; font-size:14px; font-weight:800; text-align:center;">Afternoon</th>
+              </tr>
+              <tr style="background:#f8f9fa; border-bottom:2px solid #000; font-size:12px; text-align:center;">
+                <th colspan="3" style="padding:6px; border-right:2px solid #000; font-weight:700;">10:00 am to 11:30 am</th>
+                <th colspan="3" style="padding:6px; font-weight:700;">02:00 pm to 03:30 pm</th>
+              </tr>
+              <tr style="background:#f1f3f5; border-bottom:2px solid #000; font-size:11px; text-transform:uppercase;">
+                <th style="padding:6px; width:45px; text-align:center; border-right:1px solid #ddd;">Slot</th>
+                <th style="padding:6px; text-align:left;">Course Title & Code</th>
+                <th style="padding:6px; text-align:center; border-right:2px solid #000;">Date & Day</th>
+                <th style="padding:6px; width:45px; text-align:center; border-right:1px solid #ddd;">Slot</th>
+                <th style="padding:6px; text-align:left;">Course Title & Code</th>
+                <th style="padding:6px; text-align:center;">Date & Day</th>
               </tr>
             </thead>
             <tbody>
