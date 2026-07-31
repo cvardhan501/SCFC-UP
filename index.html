@@ -1259,6 +1259,113 @@
       }
     }
 
+    /* EXAM SYSTEM STYLES */
+    .exam-tab-btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .exam-tab-btn.active {
+      background: linear-gradient(135deg, var(--indigo), var(--purple));
+      color: #ffffff;
+      box-shadow: 0 4px 12px -2px rgba(108, 99, 255, 0.4);
+    }
+
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 8px 14px;
+      min-width: 64px;
+    }
+
+    .countdown-num {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .countdown-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    .exam-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+
+    .exam-cal-day-header {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      padding: 6px 0;
+    }
+
+    .exam-cal-cell {
+      aspect-ratio: 1 / 1;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .exam-cal-cell:hover {
+      background: rgba(140, 130, 255, 0.15);
+      border-color: var(--indigo);
+    }
+
+    .exam-cal-cell.has-exam {
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.25), rgba(168, 85, 247, 0.2));
+      border-color: var(--indigo);
+      color: var(--indigo);
+      font-weight: 800;
+    }
+
+    .exam-cal-cell.has-exam::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--indigo);
+      position: absolute;
+      bottom: 4px;
+    }
+
+    @media (max-width: 900px) {
+
+      .exam-hero-grid,
+      .exam-tables-grid,
+      .exam-cal-timeline-grid,
+      .ai-plan-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
     /* Print layout adjustments to avoid overlapping header/text */
     @media print {
       * {
@@ -2297,6 +2404,14 @@
             </svg>
             <span class="label">Timetable</span>
           </a>
+          <a class="dock-item" data-view="exams" onclick="switchView('exams')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <path d="M16 2v4M8 2v4M3 10h18" />
+              <path d="M9 16l2 2 4-4" />
+            </svg>
+            <span class="label">Exam Schedule</span>
+          </a>
           <a class="dock-item" data-view="tracker" onclick="switchView('tracker')">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
               <circle cx="12" cy="12" r="10" />
@@ -2801,6 +2916,216 @@
                 <!-- Injected via JS -->
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- VIEW: EXAM DASHBOARD -->
+        <div id="view-exams" class="page-view">
+          <!-- HERO / HEADER -->
+          <div class="hero fade-up"
+            style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <div>
+              <h1>Enterprise <span class="grad">Exam Management</span> System</h1>
+              <p>Automated slot-mapped CA examination timetable, live countdown timer, AI study planner & readiness statistics.</p>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn btn-ghost" onclick="printExamScheduleReport()"><svg width="16" height="16"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                  <rect x="6" y="14" width="12" height="8"></rect>
+                </svg> Print Schedule</button>
+              <button class="btn btn-primary" onclick="shareExamSchedule()"><svg width="16" height="16" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="1.8">
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg> Share Schedule</button>
+            </div>
+          </div>
+
+          <!-- ACADEMIC METADATA BANNER -->
+          <div class="glass fade-up"
+            style="padding:16px 20px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; border-left:4px solid var(--indigo);">
+            <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:center;">
+              <div>
+                <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Academic Year</span>
+                <strong style="font-size:14px; color:var(--ink);">2026 - 2027</strong>
+              </div>
+              <div>
+                <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Semester</span>
+                <strong style="font-size:14px; color:var(--ink);" id="examSemDisplay">Semester 1</strong>
+              </div>
+              <div>
+                <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Department</span>
+                <strong style="font-size:14px; color:var(--ink);">School of CSE</strong>
+              </div>
+              <div>
+                <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Student USN</span>
+                <strong style="font-size:14px; color:var(--indigo);" class="student-usn-display">N/A</strong>
+              </div>
+            </div>
+            <!-- CA TAB SWITCHER -->
+            <div style="display:flex; gap:6px; background:rgba(0,0,0,0.12); padding:4px; border-radius:12px; border:1px solid var(--glass-border);">
+              <button class="exam-tab-btn active" id="tabCA1" onclick="switchExamTab('CA1')">CA1 Exam</button>
+              <button class="exam-tab-btn" id="tabCA2" onclick="switchExamTab('CA2')">CA2 Exam</button>
+              <button class="exam-tab-btn" id="tabCA3" onclick="switchExamTab('CA3')">CA3 Exam</button>
+            </div>
+          </div>
+
+          <!-- NOTIFICATION / TODAY ALERT BANNER -->
+          <div id="examNotificationContainer"></div>
+
+          <!-- HERO STATS & NEXT EXAM COUNTDOWN -->
+          <div style="display:grid; grid-template-columns: 2fr 1fr; gap:20px; margin-bottom:24px;" class="exam-hero-grid">
+            <!-- NEXT EXAM COUNTDOWN HERO CARD -->
+            <div class="glass spot card-pad fade-up"
+              style="background: linear-gradient(135deg, rgba(108,99,255,0.18), rgba(168,85,247,0.12)); border:1px solid rgba(140,130,255,0.3);">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
+                <span style="background:var(--indigo); color:#fff; font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.05em;">NEXT UPCOMING EXAM</span>
+                <span id="nextExamSeriesBadge" style="font-size:12px; font-weight:700; color:var(--ink-soft);">CA1 Examination</span>
+              </div>
+              <div id="nextExamHeroContent">
+                <!-- Dynamically injected via JS -->
+              </div>
+            </div>
+
+            <!-- READINESS SCORE CARD -->
+            <div class="glass spot card-pad fade-up"
+              style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+              <h3 style="margin-top:0; margin-bottom:12px; font-size:15px;">Exam Readiness Score</h3>
+              <div style="position:relative; width:120px; height:120px; display:grid; place-items:center;">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10" />
+                  <circle id="readinessCircle" cx="60" cy="60" r="50" fill="none" stroke="var(--indigo)" stroke-width="10"
+                    stroke-dasharray="314" stroke-dashoffset="60" stroke-linecap="round" transform="rotate(-90 60 60)"
+                    style="transition: stroke-dashoffset 1s ease;" />
+                </svg>
+                <div style="position:absolute; text-align:center;">
+                  <span id="readinessScoreVal" style="font-size:26px; font-weight:800; color:var(--ink);">85%</span>
+                </div>
+              </div>
+              <div id="readinessBadge" style="margin-top:10px; font-weight:700; font-size:13px; color:var(--green);">Ready</div>
+              <p style="font-size:11px; color:var(--ink-soft); margin-top:4px; margin-bottom:0;">Based on remaining days & revision progress</p>
+            </div>
+          </div>
+
+          <!-- STATISTICS CARDS -->
+          <div class="dash-grid fade-up" style="margin-bottom:24px;">
+            <div class="glass p-6">
+              <h3>Total Subjects</h3>
+              <div class="val" id="statExamTotalSubjects" style="font-size:32px; margin: 8px 0; color:var(--indigo);">0</div>
+              <p style="color:var(--ink-soft); font-size:12px;">Mapped from active workspace</p>
+            </div>
+            <div class="glass p-6">
+              <h3>Upcoming Exams</h3>
+              <div class="val" id="statExamUpcomingCount" style="font-size:32px; margin: 8px 0; color:#38BDF8;">0</div>
+              <p style="color:var(--ink-soft); font-size:12px;">Remaining in selected CA</p>
+            </div>
+            <div class="glass p-6">
+              <h3>Completed Exams</h3>
+              <div class="val" id="statExamCompletedCount" style="font-size:32px; margin: 8px 0; color:var(--green);">0</div>
+              <p style="color:var(--ink-soft); font-size:12px;">Finished exams</p>
+            </div>
+            <div class="glass p-6">
+              <h3>Average Exam Gap</h3>
+              <div class="val" id="statExamAvgGap" style="font-size:32px; margin: 8px 0; color:#F59E0B;">0 Days</div>
+              <p style="color:var(--ink-soft); font-size:12px;">Between scheduled papers</p>
+            </div>
+          </div>
+
+          <!-- ADMIN EXAM DATE CONFIGURATION & STUDENT EXAM TIMETABLE -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;" class="exam-tables-grid">
+            <!-- ADMIN SLOT CONFIGURATION TABLE -->
+            <div class="glass card-pad fade-up">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <div>
+                  <h3 style="margin:0; font-size:16px;">Admin Exam Date Entry</h3>
+                  <p style="margin:2px 0 0 0; font-size:12px; color:var(--ink-soft);">Configure exam date per slot. Session times are fixed automatically.</p>
+                </div>
+                <span class="announce-badge" id="adminTabBadge">CA1</span>
+              </div>
+              <div style="overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+                  <thead>
+                    <tr style="border-bottom:2px solid var(--glass-border); text-align:left;">
+                      <th style="padding:8px;">Session</th>
+                      <th style="padding:8px;">Slot</th>
+                      <th style="padding:8px;">Fixed Time</th>
+                      <th style="padding:8px;">Exam Date</th>
+                      <th style="padding:8px;">Day</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminExamSlotTableBody">
+                    <!-- Injected via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- AUTOMATIC STUDENT EXAM SCHEDULE -->
+            <div class="glass card-pad fade-up">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <div>
+                  <h3 style="margin:0; font-size:16px;">Student Exam Timetable</h3>
+                  <p style="margin:2px 0 0 0; font-size:12px; color:var(--ink-soft);">Auto-generated by matching Workspace course slots to exam dates.</p>
+                </div>
+                <span style="font-size:11px; color:var(--green); font-weight:700;">● Auto-synced from Workspace</span>
+              </div>
+              <div style="overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+                  <thead>
+                    <tr style="border-bottom:2px solid var(--glass-border); text-align:left;">
+                      <th style="padding:8px;">Course</th>
+                      <th style="padding:8px;">Slot</th>
+                      <th style="padding:8px;">Exam Date & Time</th>
+                      <th style="padding:8px;">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="studentExamScheduleBody">
+                    <!-- Injected via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- CALENDAR & TIMELINE ROW -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;" class="exam-cal-timeline-grid">
+            <!-- EXAM CALENDAR -->
+            <div class="glass card-pad fade-up">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 style="margin:0; font-size:16px;">Exam Calendar</h3>
+                <div style="font-size:12px; font-weight:700; color:var(--indigo);" id="examCalendarMonthYear">September 2026</div>
+              </div>
+              <div id="examCalendarGridContainer"></div>
+            </div>
+
+            <!-- EXAM TIMELINE -->
+            <div class="glass card-pad fade-up">
+              <h3 style="margin-top:0; margin-bottom:14px; font-size:16px;">Exam Timeline</h3>
+              <div id="examTimelineContainer"
+                style="display:flex; flex-direction:column; gap:12px; max-height:360px; overflow-y:auto; padding-right:6px;"></div>
+            </div>
+          </div>
+
+          <!-- AI STUDY PLANNER & RECOMMENDATIONS -->
+          <div class="glass card-pad fade-up" style="margin-bottom:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h3 style="margin:0; font-size:16px;">AI Study Planner & Revision Recommendations</h3>
+                <p style="margin:2px 0 0 0; font-size:12px; color:var(--ink-soft);">Automated revision schedule prioritized by nearest exam date and credit weightage.</p>
+              </div>
+              <button class="btn btn-ghost" onclick="generateAIStudyPlan()"><svg width="14" height="14" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                </svg> Regenerate Plan</button>
+            </div>
+            <div id="aiStudyPlannerContent" style="display:grid; grid-template-columns:2fr 1fr; gap:20px;" class="ai-plan-grid">
+              <!-- Dynamically Injected -->
+            </div>
           </div>
         </div>
 
@@ -3863,6 +4188,25 @@
       'L37+L38': [{ d: 'FRI', c: 5, span: 2 }], 'L39+L40': [{ d: 'FRI', c: 7, span: 2 }]
     };
 
+    const EXAM_SLOT_TIMES = Object.freeze({
+      // Forenoon / Morning (Fixed 10:00 AM – 11:30 AM)
+      A1: { session: 'Morning', timeStr: '10:00 AM – 11:30 AM', startHour: 10, startMin: 0, endHour: 11, endMin: 30 },
+      B1: { session: 'Morning', timeStr: '10:00 AM – 11:30 AM', startHour: 10, startMin: 0, endHour: 11, endMin: 30 },
+      C1: { session: 'Morning', timeStr: '10:00 AM – 11:30 AM', startHour: 10, startMin: 0, endHour: 11, endMin: 30 },
+      D1: { session: 'Morning', timeStr: '10:00 AM – 11:30 AM', startHour: 10, startMin: 0, endHour: 11, endMin: 30 },
+      E1: { session: 'Morning', timeStr: '10:00 AM – 11:30 AM', startHour: 10, startMin: 0, endHour: 11, endMin: 30 },
+      F1: { session: 'Morning', timeStr: '10:00 AM – 11:30 AM', startHour: 10, startMin: 0, endHour: 11, endMin: 30 },
+      G1: { session: 'Morning', timeStr: '10:00 AM – 11:30 AM', startHour: 10, startMin: 0, endHour: 11, endMin: 30 },
+      // Afternoon (Fixed 02:00 PM – 03:30 PM)
+      A2: { session: 'Afternoon', timeStr: '02:00 PM – 03:30 PM', startHour: 14, startMin: 0, endHour: 15, endMin: 30 },
+      B2: { session: 'Afternoon', timeStr: '02:00 PM – 03:30 PM', startHour: 14, startMin: 0, endHour: 15, endMin: 30 },
+      C2: { session: 'Afternoon', timeStr: '02:00 PM – 03:30 PM', startHour: 14, startMin: 0, endHour: 15, endMin: 30 },
+      D2: { session: 'Afternoon', timeStr: '02:00 PM – 03:30 PM', startHour: 14, startMin: 0, endHour: 15, endMin: 30 },
+      E2: { session: 'Afternoon', timeStr: '02:00 PM – 03:30 PM', startHour: 14, startMin: 0, endHour: 15, endMin: 30 },
+      F2: { session: 'Afternoon', timeStr: '02:00 PM – 03:30 PM', startHour: 14, startMin: 0, endHour: 15, endMin: 30 },
+      G2: { session: 'Afternoon', timeStr: '02:00 PM – 03:30 PM', startHour: 14, startMin: 0, endHour: 15, endMin: 30 }
+    });
+
     /* =========================================================
        STATE & MONGODB API AUTO-SAVE MANAGEMENT
     ========================================================= */
@@ -3882,7 +4226,16 @@
         8: []
       },
       history: [],
-      tasks: []
+      tasks: [],
+      examConfig: {
+        activeExamTab: 'CA1',
+        schedules: {
+          CA1: { slotDates: {} },
+          CA2: { slotDates: {} },
+          CA3: { slotDates: {} }
+        },
+        studyPlanner: { completedTasks: [] }
+      }
     };
 
     let autoSaveTimer = null;
@@ -3901,7 +4254,8 @@
               currentSemester: state.currentSemester,
               semesters: state.semesters,
               history: state.history,
-              tasks: state.tasks
+              tasks: state.tasks,
+              examConfig: state.examConfig
             })
           });
         } catch (e) {
@@ -4239,6 +4593,7 @@
       else if (viewName === 'gradesystem') renderGradeSystemView();
       else if (viewName === 'timetable') renderTimetable();
       else if (viewName === 'tracker') renderTracker();
+      else if (viewName === 'exams') renderExamDashboard();
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -4807,6 +5162,7 @@
       if (typeof renderTimetable === 'function') renderTimetable();
       if (typeof renderTracker === 'function') renderTracker();
       if (typeof renderAnalyticsView === 'function') renderAnalyticsView();
+      if (typeof renderExamDashboard === 'function' && typeof activeView !== 'undefined' && activeView === 'exams') renderExamDashboard();
     }
 
     /* =========================================================
@@ -5361,6 +5717,635 @@
       window.print();
     }
 
+    /* =========================================================
+       ENTERPRISE EXAM MANAGEMENT SYSTEM MODULE
+    ========================================================= */
+    function getPrimarySlotToken(slotStr) {
+      if (!slotStr) return null;
+      const parts = String(slotStr).split(/[\s+,]+/);
+      for (let p of parts) {
+        p = p.trim().toUpperCase();
+        if (EXAM_SLOT_TIMES[p]) return p;
+      }
+      return null;
+    }
+
+    function getDayOfWeek(dateString) {
+      if (!dateString) return 'Unscheduled';
+      const parts = dateString.split('-');
+      if (parts.length === 3) {
+        const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        return days[d.getDay()];
+      }
+      return 'Unscheduled';
+    }
+
+    function formatDateFormatted(dateString) {
+      if (!dateString) return 'Not Set';
+      const parts = dateString.split('-');
+      if (parts.length === 3) {
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const dayNum = parseInt(parts[2]);
+        const monthName = months[parseInt(parts[1]) - 1];
+        const yearNum = parts[0];
+        return `${dayNum} ${monthName} ${yearNum}`;
+      }
+      return dateString;
+    }
+
+    function switchExamTab(tabName) {
+      if (!state.examConfig) {
+        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] } };
+      }
+      state.examConfig.activeExamTab = tabName;
+      document.querySelectorAll('.exam-tab-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`tab${tabName}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      triggerAutoSave();
+      renderExamDashboard();
+    }
+
+    function updateExamSlotDate(caTab, slotName, dateValue) {
+      if (!state.examConfig) {
+        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] } };
+      }
+      if (!state.examConfig.schedules[caTab]) {
+        state.examConfig.schedules[caTab] = { slotDates: {} };
+      }
+
+      if (dateValue) {
+        // Validation 1: Prevent selecting past dates
+        const selected = new Date(dateValue + 'T00:00:00');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selected < today) {
+          alert(`Invalid Selection: ${formatDateFormatted(dateValue)} is a past date. Please select a current or future exam date.`);
+          renderExamDashboard();
+          return;
+        }
+
+        // Validation 2: Check for duplicate exam date within the same CA series
+        const slotDates = state.examConfig.schedules[caTab].slotDates || {};
+        for (let otherSlot of Object.keys(slotDates)) {
+          if (otherSlot !== slotName && slotDates[otherSlot] === dateValue) {
+            alert(`Duplicate Date Warning: Slot ${otherSlot} is already scheduled on ${formatDateFormatted(dateValue)} for ${caTab}. Please choose a different exam date.`);
+            renderExamDashboard();
+            return;
+          }
+        }
+      }
+
+      state.examConfig.schedules[caTab].slotDates[slotName] = dateValue;
+      logHistory(`Updated ${caTab} exam date for Slot ${slotName} to ${dateValue || 'Cleared'}.`);
+      triggerAutoSave();
+      renderExamDashboard();
+    }
+
+    function getMappedExamsForCA(caTab) {
+      const activeSem = state.currentSemester || 1;
+      const courses = state.semesters[activeSem] || [];
+      const caSchedule = (state.examConfig && state.examConfig.schedules && state.examConfig.schedules[caTab]) ? state.examConfig.schedules[caTab].slotDates : {};
+
+      const now = new Date();
+
+      return courses.map(c => {
+        const slotToken = getPrimarySlotToken(c.theorySlot || c.labSlot || c.labSlot2);
+        const dateVal = slotToken ? caSchedule[slotToken] : null;
+        const slotMeta = slotToken ? EXAM_SLOT_TIMES[slotToken] : null;
+        const dayName = getDayOfWeek(dateVal);
+
+        let status = 'Unscheduled';
+        let examStartDate = null;
+        let examEndDate = null;
+
+        if (dateVal && slotMeta) {
+          const parts = dateVal.split('-');
+          if (parts.length === 3) {
+            examStartDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]), slotMeta.startHour, slotMeta.startMin);
+            examEndDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]), slotMeta.endHour, slotMeta.endMin);
+
+            if (now > examEndDate) {
+              status = 'Completed';
+            } else if (now.toDateString() === examStartDate.toDateString()) {
+              status = 'Today';
+            } else {
+              status = 'Upcoming';
+            }
+          }
+        }
+
+        return {
+          course: c,
+          slot: slotToken || (c.theorySlot || c.labSlot || 'N/A'),
+          rawSlot: c.theorySlot || c.labSlot || 'N/A',
+          session: slotMeta ? slotMeta.session : 'N/A',
+          timeStr: slotMeta ? slotMeta.timeStr : 'N/A',
+          dateVal: dateVal,
+          formattedDate: formatDateFormatted(dateVal),
+          dayName: dayName,
+          status: status,
+          examStartDate: examStartDate,
+          examEndDate: examEndDate
+        };
+      });
+    }
+
+    function renderExamDashboard() {
+      if (!state.examConfig) {
+        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] } };
+      }
+      const caTab = state.examConfig.activeExamTab || 'CA1';
+      const semDisplay = document.getElementById('examSemDisplay');
+      if (semDisplay) semDisplay.textContent = `Semester ${state.currentSemester || 1}`;
+
+      const adminTabBadge = document.getElementById('adminTabBadge');
+      if (adminTabBadge) adminTabBadge.textContent = caTab;
+
+      // Render Admin Slot Table Body
+      const adminBody = document.getElementById('adminExamSlotTableBody');
+      const caSchedule = (state.examConfig.schedules[caTab] && state.examConfig.schedules[caTab].slotDates) ? state.examConfig.schedules[caTab].slotDates : {};
+
+      const morningSlots = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
+      const afternoonSlots = ['A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2'];
+
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      let adminRowsHtml = '';
+
+      const buildAdminRowHtml = (slot, sessionLabel) => {
+        const dateVal = caSchedule[slot] || '';
+        const dayBadge = getDayOfWeek(dateVal);
+        const timeMeta = EXAM_SLOT_TIMES[slot];
+
+        return `<tr style="border-bottom:1px solid var(--glass-border);">
+          <td style="padding:8px;"><span class="badge-sm" style="background:${sessionLabel === 'Morning' ? 'rgba(56,189,248,0.15)' : 'rgba(245,158,11,0.15)'}; color:${sessionLabel === 'Morning' ? '#38BDF8' : '#F59E0B'}; font-weight:700;">${sessionLabel}</span></td>
+          <td style="padding:8px;"><strong>${slot}</strong></td>
+          <td style="padding:8px; color:var(--ink-soft); font-size:12px;">${timeMeta.timeStr}</td>
+          <td style="padding:8px;">
+            <input type="date" min="${todayStr}" value="${dateVal}" class="form-input" style="padding:4px 8px; font-size:12px; width:150px;" onchange="updateExamSlotDate('${caTab}', '${slot}', this.value)" />
+          </td>
+          <td style="padding:8px;">
+            <span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${dayBadge}</span>
+          </td>
+        </tr>`;
+      };
+
+      morningSlots.forEach(s => adminRowsHtml += buildAdminRowHtml(s, 'Morning'));
+      afternoonSlots.forEach(s => adminRowsHtml += buildAdminRowHtml(s, 'Afternoon'));
+
+      if (adminBody) adminBody.innerHTML = adminRowsHtml;
+
+      // Render Mapped Student Exams
+      const mappedExams = getMappedExamsForCA(caTab);
+      const studentBody = document.getElementById('studentExamScheduleBody');
+      if (studentBody) {
+        if (mappedExams.length === 0) {
+          studentBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:16px; color:var(--ink-soft);">No subjects registered in Semester ${state.currentSemester} workspace.</td></tr>`;
+        } else {
+          studentBody.innerHTML = mappedExams.map(m => {
+            let statusColor = '#38BDF8', statusBg = 'rgba(56,189,248,0.15)';
+            if (m.status === 'Completed') { statusColor = 'var(--green)'; statusBg = 'rgba(34,197,94,0.15)'; }
+            else if (m.status === 'Today') { statusColor = '#EF4444'; statusBg = 'rgba(239,68,68,0.15)'; }
+
+            return `<tr style="border-bottom:1px solid var(--glass-border);">
+              <td style="padding:8px;"><strong>${m.course.code}</strong><br><span style="font-size:12px; color:var(--ink-soft);">${m.course.name}</span></td>
+              <td style="padding:8px;"><span class="badge-sm b-cr">${m.slot}</span></td>
+              <td style="padding:8px;">
+                ${m.dateVal ? `<strong>${m.formattedDate} (${m.dayName})</strong><br><small style="color:var(--ink-soft);">${m.timeStr}</small>` : '<span style="color:var(--ink-soft); font-style:italic;">Exam date not configured by Admin</span>'}
+              </td>
+              <td style="padding:8px;">
+                <span class="badge-sm" style="background:${statusBg}; color:${statusColor}; font-weight:700;">${m.status}</span>
+              </td>
+            </tr>`;
+          }).join('');
+        }
+      }
+
+      // Update Statistics
+      const totalSubj = mappedExams.length;
+      const completedCount = mappedExams.filter(m => m.status === 'Completed').length;
+      const upcomingCount = mappedExams.filter(m => m.status === 'Upcoming' || m.status === 'Today').length;
+
+      const elTotal = document.getElementById('statExamTotalSubjects');
+      const elUp = document.getElementById('statExamUpcomingCount');
+      const elComp = document.getElementById('statExamCompletedCount');
+      if (elTotal) elTotal.textContent = totalSubj;
+      if (elUp) elUp.textContent = upcomingCount;
+      if (elComp) elComp.textContent = completedCount;
+
+      // Calculate Average Gap
+      const scheduledWithDates = mappedExams.filter(m => m.examStartDate).sort((a, b) => a.examStartDate - b.examStartDate);
+      let avgGapDays = 0;
+      if (scheduledWithDates.length > 1) {
+        let totalDiffMs = 0;
+        for (let i = 0; i < scheduledWithDates.length - 1; i++) {
+          totalDiffMs += (scheduledWithDates[i + 1].examStartDate - scheduledWithDates[i].examStartDate);
+        }
+        avgGapDays = Math.round((totalDiffMs / (scheduledWithDates.length - 1)) / (1000 * 60 * 60 * 24));
+      }
+      const elGap = document.getElementById('statExamAvgGap');
+      if (elGap) elGap.textContent = `${avgGapDays} Day${avgGapDays !== 1 ? 's' : ''}`;
+
+      // Live Hero & Countdown Update
+      updateExamHeroContent(mappedExams, caTab);
+
+      // Render Calendar, Timeline & AI Study Planner
+      renderExamCalendar(mappedExams);
+      renderExamTimeline(mappedExams);
+      renderAIStudyPlanner(mappedExams);
+      updateExamNotifications(mappedExams);
+    }
+
+    function updateExamHeroContent(mappedExams, caTab) {
+      const heroContainer = document.getElementById('nextExamHeroContent');
+      const badgeSeries = document.getElementById('nextExamSeriesBadge');
+      if (badgeSeries) badgeSeries.textContent = `${caTab} Examination`;
+
+      if (!heroContainer) return;
+
+      const upcomingExams = mappedExams.filter(m => m.examStartDate && m.status !== 'Completed').sort((a, b) => a.examStartDate - b.examStartDate);
+
+      if (upcomingExams.length === 0) {
+        heroContainer.innerHTML = `<div style="text-align:center; padding:20px; color:var(--ink-soft);">
+          <h3 style="margin:0 0 6px 0; color:var(--ink);">All ${caTab} Exams Completed</h3>
+          <p style="margin:0; font-size:13px;">No remaining upcoming exams scheduled for this series.</p>
+        </div>`;
+        return;
+      }
+
+      const nextExam = upcomingExams[0];
+
+      heroContainer.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
+          <div>
+            <h2 style="font-size:24px; margin:0; font-weight:800; color:var(--ink);">${nextExam.course.name}</h2>
+            <div style="margin-top:4px; font-size:13px; color:var(--ink-soft); display:flex; gap:12px; align-items:center;">
+              <strong>Code: ${nextExam.course.code}</strong> • <span>Slot: ${nextExam.slot}</span> • <span>Faculty: ${nextExam.course.instructor || 'School Faculty'}</span>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:16px; font-weight:800; color:var(--indigo);">${nextExam.formattedDate} (${nextExam.dayName})</div>
+            <div style="font-size:13px; font-weight:600; color:var(--ink-soft);">${nextExam.timeStr}</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;" id="nextExamCountdownTimer" data-target="${nextExam.examStartDate.getTime()}">
+          <div class="countdown-unit"><span class="countdown-num" id="cdDays">00</span><span class="countdown-label">Days</span></div>
+          <div class="countdown-unit"><span class="countdown-num" id="cdHours">00</span><span class="countdown-label">Hours</span></div>
+          <div class="countdown-unit"><span class="countdown-num" id="cdMins">00</span><span class="countdown-label">Mins</span></div>
+          <div class="countdown-unit"><span class="countdown-num" id="cdSecs">00</span><span class="countdown-label">Secs</span></div>
+        </div>
+      `;
+
+      updateExamCountdown();
+    }
+
+    function updateExamCountdown() {
+      const timerEl = document.getElementById('nextExamCountdownTimer');
+      if (!timerEl) return;
+      const targetTime = parseInt(timerEl.dataset.target);
+      if (isNaN(targetTime)) return;
+
+      const now = new Date().getTime();
+      const diff = targetTime - now;
+
+      if (diff <= 0) {
+        const cdD = document.getElementById('cdDays');
+        const cdH = document.getElementById('cdHours');
+        const cdM = document.getElementById('cdMins');
+        const cdS = document.getElementById('cdSecs');
+        if (cdD) cdD.textContent = '00';
+        if (cdH) cdH.textContent = '00';
+        if (cdM) cdM.textContent = '00';
+        if (cdS) cdS.textContent = '00';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      const cdD = document.getElementById('cdDays');
+      const cdH = document.getElementById('cdHours');
+      const cdM = document.getElementById('cdMins');
+      const cdS = document.getElementById('cdSecs');
+
+      if (cdD) cdD.textContent = String(days).padStart(2, '0');
+      if (cdH) cdH.textContent = String(hours).padStart(2, '0');
+      if (cdM) cdM.textContent = String(mins).padStart(2, '0');
+      if (cdS) cdS.textContent = String(secs).padStart(2, '0');
+    }
+
+    function renderExamCalendar(mappedExams) {
+      const calContainer = document.getElementById('examCalendarGridContainer');
+      if (!calContainer) return;
+
+      const examDatesMap = {};
+      mappedExams.forEach(m => {
+        if (m.dateVal) {
+          examDatesMap[m.dateVal] = m;
+        }
+      });
+
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth();
+
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const monthYearTitle = document.getElementById('examCalendarMonthYear');
+      if (monthYearTitle) monthYearTitle.textContent = `${monthNames[month]} ${year}`;
+
+      const daysHeader = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      let calHtml = `<div class="exam-cal-grid" style="margin-bottom:6px;">
+        ${daysHeader.map(d => `<div class="exam-cal-day-header">${d}</div>`).join('')}
+      </div><div class="exam-cal-grid">`;
+
+      const firstDayIndex = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 0; i < firstDayIndex; i++) {
+        calHtml += `<div class="exam-cal-cell" style="opacity:0.2;"></div>`;
+      }
+
+      for (let day = 1; day <= totalDays; day++) {
+        const mStr = String(month + 1).padStart(2, '0');
+        const dStr = String(day).padStart(2, '0');
+        const dateKey = `${year}-${mStr}-${dStr}`;
+        const examItem = examDatesMap[dateKey];
+        const isToday = (day === today.getDate());
+
+        calHtml += `<div class="exam-cal-cell ${examItem ? 'has-exam' : ''} ${isToday ? 'spot' : ''}" onclick="showExamCalendarDetail('${dateKey}')">
+          <span>${day}</span>
+          ${examItem ? `<small style="font-size:8.5px; margin-top:2px;">${examItem.slot}</small>` : ''}
+        </div>`;
+      }
+
+      calHtml += `</div>`;
+      calContainer.innerHTML = calHtml;
+    }
+
+    function showExamCalendarDetail(dateKey) {
+      const caTab = (state.examConfig && state.examConfig.activeExamTab) ? state.examConfig.activeExamTab : 'CA1';
+      const mappedExams = getMappedExamsForCA(caTab);
+      const match = mappedExams.find(m => m.dateVal === dateKey);
+
+      if (match) {
+        alert(`Exam Details (${dateKey}):\n\nCourse: ${match.course.name} (${match.course.code})\nSlot: ${match.slot}\nSession: ${match.session}\nTime: ${match.timeStr}\nFaculty: ${match.course.instructor || 'TBA'}\nStatus: ${match.status}`);
+      } else {
+        alert(`No exam scheduled on ${formatDateFormatted(dateKey)}.`);
+      }
+    }
+
+    function renderExamTimeline(mappedExams) {
+      const container = document.getElementById('examTimelineContainer');
+      if (!container) return;
+
+      const sorted = mappedExams.filter(m => m.dateVal).sort((a, b) => (a.examStartDate || 0) - (b.examStartDate || 0));
+
+      if (sorted.length === 0) {
+        container.innerHTML = `<div style="color:var(--ink-soft); text-align:center; padding:20px; font-size:13px;">No exam dates configured yet. Set exam dates in the Admin table above.</div>`;
+        return;
+      }
+
+      container.innerHTML = sorted.map(m => {
+        let borderClr = 'var(--indigo)';
+        if (m.status === 'Completed') borderClr = 'var(--green)';
+        else if (m.status === 'Today') borderClr = '#EF4444';
+
+        return `<div style="display:flex; gap:12px; align-items:center; background:rgba(255,255,255,0.03); border-left:3px solid ${borderClr}; border-radius:8px; padding:10px 12px; border-top:1px solid var(--glass-border); border-right:1px solid var(--glass-border); border-bottom:1px solid var(--glass-border);">
+          <div style="min-width:100px;">
+            <strong style="font-size:12px; display:block; color:var(--ink);">${m.formattedDate}</strong>
+            <small style="color:var(--ink-soft); font-size:10.5px;">${m.dayName}</small>
+          </div>
+          <div style="flex:1;">
+            <b style="font-size:13px; color:var(--ink); display:block;">${m.course.code} - ${m.course.name}</b>
+            <span style="font-size:11px; color:var(--ink-soft);">${m.timeStr} • Slot ${m.slot}</span>
+          </div>
+          <div>
+            <span class="badge-sm" style="background:${m.status === 'Completed' ? 'rgba(34,197,94,0.15)' : (m.status === 'Today' ? 'rgba(239,68,68,0.15)' : 'rgba(108,99,255,0.15)')}; color:${borderClr}; font-weight:700;">${m.status}</span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function renderAIStudyPlanner(mappedExams) {
+      const container = document.getElementById('aiStudyPlannerContent');
+      if (!container) return;
+
+      const upcoming = mappedExams.filter(m => m.status !== 'Completed').sort((a, b) => (a.examStartDate || Infinity) - (b.examStartDate || Infinity));
+      const completedTaskIds = new Set((state.examConfig && state.examConfig.studyPlanner) ? state.examConfig.studyPlanner.completedTasks : []);
+
+      let tasksHtml = '';
+      if (upcoming.length === 0) {
+        tasksHtml = `<div style="color:var(--ink-soft); font-size:13px; padding:12px;">No upcoming exams requiring study tasks.</div>`;
+      } else {
+        tasksHtml = upcoming.map((m, idx) => {
+          const taskId = `task_${m.course.code}`;
+          const isDone = completedTaskIds.has(taskId);
+          const priority = idx === 0 ? 'High Priority' : 'Medium Priority';
+          const pColor = idx === 0 ? '#EF4444' : '#F59E0B';
+
+          return `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); border-radius:10px; margin-bottom:8px;">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <input type="checkbox" ${isDone ? 'checked' : ''} style="width:16px; height:16px; cursor:pointer;" onchange="toggleStudyTask('${taskId}')" />
+              <div>
+                <strong style="font-size:13px; text-decoration:${isDone ? 'line-through' : 'none'}; color:${isDone ? 'var(--ink-soft)' : 'var(--ink)'};">${m.course.name} (${m.course.code})</strong>
+                <div style="font-size:11px; color:var(--ink-soft); margin-top:2px;">Slot ${m.slot} • Target Revision: 3 Hours • Focus: Core Concepts</div>
+              </div>
+            </div>
+            <span class="badge-sm" style="background:rgba(255,255,255,0.08); color:${pColor}; border:1px solid ${pColor}; font-weight:700;">${priority}</span>
+          </div>`;
+        }).join('');
+      }
+
+      // Calculate Readiness Score
+      const totalUpcoming = upcoming.length;
+      const doneCount = upcoming.filter(m => completedTaskIds.has(`task_${m.course.code}`)).length;
+      let score = 65;
+      if (totalUpcoming > 0) {
+        score = Math.round(50 + (doneCount / totalUpcoming) * 45);
+      } else if (mappedExams.length > 0) {
+        score = 100;
+      }
+
+      let readinessLabel = 'Ready';
+      let readinessClr = 'var(--green)';
+      if (score < 50) { readinessLabel = 'Critical'; readinessClr = '#EF4444'; }
+      else if (score < 70) { readinessLabel = 'Needs Revision'; readinessClr = '#F59E0B'; }
+      else if (score < 85) { readinessLabel = 'Almost Ready'; readinessClr = '#38BDF8'; }
+
+      const readinessScoreVal = document.getElementById('readinessScoreVal');
+      const readinessBadge = document.getElementById('readinessBadge');
+      const readinessCircle = document.getElementById('readinessCircle');
+
+      if (readinessScoreVal) readinessScoreVal.textContent = `${score}%`;
+      if (readinessBadge) {
+        readinessBadge.textContent = readinessLabel;
+        readinessBadge.style.color = readinessClr;
+      }
+      if (readinessCircle) {
+        const offset = 314 - (314 * score / 100);
+        readinessCircle.style.strokeDashoffset = offset;
+        readinessCircle.style.stroke = readinessClr;
+      }
+
+      container.innerHTML = `
+        <div>
+          <h4 style="margin:0 0 10px 0; font-size:14px; font-weight:700;">Prioritized Revision Checklist</h4>
+          ${tasksHtml}
+        </div>
+        <div style="background:rgba(108,99,255,0.06); border:1px solid var(--glass-border); border-radius:12px; padding:14px;">
+          <h4 style="margin:0 0 10px 0; font-size:14px; font-weight:700; color:var(--indigo);">AI Weak Area Analysis</h4>
+          <div class="tip-row"><span class="b"></span>Prioritize <b>${upcoming[0] ? upcoming[0].course.name : 'Nearest Subject'}</b> as its exam date is closest.</div>
+          <div class="tip-row"><span class="b"></span>Allocate at least 3 hours for 4-credit courses.</div>
+          <div class="tip-row"><span class="b"></span>Review formulas and past question papers 24 hours prior to paper.</div>
+        </div>
+      `;
+    }
+
+    function toggleStudyTask(taskId) {
+      if (!state.examConfig) {
+        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] } };
+      }
+      if (!state.examConfig.studyPlanner) state.examConfig.studyPlanner = { completedTasks: [] };
+      const tasks = state.examConfig.studyPlanner.completedTasks || [];
+      const idx = tasks.indexOf(taskId);
+      if (idx > -1) {
+        tasks.splice(idx, 1);
+      } else {
+        tasks.push(taskId);
+      }
+      state.examConfig.studyPlanner.completedTasks = tasks;
+      triggerAutoSave();
+      renderExamDashboard();
+    }
+
+    function generateAIStudyPlan() {
+      if (state.examConfig && state.examConfig.studyPlanner) {
+        state.examConfig.studyPlanner.completedTasks = [];
+      }
+      logHistory('Regenerated AI Study Planner schedule.');
+      triggerAutoSave();
+      renderExamDashboard();
+      alert('AI Study Plan regenerated successfully based on latest exam schedule!');
+    }
+
+    function updateExamNotifications(mappedExams) {
+      const container = document.getElementById('examNotificationContainer');
+      if (!container) return;
+
+      const todayExam = mappedExams.find(m => m.status === 'Today');
+      if (todayExam) {
+        container.innerHTML = `
+          <div class="glass fade-up" style="padding:14px 18px; margin-bottom:20px; background:linear-gradient(135deg, rgba(239,68,68,0.18), rgba(245,158,11,0.12)); border:1.5px solid #EF4444; border-radius:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+              <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#EF4444; letter-spacing:0.05em; display:block;">🔥 TODAY'S EXAM ALERT</span>
+              <strong style="font-size:16px; color:var(--ink);">${todayExam.course.name} (${todayExam.course.code})</strong>
+              <div style="font-size:12px; color:var(--ink-soft); margin-top:2px;">Time: ${todayExam.timeStr} • Slot ${todayExam.slot}</div>
+            </div>
+            <div style="background:#EF4444; color:#fff; font-weight:800; font-size:14px; padding:8px 16px; border-radius:20px;">
+              Best of Luck! 👍
+            </div>
+          </div>
+        `;
+      } else {
+        container.innerHTML = '';
+      }
+    }
+
+    function printExamScheduleReport() {
+      const caTab = (state.examConfig && state.examConfig.activeExamTab) ? state.examConfig.activeExamTab : 'CA1';
+      const mappedExams = getMappedExamsForCA(caTab);
+
+      let rowsHtml = '';
+      if (mappedExams.length === 0) {
+        rowsHtml = `<tr><td colspan="5" style="text-align:center; padding:12px; color:#666;">No subjects registered in Semester ${state.currentSemester}.</td></tr>`;
+      } else {
+        rowsHtml = mappedExams.map((m, i) => {
+          return `<tr>
+            <td style="padding:8px; border-bottom:1px solid #ddd;">${i + 1}</td>
+            <td style="padding:8px; border-bottom:1px solid #ddd;"><strong>${m.course.code}</strong><br><small style="color:#666;">${m.course.name}</small></td>
+            <td style="padding:8px; border-bottom:1px solid #ddd;">${m.slot}</td>
+            <td style="padding:8px; border-bottom:1px solid #ddd;">${m.dateVal ? `<strong>${m.formattedDate}</strong> (${m.dayName})` : 'Unscheduled'}</td>
+            <td style="padding:8px; border-bottom:1px solid #ddd;">${m.timeStr}</td>
+          </tr>`;
+        }).join('');
+      }
+
+      const printArea = document.getElementById('printableReport');
+      printArea.innerHTML = `
+        <div style="font-family:'Inter', Arial, sans-serif; max-width:900px; margin:0 auto; padding:20px; color:#000; background:#fff;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #000; padding-bottom:12px; margin-bottom:20px;">
+            <div>
+              <h1 style="font-size:22px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.05em;">SCFC Official ${caTab} Exam Schedule</h1>
+              <p style="margin:4px 0 0 0; font-size:13px; color:#444;">School of Computer Science & Engineering</p>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:11px; color:#666;">Date Generated</div>
+              <div style="font-size:13px; font-weight:600;">${new Date().toLocaleDateString()}</div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:8px; padding:16px; margin-bottom:24px;">
+            <div>
+              <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Student Name</span>
+              <strong style="font-size:16px; color:#111;">${state.studentName || 'N/A'}</strong>
+            </div>
+            <div>
+              <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">USN</span>
+              <strong style="font-size:16px; color:#111;">${state.usn || 'N/A'}</strong>
+            </div>
+            <div>
+              <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Semester & Series</span>
+              <strong style="font-size:16px; color:#111;">Semester ${state.currentSemester || 1} • ${caTab}</strong>
+            </div>
+          </div>
+
+          <h3 style="font-size:16px; margin-bottom:10px; text-transform:uppercase;">Examination Schedule Table</h3>
+          <table style="width:100%; border-collapse:collapse; margin-bottom:24px; font-size:13px;">
+            <thead>
+              <tr style="background:#f1f3f5; border-bottom:2px solid #dee2e6; text-align:left;">
+                <th style="padding:8px; width:40px;">#</th>
+                <th style="padding:8px;">Course Title & Code</th>
+                <th style="padding:8px;">Slot</th>
+                <th style="padding:8px;">Exam Date & Day</th>
+                <th style="padding:8px;">Session Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+
+          <div style="margin-top:30px; border-top:1px solid #eee; padding-top:12px; font-size:11px; color:#888; text-align:center;">
+            Official Academic Exam Timetable • SCFC Grade Calculator
+          </div>
+        </div>
+      `;
+
+      window.print();
+    }
+
+    function shareExamSchedule() {
+      const caTab = (state.examConfig && state.examConfig.activeExamTab) ? state.examConfig.activeExamTab : 'CA1';
+      const text = `Check out my ${caTab} Exam Schedule on SCFC Grade Calculator!\nStudent: ${state.studentName || 'Student'} (${state.usn || 'USN'})\nSemester: ${state.currentSemester || 1}`;
+
+      if (navigator.share) {
+        navigator.share({
+          title: `SCFC ${caTab} Exam Schedule`,
+          text: text,
+          url: window.location.href
+        }).catch(err => console.log('Share canceled:', err));
+      } else {
+        navigator.clipboard.writeText(`${text}\n${window.location.href}`);
+        alert('Exam Schedule summary and link copied to clipboard!');
+      }
+    }
+
+    // Interval to refresh countdown timer every 1 second
+    setInterval(updateExamCountdown, 1000);
+
     function preparePrintReportForActiveView() {
       const printArea = document.getElementById('printableReport');
       if (!printArea || !printArea.innerHTML.trim()) {
@@ -5368,6 +6353,8 @@
           printTimetableReport();
         } else if (typeof activeView !== 'undefined' && activeView === 'tracker') {
           printTrackerReport();
+        } else if (typeof activeView !== 'undefined' && activeView === 'exams') {
+          printExamScheduleReport();
         } else {
           printCleanReport(state.currentSemester || 1);
         }
@@ -5685,7 +6672,7 @@
     (function rebuildMobileNav() {
       const bottom = document.querySelector('.mobile-bottomnav');
       if (!bottom) return;
-      const views = ['dashboard', 'semester', 'timetable', 'tracker', 'analytics', 'reports', 'settings'];
+      const views = ['dashboard', 'semester', 'timetable', 'exams', 'tracker', 'analytics', 'reports', 'settings'];
       bottom.innerHTML = '';
       views.forEach(v => {
         const dock = document.querySelector(`.dock-item[data-view="${v}"]`);
