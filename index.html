@@ -363,14 +363,37 @@
       top: 20px;
       align-self: start;
       height: calc(100vh - 40px);
+      max-height: calc(100vh - 40px);
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       padding: 22px 14px;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      overscroll-behavior-y: contain;
       width: var(--dock-w);
       transition: width .35s cubic-bezier(.22, 1, .36, 1);
       z-index: 30;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(140, 130, 255, 0.4) transparent;
+    }
+
+    .dock::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .dock::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .dock::-webkit-scrollbar-thumb {
+      background: rgba(140, 130, 255, 0.35);
+      border-radius: 4px;
+    }
+
+    .dock::-webkit-scrollbar-thumb:hover {
+      background: rgba(140, 130, 255, 0.6);
     }
 
     .dock:hover {
@@ -384,6 +407,7 @@
       padding: 0 6px 22px 6px;
       width: 100%;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .dock-logo .mark {
@@ -425,6 +449,7 @@
       gap: 4px;
       width: 100%;
       margin-top: 8px;
+      flex-shrink: 0;
     }
 
     .dock-item {
@@ -471,7 +496,8 @@
     }
 
     .dock-spacer {
-      flex: 1;
+      min-height: 16px;
+      flex-shrink: 0;
     }
 
     .dock-user {
@@ -1198,7 +1224,7 @@
       gap: 10px;
     }
 
-    .dash-grid .glass.p-6 > * {
+    .dash-grid .glass.p-6>* {
       width: 100%;
     }
 
@@ -1216,41 +1242,103 @@
       font-size: 2.4rem;
       line-height: 1.05;
     }
+
     @media (max-width: 640px) {
       .dash-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 12px;
       }
+
       .dash-grid .glass.p-6 {
         min-height: 120px;
         padding: 12px 14px;
       }
+
       .dash-grid .glass.p-6 .val {
         font-size: 1.8rem;
       }
     }
+
     /* Print layout adjustments to avoid overlapping header/text */
     @media print {
-      * { -webkit-print-color-adjust: exact; color-adjust: exact; }
-      body { background: #fff !important; color: #000 !important; }
+      * {
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+      }
+
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+
       /* leave space for browser print header to avoid overlap */
-      body, #printableReport { padding-top: 22mm !important; }
+      body,
+      #printableReport {
+        padding-top: 22mm !important;
+      }
+
       /* Hide non-essential UI */
-      .dock, .topbar, .rsidebar, .ws-controls, .dock-logo, .dock-user { display: none !important; }
+      .dock,
+      .topbar,
+      .rsidebar,
+      .ws-controls,
+      .dock-logo,
+      .dock-user {
+        display: none !important;
+      }
+
       /* Use single-column shell for print */
-      .shell { grid-template-columns: 1fr !important; max-width: 100% !important; padding: 0 !important; }
+      .shell {
+        grid-template-columns: 1fr !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+      }
+
       /* Reduce hero size so header doesn't overlap */
-      .hero h1 { font-size: 20px !important; line-height: 1.1 !important; }
-      .hero p { font-size: 12px !important; color: #333 !important; }
+      .hero h1 {
+        font-size: 20px !important;
+        line-height: 1.1 !important;
+      }
+
+      .hero p {
+        font-size: 12px !important;
+        color: #333 !important;
+      }
+
       /* Make cards print-friendly */
-      .dash-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
-      .dash-grid .glass.p-6 { min-height: 120px !important; padding: 12px !important; background: transparent !important; box-shadow: none !important; border: 1px solid #ddd !important; }
-      .dash-grid .glass.p-6 .val { font-size: 1.6rem !important; color: #000 !important; }
-      .glass::before, .glass.spot::after { display: none !important; }
+      .dash-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+      }
+
+      .dash-grid .glass.p-6 {
+        min-height: 120px !important;
+        padding: 12px !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+      }
+
+      .dash-grid .glass.p-6 .val {
+        font-size: 1.6rem !important;
+        color: #000 !important;
+      }
+
+      .glass::before,
+      .glass.spot::after {
+        display: none !important;
+      }
+
       /* hide large hero/banner that collides with browser print header */
-      .hero { display: none !important; }
+      .hero {
+        display: none !important;
+      }
+
       /* Prevent page breaks inside cards */
-      .glass { page-break-inside: avoid; break-inside: avoid; }
+      .glass {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
     }
 
     .dash-grid .glass.p-6 p {
@@ -1332,8 +1420,8 @@
       gap: 8px;
       padding: 8px 10px;
       border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
       color: var(--ink);
       cursor: pointer;
       font-size: 11px;
@@ -1360,7 +1448,7 @@
       gap: 8px;
       font-size: 11px;
       padding: 4px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .tracker-course-item:last-child {
@@ -1374,8 +1462,8 @@
       border-radius: 999px;
       font-size: 11px;
       font-weight: 700;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
       color: var(--ink);
       cursor: pointer;
       transition: all 0.2s ease;
@@ -1383,7 +1471,7 @@
 
     .tracker-toggle-btn:hover {
       transform: translateY(-1px);
-      background: rgba(255,255,255,0.12);
+      background: rgba(255, 255, 255, 0.12);
     }
 
     .tracker-filter-group {
@@ -1409,7 +1497,7 @@
       display: grid;
       place-items: center;
       position: relative;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
     }
 
     .tracker-ring::before {
@@ -2088,6 +2176,8 @@
       body {
         background: #ffffff !important;
         color: #000000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
 
       .aurora-wrap,
@@ -2099,37 +2189,36 @@
         display: none !important;
       }
 
-      .app {
-        display: block !important;
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-
-      .page-view {
+      body>*:not(#printableReport) {
         display: none !important;
       }
 
-      .page-view.active {
-        display: block !important;
-      }
-
-      /* Only show the clean printable report; hide other page elements to avoid duplicates */
-      body > *:not(#printableReport) { display: none !important; }
       #printableReport {
         display: block !important;
         position: static !important;
         left: auto !important;
         top: auto !important;
-        width: auto !important;
+        width: 100% !important;
         max-width: 100% !important;
         background: #ffffff !important;
+        color: #000000 !important;
         margin: 0 auto !important;
-        padding: 8mm !important;
+        padding: 5mm !important;
+      }
+
+      #printableReport * {
+        color: #000000 !important;
+      }
+
+      #printableReport table,
+      #printableReport th,
+      #printableReport td {
+        border-color: #cccccc !important;
       }
 
       @page {
         size: auto;
-        margin: 12mm;
+        margin: 10mm;
       }
     }
 
@@ -2159,7 +2248,7 @@
     <div class="shell">
 
       <!-- DOCK NAV -->
-      <nav class="glass dock">
+      <nav class="glass dock" tabindex="0">
         <div class="dock-logo" onclick="switchView('dashboard')">
           <div class="mark">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
@@ -2201,10 +2290,10 @@
           </a>
           <a class="dock-item" data-view="timetable" onclick="switchView('timetable')">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-              <line x1="16" y1="2" x2="16" y2="6"/>
-              <line x1="8" y1="2" x2="8" y2="6"/>
-              <line x1="3" y1="10" x2="21" y2="10"/>
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
             </svg>
             <span class="label">Timetable</span>
           </a>
@@ -2643,8 +2732,9 @@
                 <h4>Smart Warnings</h4>
               </div>
               <div id="smartWarningsContainer">
-                 <span class="announce-badge">Active</span>
-                 <p class="note">MongoDB integration and Student USN authentication are active. All changes auto-save instantly to the database.</p>
+                <span class="announce-badge">Active</span>
+                <p class="note">MongoDB integration and Student USN authentication are active. All changes auto-save
+                  instantly to the database.</p>
               </div>
             </div>
           </div>
@@ -2657,10 +2747,12 @@
             <p>Official course timetable with theory and lab slot mappings. Auto-generates based on selected slots.</p>
           </div>
           <div class="glass fade-up" style="padding: 24px; margin-bottom:24px; overflow-x: auto;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; flex-wrap:wrap;">
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; flex-wrap:wrap;">
               <h3 style="margin:0;">Course Slot Assignments</h3>
               <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
                 <select class="form-input" id="timetableSemSelect" style="width:200px;" onchange="renderTimetable()">
+                  <option value="all">All Semesters (1-8)</option>
                   <option value="1">Semester 1</option>
                   <option value="2">Semester 2</option>
                   <option value="3">Semester 3</option>
@@ -2670,7 +2762,7 @@
                   <option value="7">Semester 7</option>
                   <option value="8">Semester 8</option>
                 </select>
-                <button class="btn btn-ghost" onclick="window.print()">Print Timetable</button>
+                <button class="btn btn-ghost" onclick="printTimetableReport()">Print Timetable</button>
               </div>
             </div>
             <table style="width:100%; text-align:left;">
@@ -2726,27 +2818,33 @@
             </div>
             <div class="glass p-6">
               <h3>Credits Earned</h3>
-              <div class="val" id="trackerCompletedCredits" style="font-size:36px; margin: 10px 0; color:var(--green);">0</div>
+              <div class="val" id="trackerCompletedCredits" style="font-size:36px; margin: 10px 0; color:var(--green);">
+                0</div>
               <p style="color:var(--ink-soft); font-size:13px;">Passed credits only</p>
             </div>
             <div class="glass p-6">
               <h3>Credits Remaining</h3>
-              <div class="val" id="trackerRemaining" style="font-size:36px; margin: 10px 0; color:var(--indigo);">160</div>
+              <div class="val" id="trackerRemaining" style="font-size:36px; margin: 10px 0; color:var(--indigo);">160
+              </div>
               <p style="color:var(--ink-soft); font-size:13px;">Minimum requirement balance</p>
             </div>
             <div class="glass p-6">
               <h3>Overall Completion %</h3>
               <div class="val" id="trackerPct" style="font-size:36px; margin: 10px 0;">0%</div>
-              <div class="prog-bar"><div class="prog-fill" id="trackerTotalProg" style="width:0%; background:var(--green)"></div></div>
+              <div class="prog-bar">
+                <div class="prog-fill" id="trackerTotalProg" style="width:0%; background:var(--green)"></div>
+              </div>
             </div>
             <div class="glass p-6">
               <h3>Current Semester Credits</h3>
-              <div class="val" id="trackerCurrentSemCredits" style="font-size:36px; margin: 10px 0; color:var(--indigo);">0</div>
+              <div class="val" id="trackerCurrentSemCredits"
+                style="font-size:36px; margin: 10px 0; color:var(--indigo);">0</div>
               <p style="color:var(--ink-soft); font-size:13px;">Passed credits in active semester</p>
             </div>
             <div class="glass p-6">
               <h3>Courses Completed</h3>
-              <div class="val" id="trackerCompletedCourses" style="font-size:36px; margin: 10px 0; color:var(--green);">0</div>
+              <div class="val" id="trackerCompletedCourses" style="font-size:36px; margin: 10px 0; color:var(--green);">
+                0</div>
               <p style="color:var(--ink-soft); font-size:13px;">Courses with grade D or higher</p>
             </div>
             <div class="glass p-6">
@@ -2756,7 +2854,8 @@
             </div>
           </div>
 
-          <div class="glass fade-up" style="padding: 18px; margin: 24px 0; display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
+          <div class="glass fade-up"
+            style="padding: 18px; margin: 24px 0; display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
             <div class="tracker-filter-group">
               <label for="trackerSemesterFilter">Semester</label>
               <select class="form-input" id="trackerSemesterFilter">
@@ -2941,7 +3040,8 @@
 
             <div class="glass spot card-pad">
               <h3 style="margin-bottom:16px; font-size:16px; font-weight:700;">Data Management & Reset</h3>
-              <p style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">Export backup JSON, import data, or reset specific semester timetables.</p>
+              <p style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">Export backup JSON, import data, or
+                reset specific semester timetables.</p>
               <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
                 <button class="btn btn-ghost" onclick="exportDataBackup()">Export Backup (JSON)</button>
                 <label class="btn btn-ghost" style="cursor:pointer; display:inline-flex; align-items:center;">
@@ -2950,9 +3050,12 @@
                 </label>
               </div>
               <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <button class="btn btn-ghost" style="color:#F59E0B; border-color:rgba(245,158,11,.3);" onclick="resetTimetable()">Reset Current Timetable</button>
-                <button class="btn btn-ghost" style="color:#EF4444; border-color:rgba(239,68,68,.3);" onclick="resetCurrentSemester()">Reset Semester Courses</button>
-                <button class="btn btn-ghost" style="color:#EF4444; border-color:rgba(239,68,68,.3);" onclick="logoutStudent()">Logout Session</button>
+                <button class="btn btn-ghost" style="color:#F59E0B; border-color:rgba(245,158,11,.3);"
+                  onclick="resetTimetable()">Reset Current Timetable</button>
+                <button class="btn btn-ghost" style="color:#EF4444; border-color:rgba(239,68,68,.3);"
+                  onclick="resetCurrentSemester()">Reset Semester Courses</button>
+                <button class="btn btn-ghost" style="color:#EF4444; border-color:rgba(239,68,68,.3);"
+                  onclick="logoutStudent()">Logout Session</button>
               </div>
             </div>
 
@@ -3188,7 +3291,8 @@
           <div class="auth-banner" id="setupBanner"></div>
           <div class="form-group">
             <label>USN</label>
-            <input type="text" id="setupUsnInput" class="form-input" placeholder="e.g. 1SC21CS001" style="text-transform:uppercase;" disabled>
+            <input type="text" id="setupUsnInput" class="form-input" placeholder="e.g. 1SC21CS001"
+              style="text-transform:uppercase;" disabled>
           </div>
           <div class="form-group">
             <label>New Password</label>
@@ -3198,9 +3302,11 @@
             <label>Confirm Password</label>
             <input type="password" id="setupConfirmPasswordInput" class="form-input" placeholder="Confirm password">
           </div>
-          <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="handleSetupPasswordSubmit()">Create Password</button>
+          <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;"
+            onclick="handleSetupPasswordSubmit()">Create Password</button>
           <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
-            Already secured? <a href="#" style="color:var(--indigo); font-weight:700;" onclick="switchAuthTab('login')">Login here</a>
+            Already secured? <a href="#" style="color:var(--indigo); font-weight:700;"
+              onclick="switchAuthTab('login')">Login here</a>
           </div>
         </div>
       </div>
@@ -3360,133 +3466,133 @@
       // { code: 'CSE2022', name: 'Front End Engineering', credits: 3, basket: 'Fullstack Development' },
       // { code: 'CSE2023', name: 'Backend Engineering', credits: 3, basket: 'Fullstack Development' },
       // { code: 'CSE2035', name: 'DevOps', credits: 3, basket: 'DevOps' },
-  
-  // AI & ML
-  { code: "CSE3010", name: "AI & ML Applications", credits: 3, basket: "AI & ML" },
-  { code: "CSE3015", name: "Natural Language Processing", credits: 3, basket: "AI & ML" },
-  { code: "CSE3013", name: "Deep Neural Networks", credits: 3, basket: "AI & ML" },
-  { code: "CSE3012", name: "Optimization Techniques in Machine Learning", credits: 3, basket: "AI & ML" },
-  { code: "CSE3014", name: "Reinforcement Learning Techniques", credits: 3, basket: "AI & ML" },
-  { code: "CSE4005", name: "Industrial Applications of AI & ML", credits: 3, basket: "AI & ML" },
 
-  // Cyber Security
-  { code: "CSE3022", name: "Intrusion Detection and Prevention System", credits: 3, basket: "Cyber Security" },
-  { code: "CSE3021", name: "Ethical Hacking", credits: 3, basket: "Cyber Security" },
-  { code: "CSE3025", name: "Networking and System Administration", credits: 3, basket: "Cyber Security" },
-  { code: "CSE3020", name: "Social Media Privacy and Security", credits: 3, basket: "Cyber Security" },
-  { code: "CSE3023", name: "Fundamentals of Cloud Security", credits: 3, basket: "Cyber Security" },
-  { code: "CSE3024", name: "Penetration Testing and Incident Response", credits: 3, basket: "Cyber Security" },
-  { code: "CSE3026", name: "Blockchain and Distributed Ledger Technology", credits: 3, basket: "Cyber Security" },
-  { code: "CSE4009", name: "Industrial Applications of Cyber Security", credits: 3, basket: "Cyber Security" },
+      // AI & ML
+      { code: "CSE3010", name: "AI & ML Applications", credits: 3, basket: "AI & ML" },
+      { code: "CSE3015", name: "Natural Language Processing", credits: 3, basket: "AI & ML" },
+      { code: "CSE3013", name: "Deep Neural Networks", credits: 3, basket: "AI & ML" },
+      { code: "CSE3012", name: "Optimization Techniques in Machine Learning", credits: 3, basket: "AI & ML" },
+      { code: "CSE3014", name: "Reinforcement Learning Techniques", credits: 3, basket: "AI & ML" },
+      { code: "CSE4005", name: "Industrial Applications of AI & ML", credits: 3, basket: "AI & ML" },
 
-  // Data Analytics
-  { code: "CSE1008", name: "Statistical Foundations of Data Analytics", credits: 3, basket: "Data Analytics" },
-  { code: "CSE1012", name: "R Programming for Data Analytics", credits: 3, basket: "Data Analytics" },
-  { code: "CSE1013", name: "Exploratory Data Analysis", credits: 3, basket: "Data Analytics" },
-  { code: "CSE2024", name: "Web Data Analytics", credits: 3, basket: "Data Analytics" },
-  { code: "CSE2025", name: "Predictive Analytics", credits: 3, basket: "Data Analytics" },
-  { code: "CSE2026", name: "Social Media Analytics", credits: 3, basket: "Data Analytics" },
-  { code: "CSE2027", name: "Healthcare Analytics", credits: 3, basket: "Data Analytics" },
-  { code: "CSE2028", name: "Big Data Analytics", credits: 3, basket: "Data Analytics" },
-  { code: "CSE2029", name: "Business Analytics Fundamentals", credits: 3, basket: "Data Analytics" },
-  { code: "CSE4010", name: "Industrial Applications of Data Analytics", credits: 3, basket: "Data Analytics" },
+      // Cyber Security
+      { code: "CSE3022", name: "Intrusion Detection and Prevention System", credits: 3, basket: "Cyber Security" },
+      { code: "CSE3021", name: "Ethical Hacking", credits: 3, basket: "Cyber Security" },
+      { code: "CSE3025", name: "Networking and System Administration", credits: 3, basket: "Cyber Security" },
+      { code: "CSE3020", name: "Social Media Privacy and Security", credits: 3, basket: "Cyber Security" },
+      { code: "CSE3023", name: "Fundamentals of Cloud Security", credits: 3, basket: "Cyber Security" },
+      { code: "CSE3024", name: "Penetration Testing and Incident Response", credits: 3, basket: "Cyber Security" },
+      { code: "CSE3026", name: "Blockchain and Distributed Ledger Technology", credits: 3, basket: "Cyber Security" },
+      { code: "CSE4009", name: "Industrial Applications of Cyber Security", credits: 3, basket: "Cyber Security" },
 
-  // IoT
-  { code: "ECE2004", name: "Sensor Technology, Embedded Systems and User Interface", credits: 3, basket: "IoT" },
-  { code: "ECE2002", name: "IoT Platforms and Application Development", credits: 3, basket: "IoT" },
-  { code: "CSE2031", name: "Wireless Communication in IoT", credits: 3, basket: "IoT" },
-  { code: "ECE2001", name: "IoT Architecture and Protocols", credits: 3, basket: "IoT" },
-  { code: "CSE2032", name: "Mobile Application for IoT", credits: 3, basket: "IoT" },
-  { code: "CSE2033", name: "Cloud Computing for IoT", credits: 3, basket: "IoT" },
-  { code: "CSE2030", name: "Big Data Analytics for IoT", credits: 3, basket: "IoT" },
-  { code: "ECE2003", name: "Industrial Internet of Things", credits: 3, basket: "IoT" },
-  { code: "ECE2005", name: "Internet of Medical Things", credits: 3, basket: "IoT" },
+      // Data Analytics
+      { code: "CSE1008", name: "Statistical Foundations of Data Analytics", credits: 3, basket: "Data Analytics" },
+      { code: "CSE1012", name: "R Programming for Data Analytics", credits: 3, basket: "Data Analytics" },
+      { code: "CSE1013", name: "Exploratory Data Analysis", credits: 3, basket: "Data Analytics" },
+      { code: "CSE2024", name: "Web Data Analytics", credits: 3, basket: "Data Analytics" },
+      { code: "CSE2025", name: "Predictive Analytics", credits: 3, basket: "Data Analytics" },
+      { code: "CSE2026", name: "Social Media Analytics", credits: 3, basket: "Data Analytics" },
+      { code: "CSE2027", name: "Healthcare Analytics", credits: 3, basket: "Data Analytics" },
+      { code: "CSE2028", name: "Big Data Analytics", credits: 3, basket: "Data Analytics" },
+      { code: "CSE2029", name: "Business Analytics Fundamentals", credits: 3, basket: "Data Analytics" },
+      { code: "CSE4010", name: "Industrial Applications of Data Analytics", credits: 3, basket: "Data Analytics" },
 
-  // Cloud Computing
-  { code: "CSE2037", name: "Database and Network Management", credits: 3, basket: "Cloud Computing" },
-  { code: "CSE2036", name: "Cloud Services and APIs", credits: 3, basket: "Cloud Computing" },
-  { code: "CSE2034", name: "Design and Operation of Data Center", credits: 3, basket: "Cloud Computing" },
-  { code: "CSE2076", name: "System Provisioning and Monitoring", credits: 3, basket: "Cloud Computing" },
-  { code: "CSE2038", name: "Cloud Computing Platforms", credits: 3, basket: "Cloud Computing" },
-  { code: "CSE3028", name: "Edge Computing Paradigms", credits: 3, basket: "Cloud Computing" },
-  { code: "CSE2039", name: "Middleware Technologies", credits: 3, basket: "Cloud Computing" },
-  { code: "CSE4003", name: "Industrial Applications of Cloud Computing", credits: 3, basket: "Cloud Computing" },
+      // IoT
+      { code: "ECE2004", name: "Sensor Technology, Embedded Systems and User Interface", credits: 3, basket: "IoT" },
+      { code: "ECE2002", name: "IoT Platforms and Application Development", credits: 3, basket: "IoT" },
+      { code: "CSE2031", name: "Wireless Communication in IoT", credits: 3, basket: "IoT" },
+      { code: "ECE2001", name: "IoT Architecture and Protocols", credits: 3, basket: "IoT" },
+      { code: "CSE2032", name: "Mobile Application for IoT", credits: 3, basket: "IoT" },
+      { code: "CSE2033", name: "Cloud Computing for IoT", credits: 3, basket: "IoT" },
+      { code: "CSE2030", name: "Big Data Analytics for IoT", credits: 3, basket: "IoT" },
+      { code: "ECE2003", name: "Industrial Internet of Things", credits: 3, basket: "IoT" },
+      { code: "ECE2005", name: "Internet of Medical Things", credits: 3, basket: "IoT" },
 
-  // Robotics
-  { code: "ECE5002", name: "Principles of Robotics and RoS", credits: 3, basket: "Robotics" },
-  { code: "ECE2037", name: "Drone Technology", credits: 3, basket: "Robotics" },
-  { code: "CSE5096", name: "Robotic Process Automation", credits: 3, basket: "Robotics" },
-  { code: "CSE5099", name: "Robot Motion Planning", credits: 3, basket: "Robotics" },
-  { code: "ECE5005", name: "Robot Kinematics", credits: 3, basket: "Robotics" },
-  { code: "ECE3023", name: "Mechatronic System Design", credits: 3, basket: "Robotics" },
-  { code: "CSE5098", name: "Computer Vision", credits: 3, basket: "Robotics" },
-  { code: "ECE3026", name: "Building Robots", credits: 3, basket: "Robotics" },
-  { code: "CSE3031", name: "Autonomous Mobile Robots", credits: 3, basket: "Robotics" },
-  { code: "CSE3032", name: "Human-Robot Interaction", credits: 3, basket: "Robotics" },
-  { code: "CSE3033", name: "Microrobotics", credits: 3, basket: "Robotics" },
-  { code: "CSE4004", name: "Industrial Applications of Robotics", credits: 3, basket: "Robotics" },
+      // Cloud Computing
+      { code: "CSE2037", name: "Database and Network Management", credits: 3, basket: "Cloud Computing" },
+      { code: "CSE2036", name: "Cloud Services and APIs", credits: 3, basket: "Cloud Computing" },
+      { code: "CSE2034", name: "Design and Operation of Data Center", credits: 3, basket: "Cloud Computing" },
+      { code: "CSE2076", name: "System Provisioning and Monitoring", credits: 3, basket: "Cloud Computing" },
+      { code: "CSE2038", name: "Cloud Computing Platforms", credits: 3, basket: "Cloud Computing" },
+      { code: "CSE3028", name: "Edge Computing Paradigms", credits: 3, basket: "Cloud Computing" },
+      { code: "CSE2039", name: "Middleware Technologies", credits: 3, basket: "Cloud Computing" },
+      { code: "CSE4003", name: "Industrial Applications of Cloud Computing", credits: 3, basket: "Cloud Computing" },
 
-  // Big Data
-  { code: "CSE3019", name: "Big Data Security and Privacy", credits: 3, basket: "Big Data" },
-  { code: "CSE1011", name: "Information Visualization", credits: 3, basket: "Big Data" },
-  { code: "CSE2080", name: "Data Engineering Pipelines", credits: 3, basket: "Big Data" },
-  { code: "CSE3034", name: "Data Ingestion Techniques", credits: 3, basket: "Big Data" },
-  { code: "CSE4011", name: "Industrial Applications of Big Data", credits: 3, basket: "Big Data" },
+      // Robotics
+      { code: "ECE5002", name: "Principles of Robotics and RoS", credits: 3, basket: "Robotics" },
+      { code: "ECE2037", name: "Drone Technology", credits: 3, basket: "Robotics" },
+      { code: "CSE5096", name: "Robotic Process Automation", credits: 3, basket: "Robotics" },
+      { code: "CSE5099", name: "Robot Motion Planning", credits: 3, basket: "Robotics" },
+      { code: "ECE5005", name: "Robot Kinematics", credits: 3, basket: "Robotics" },
+      { code: "ECE3023", name: "Mechatronic System Design", credits: 3, basket: "Robotics" },
+      { code: "CSE5098", name: "Computer Vision", credits: 3, basket: "Robotics" },
+      { code: "ECE3026", name: "Building Robots", credits: 3, basket: "Robotics" },
+      { code: "CSE3031", name: "Autonomous Mobile Robots", credits: 3, basket: "Robotics" },
+      { code: "CSE3032", name: "Human-Robot Interaction", credits: 3, basket: "Robotics" },
+      { code: "CSE3033", name: "Microrobotics", credits: 3, basket: "Robotics" },
+      { code: "CSE4004", name: "Industrial Applications of Robotics", credits: 3, basket: "Robotics" },
 
-  // Full Stack Development
-  { code: "CSE2022", name: "Front End Engineering", credits: 3, basket: "Full Stack Development" },
-  { code: "CSE2023", name: "Backend Engineering", credits: 3, basket: "Full Stack Development" },
-  { code: "CSE2041", name: "NoSQL Data Bases and Retrieval Augmented Generation", credits: 3, basket: "Full Stack Development" },
-  { code: "CSE3017", name: "Java, Springboot and Microservices", credits: 3, basket: "Full Stack Development" },
-  { code: "CSE3018", name: "MEAN/MERN Stack", credits: 3, basket: "Full Stack Development" },
-  { code: "CSE4008", name: "Industrial Applications of Full Stack Development", credits: 3, basket: "Full Stack Development" },
-  { code: "CSE4012", name: "Cross Platform Mobile App Development", credits: 3, basket: "Full Stack Development" },
-  { code: "CSE4013", name: "Full Stack AI", credits: 3, basket: "Full Stack Development" },
+      // Big Data
+      { code: "CSE3019", name: "Big Data Security and Privacy", credits: 3, basket: "Big Data" },
+      { code: "CSE1011", name: "Information Visualization", credits: 3, basket: "Big Data" },
+      { code: "CSE2080", name: "Data Engineering Pipelines", credits: 3, basket: "Big Data" },
+      { code: "CSE3034", name: "Data Ingestion Techniques", credits: 3, basket: "Big Data" },
+      { code: "CSE4011", name: "Industrial Applications of Big Data", credits: 3, basket: "Big Data" },
 
-  // DevOps
-  { code: "CSE2035", name: "DevOps", credits: 3, basket: "DevOps" },
-  { code: "CSE2042", name: "Development Automation", credits: 3, basket: "DevOps" },
-  { code: "CSE2043", name: "Advanced Linux and Shell Scripting", credits: 3, basket: "DevOps" },
-  { code: "CSE2040", name: "Continuous Integration and Continuous Deployment", credits: 3, basket: "DevOps" },
-  { code: "CSE2048", name: "Microservices and Service Oriented Architecture", credits: 3, basket: "DevOps" },
-  { code: "CSE2077", name: "Infrastructure Provisioning", credits: 3, basket: "DevOps" },
-  { code: "CSE2078", name: "Build and Release Management", credits: 3, basket: "DevOps" },
-  { code: "CSE2079", name: "Containerization and Orchestration", credits: 3, basket: "DevOps" },
-  { code: "CSE4007", name: "Industrial Applications of DevOps", credits: 3, basket: "DevOps" },
+      // Full Stack Development
+      { code: "CSE2022", name: "Front End Engineering", credits: 3, basket: "Full Stack Development" },
+      { code: "CSE2023", name: "Backend Engineering", credits: 3, basket: "Full Stack Development" },
+      { code: "CSE2041", name: "NoSQL Data Bases and Retrieval Augmented Generation", credits: 3, basket: "Full Stack Development" },
+      { code: "CSE3017", name: "Java, Springboot and Microservices", credits: 3, basket: "Full Stack Development" },
+      { code: "CSE3018", name: "MEAN/MERN Stack", credits: 3, basket: "Full Stack Development" },
+      { code: "CSE4008", name: "Industrial Applications of Full Stack Development", credits: 3, basket: "Full Stack Development" },
+      { code: "CSE4012", name: "Cross Platform Mobile App Development", credits: 3, basket: "Full Stack Development" },
+      { code: "CSE4013", name: "Full Stack AI", credits: 3, basket: "Full Stack Development" },
 
-  //open electives
-   { code: "PSY1102", name: "Consumer Behaviour", credits: 2, basket: "Open Elective" },
-  { code: "SSK3002", name: "Public Speaking and Personality Development", credits: 1, basket: "Open Elective" },
-  { code: "KAN1005", name: "Kannada Kali", credits: 1, basket: "Open Elective" },
-  { code: "KAN1004", name: "Kannada Literature", credits: 3, basket: "Open Elective" },
+      // DevOps
+      { code: "CSE2035", name: "DevOps", credits: 3, basket: "DevOps" },
+      { code: "CSE2042", name: "Development Automation", credits: 3, basket: "DevOps" },
+      { code: "CSE2043", name: "Advanced Linux and Shell Scripting", credits: 3, basket: "DevOps" },
+      { code: "CSE2040", name: "Continuous Integration and Continuous Deployment", credits: 3, basket: "DevOps" },
+      { code: "CSE2048", name: "Microservices and Service Oriented Architecture", credits: 3, basket: "DevOps" },
+      { code: "CSE2077", name: "Infrastructure Provisioning", credits: 3, basket: "DevOps" },
+      { code: "CSE2078", name: "Build and Release Management", credits: 3, basket: "DevOps" },
+      { code: "CSE2079", name: "Containerization and Orchestration", credits: 3, basket: "DevOps" },
+      { code: "CSE4007", name: "Industrial Applications of DevOps", credits: 3, basket: "DevOps" },
 
-  { code: "POS1101", name: "Cinematic Politics and Affective Governance", credits: 3, basket: "Open Elective" },
-  { code: "SOC1101", name: "Foundations for Applied Sociology", credits: 3, basket: "Open Elective" },
-  { code: "POS1102", name: "Ethics and Values", credits: 0, basket: "Open Elective" },
+      //open electives
+      { code: "PSY1102", name: "Consumer Behaviour", credits: 2, basket: "Open Elective" },
+      { code: "SSK3002", name: "Public Speaking and Personality Development", credits: 1, basket: "Open Elective" },
+      { code: "KAN1005", name: "Kannada Kali", credits: 1, basket: "Open Elective" },
+      { code: "KAN1004", name: "Kannada Literature", credits: 3, basket: "Open Elective" },
 
-  { code: "PHY1004", name: "Engineering Physics", credits: 3, basket: "Open Elective" },
-  { code: "CHE1006", name: "Sustainable Electronic Waste Management", credits: 3, basket: "Open Elective" },
-  { code: "CHE1007", name: "Chemistry for Computer Applications", credits: 3, basket: "Open Elective" },
+      { code: "POS1101", name: "Cinematic Politics and Affective Governance", credits: 3, basket: "Open Elective" },
+      { code: "SOC1101", name: "Foundations for Applied Sociology", credits: 3, basket: "Open Elective" },
+      { code: "POS1102", name: "Ethics and Values", credits: 0, basket: "Open Elective" },
 
-  { code: "MGT2104", name: "Introduction to Digital Marketing", credits: 3, basket: "Open Elective" },
+      { code: "PHY1004", name: "Engineering Physics", credits: 3, basket: "Open Elective" },
+      { code: "CHE1006", name: "Sustainable Electronic Waste Management", credits: 3, basket: "Open Elective" },
+      { code: "CHE1007", name: "Chemistry for Computer Applications", credits: 3, basket: "Open Elective" },
 
-  { code: "CSE5008", name: "Data Communications and Networks", credits: 3, basket: "Open Elective" },
-  { code: "CSE5024", name: "Advanced Software Testing", credits: 3, basket: "Open Elective" },
-  { code: "CSE5007", name: "Software Development Framework", credits: 3, basket: "Open Elective" },
-  { code: "CSE5013", name: "C# and .NET Framework", credits: 2, basket: "Open Elective" },
-  { code: "CSE5060", name: "Operating Systems and Virtual Machines", credits: 3, basket: "Open Elective" },
-  { code: "CSE5064", name: "Cryptography and Information Security", credits: 3, basket: "Open Elective" },
+      { code: "MGT2104", name: "Introduction to Digital Marketing", credits: 3, basket: "Open Elective" },
 
-  { code: "DES1015", name: "Fashion and Visual Merchandising", credits: 3, basket: "Open Elective" },
-  { code: "DES2019", name: "Fashion Communication", credits: 2, basket: "Open Elective" },
-  { code: "DES2021", name: "Traditional Indian Textile", credits: 2, basket: "Open Elective" },
-  { code: "DES2020", name: "World Costume", credits: 4, basket: "Open Elective" },
-  { code: "DES1009", name: "Pattern Making and Garment Construction - Children", credits: 2, basket: "Open Elective" },
-  { code: "DES1007", name: "Textile Manufacturing", credits: 3, basket: "Open Elective" },
-  { code: "DES4001", name: "Quality Assurance and Production Management", credits: 3, basket: "Open Elective" },
-  { code: "DES4002", name: "Fashion Marketing Management", credits: 3, basket: "Open Elective" },
-  { code: "DES2002", name: "Social and Psychological Aspects of Clothing", credits: 2, basket: "Open Elective" },
-];
+      { code: "CSE5008", name: "Data Communications and Networks", credits: 3, basket: "Open Elective" },
+      { code: "CSE5024", name: "Advanced Software Testing", credits: 3, basket: "Open Elective" },
+      { code: "CSE5007", name: "Software Development Framework", credits: 3, basket: "Open Elective" },
+      { code: "CSE5013", name: "C# and .NET Framework", credits: 2, basket: "Open Elective" },
+      { code: "CSE5060", name: "Operating Systems and Virtual Machines", credits: 3, basket: "Open Elective" },
+      { code: "CSE5064", name: "Cryptography and Information Security", credits: 3, basket: "Open Elective" },
+
+      { code: "DES1015", name: "Fashion and Visual Merchandising", credits: 3, basket: "Open Elective" },
+      { code: "DES2019", name: "Fashion Communication", credits: 2, basket: "Open Elective" },
+      { code: "DES2021", name: "Traditional Indian Textile", credits: 2, basket: "Open Elective" },
+      { code: "DES2020", name: "World Costume", credits: 4, basket: "Open Elective" },
+      { code: "DES1009", name: "Pattern Making and Garment Construction - Children", credits: 2, basket: "Open Elective" },
+      { code: "DES1007", name: "Textile Manufacturing", credits: 3, basket: "Open Elective" },
+      { code: "DES4001", name: "Quality Assurance and Production Management", credits: 3, basket: "Open Elective" },
+      { code: "DES4002", name: "Fashion Marketing Management", credits: 3, basket: "Open Elective" },
+      { code: "DES2002", name: "Social and Psychological Aspects of Clothing", credits: 2, basket: "Open Elective" },
+    ];
 
     const seen = new Set();
     const courseBankUnique = courseBank.filter(c => {
@@ -3596,12 +3702,18 @@
        TIMETABLE SLOT MAPPING & CONSTANTS
     ========================================================= */
     const THEORY_SLOTS = [
-      'A1+TA1','B1+TB1','C1+TC1','A2+TA2','B2+TB2','C2+TC2',
-      'D1','D2','E1','E2','F1','F2','G1','G2'
+      'A1', 'TA1', 'A1+TA1',
+      'B1', 'TB1', 'B1+TB1',
+      'C1', 'TC1', 'C1+TC1',
+      'A2', 'TA2', 'A2+TA2',
+      'B2', 'TB2', 'B2+TB2',
+      'C2', 'TC2', 'C2+TC2',
+      'D1', 'D2', 'E1', 'E2', 'F1', 'F2', 'G1', 'G2',
+      'TD1', 'TD2'
     ];
     const LAB_SLOTS = [
-      'L1+L2','L3+L4','L5+L6','L7+L8','L9+L10','L11+L12','L13+L14','L15+L16','L17+L18','L19+L20',
-      'L21+L22','L23+L24','L25+L26','L27+L28','L29+L30','L31+L32','L33+L34','L35+L36','L37+L38','L39+L40'
+      'L1+L2', 'L3+L4', 'L5+L6', 'L7+L8', 'L9+L10', 'L11+L12', 'L13+L14', 'L15+L16', 'L17+L18', 'L19+L20',
+      'L21+L22', 'L23+L24', 'L25+L26', 'L27+L28', 'L29+L30', 'L31+L32', 'L33+L34', 'L35+L36', 'L37+L38', 'L39+L40'
     ];
 
     function getSlotParts(slotValue) {
@@ -3613,53 +3725,142 @@
       return new Set(getSlotParts(slotValue));
     }
 
+    function getGridCells(slotValue) {
+      if (!slotValue) return [];
+      const parts = slotValue.split('+').map(p => p.trim()).filter(Boolean);
+      const cells = new Set();
+
+      parts.forEach(part => {
+        if (SLOT_MAP[part]) {
+          SLOT_MAP[part].forEach(m => {
+            const span = m.span || 1;
+            for (let i = 0; i < span; i++) {
+              cells.add(`${m.d}_${m.c + i}`);
+            }
+          });
+        }
+      });
+
+      if (SLOT_MAP[slotValue]) {
+        SLOT_MAP[slotValue].forEach(m => {
+          const span = m.span || 1;
+          for (let i = 0; i < span; i++) {
+            cells.add(`${m.d}_${m.c + i}`);
+          }
+        });
+      }
+
+      return Array.from(cells);
+    }
+
+    function hasConflict(slotType, newSlotValue, rows, currentCourseIndex = -1, slotField = '') {
+      if (!newSlotValue) return { conflict: false, message: '' };
+
+      const targetCells = getGridCells(newSlotValue);
+      if (targetCells.length === 0) return { conflict: false, message: '' };
+
+      const occupiedCells = new Map();
+
+      (rows || []).forEach((r, idx) => {
+        const isTheoryAllowed = r.type !== 'Lab';
+        const isLabAllowed = r.type !== 'Theory';
+
+        if (isTheoryAllowed && r.theorySlot && !(idx === currentCourseIndex && slotField === 'theorySlot')) {
+          getGridCells(r.theorySlot).forEach(c => {
+            occupiedCells.set(c, { type: 'Theory', code: r.code, slot: r.theorySlot });
+          });
+        }
+
+        if (isLabAllowed && r.labSlot && !(idx === currentCourseIndex && slotField === 'labSlot')) {
+          getGridCells(r.labSlot).forEach(c => {
+            occupiedCells.set(c, { type: 'Lab', code: r.code, slot: r.labSlot });
+          });
+        }
+
+        if (isLabAllowed && r.labSlot2 && !(idx === currentCourseIndex && slotField === 'labSlot2')) {
+          getGridCells(r.labSlot2).forEach(c => {
+            occupiedCells.set(c, { type: 'Lab', code: r.code, slot: r.labSlot2 });
+          });
+        }
+
+        if (isLabAllowed && Array.isArray(r.labSlots)) {
+          r.labSlots.forEach(lSlot => {
+            getGridCells(lSlot).forEach(c => {
+              occupiedCells.set(c, { type: 'Lab', code: r.code, slot: lSlot });
+            });
+          });
+        }
+      });
+
+      for (const cell of targetCells) {
+        if (occupiedCells.has(cell)) {
+          const existing = occupiedCells.get(cell);
+          if (slotType === 'Lab') {
+            return {
+              conflict: true,
+              message: "Cannot add lab. Both consecutive slots must be empty."
+            };
+          } else {
+            return {
+              conflict: true,
+              message: "Cannot add theory subject. This slot is already occupied by a lab."
+            };
+          }
+        }
+      }
+
+      return { conflict: false, message: '' };
+    }
+
+
     const SLOT_MAP = {
       // 3-credit theory slots
-      'A1': [{d:'MON', c:0}, {d:'WED', c:1}, {d:'FRI', c:2}],
-      'B1': [{d:'TUE', c:0}, {d:'WED', c:3}, {d:'THU', c:1}],
-      'C1': [{d:'WED', c:0}, {d:'THU', c:3}, {d:'FRI', c:1}],
-      'D1': [{d:'MON', c:2}, {d:'THU', c:0}],
-      'E1': [{d:'TUE', c:2}, {d:'FRI', c:0}],
-      'F1': [{d:'MON', c:1}, {d:'WED', c:2}],
-      'G1': [{d:'TUE', c:1}, {d:'THU', c:2}],
+      'A1': [{ d: 'MON', c: 0 }, { d: 'WED', c: 1 }, { d: 'FRI', c: 2 }],
+      'B1': [{ d: 'TUE', c: 0 }, { d: 'WED', c: 3 }, { d: 'THU', c: 1 }],
+      'C1': [{ d: 'WED', c: 0 }, { d: 'THU', c: 3 }, { d: 'FRI', c: 1 }],
+      'D1': [{ d: 'MON', c: 2 }, { d: 'THU', c: 0 }],
+      'E1': [{ d: 'TUE', c: 2 }, { d: 'FRI', c: 0 }],
+      'F1': [{ d: 'MON', c: 1 }, { d: 'WED', c: 2 }],
+      'G1': [{ d: 'TUE', c: 1 }, { d: 'THU', c: 2 }],
 
-      'A2': [{d:'MON', c:5}, {d:'WED', c:6}, {d:'FRI', c:7}],
-      'B2': [{d:'TUE', c:5}, {d:'WED', c:8}, {d:'THU', c:6}],
-      'C2': [{d:'WED', c:5}, {d:'THU', c:8}, {d:'FRI', c:6}],
-      'D2': [{d:'MON', c:7}, {d:'THU', c:5}],
-      'E2': [{d:'TUE', c:7}, {d:'FRI', c:5}],
-      'F2': [{d:'MON', c:6}, {d:'WED', c:7}],
-      'G2': [{d:'TUE', c:6}, {d:'THU', c:7}],
+      'A2': [{ d: 'MON', c: 5 }, { d: 'WED', c: 6 }, { d: 'FRI', c: 7 }],
+      'B2': [{ d: 'TUE', c: 5 }, { d: 'WED', c: 8 }, { d: 'THU', c: 6 }],
+      'C2': [{ d: 'WED', c: 5 }, { d: 'THU', c: 8 }, { d: 'FRI', c: 6 }],
+      'D2': [{ d: 'MON', c: 7 }, { d: 'THU', c: 5 }],
+      'E2': [{ d: 'TUE', c: 7 }, { d: 'FRI', c: 5 }],
+      'F2': [{ d: 'MON', c: 6 }, { d: 'WED', c: 7 }],
+      'G2': [{ d: 'TUE', c: 6 }, { d: 'THU', c: 7 }],
 
       // Extra 1-credit theory slots
-      'TA1': [{d:'TUE', c:3}], 'TA2': [{d:'TUE', c:8}],
-      'TB1': [{d:'FRI', c:3}], 'TB2': [{d:'FRI', c:8}],
-      'TC1': [{d:'MON', c:3}], 'TC2': [{d:'MON', c:8}],
+      'TA1': [{ d: 'TUE', c: 3 }], 'TA2': [{ d: 'TUE', c: 8 }],
+      'TB1': [{ d: 'FRI', c: 3 }], 'TB2': [{ d: 'FRI', c: 8 }],
+      'TC1': [{ d: 'MON', c: 3 }], 'TC2': [{ d: 'MON', c: 8 }],
+      'TD1': [{ d: 'THU', c: 3 }], 'TD2': [{ d: 'THU', c: 8 }],
 
       // Individual Lab slots (L1 to L40)
-      'L1': [{d:'MON', c:0}], 'L2': [{d:'MON', c:1}], 'L3': [{d:'MON', c:2}], 'L4': [{d:'MON', c:3}],
-      'L5': [{d:'TUE', c:0}], 'L6': [{d:'TUE', c:1}], 'L7': [{d:'TUE', c:2}], 'L8': [{d:'TUE', c:3}],
-      'L9': [{d:'WED', c:0}], 'L10': [{d:'WED', c:1}], 'L11': [{d:'WED', c:2}], 'L12': [{d:'WED', c:3}],
-      'L13': [{d:'THU', c:0}], 'L14': [{d:'THU', c:1}], 'L15': [{d:'THU', c:2}], 'L16': [{d:'THU', c:3}],
-      'L17': [{d:'FRI', c:0}], 'L18': [{d:'FRI', c:1}], 'L19': [{d:'FRI', c:2}], 'L20': [{d:'FRI', c:3}],
+      'L1': [{ d: 'MON', c: 0 }], 'L2': [{ d: 'MON', c: 1 }], 'L3': [{ d: 'MON', c: 2 }], 'L4': [{ d: 'MON', c: 3 }],
+      'L5': [{ d: 'TUE', c: 0 }], 'L6': [{ d: 'TUE', c: 1 }], 'L7': [{ d: 'TUE', c: 2 }], 'L8': [{ d: 'TUE', c: 3 }],
+      'L9': [{ d: 'WED', c: 0 }], 'L10': [{ d: 'WED', c: 1 }], 'L11': [{ d: 'WED', c: 2 }], 'L12': [{ d: 'WED', c: 3 }],
+      'L13': [{ d: 'THU', c: 0 }], 'L14': [{ d: 'THU', c: 1 }], 'L15': [{ d: 'THU', c: 2 }], 'L16': [{ d: 'THU', c: 3 }],
+      'L17': [{ d: 'FRI', c: 0 }], 'L18': [{ d: 'FRI', c: 1 }], 'L19': [{ d: 'FRI', c: 2 }], 'L20': [{ d: 'FRI', c: 3 }],
 
-      'L21': [{d:'MON', c:5}], 'L22': [{d:'MON', c:6}], 'L23': [{d:'MON', c:7}], 'L24': [{d:'MON', c:8}],
-      'L25': [{d:'TUE', c:5}], 'L26': [{d:'TUE', c:6}], 'L27': [{d:'TUE', c:7}], 'L28': [{d:'TUE', c:8}],
-      'L29': [{d:'WED', c:5}], 'L30': [{d:'WED', c:6}], 'L31': [{d:'WED', c:7}], 'L32': [{d:'WED', c:8}],
-      'L33': [{d:'THU', c:5}], 'L34': [{d:'THU', c:6}], 'L35': [{d:'THU', c:7}], 'L36': [{d:'THU', c:8}],
-      'L37': [{d:'FRI', c:5}], 'L38': [{d:'FRI', c:6}], 'L39': [{d:'FRI', c:7}], 'L40': [{d:'FRI', c:8}],
+      'L21': [{ d: 'MON', c: 5 }], 'L22': [{ d: 'MON', c: 6 }], 'L23': [{ d: 'MON', c: 7 }], 'L24': [{ d: 'MON', c: 8 }],
+      'L25': [{ d: 'TUE', c: 5 }], 'L26': [{ d: 'TUE', c: 6 }], 'L27': [{ d: 'TUE', c: 7 }], 'L28': [{ d: 'TUE', c: 8 }],
+      'L29': [{ d: 'WED', c: 5 }], 'L30': [{ d: 'WED', c: 6 }], 'L31': [{ d: 'WED', c: 7 }], 'L32': [{ d: 'WED', c: 8 }],
+      'L33': [{ d: 'THU', c: 5 }], 'L34': [{ d: 'THU', c: 6 }], 'L35': [{ d: 'THU', c: 7 }], 'L36': [{ d: 'THU', c: 8 }],
+      'L37': [{ d: 'FRI', c: 5 }], 'L38': [{ d: 'FRI', c: 6 }], 'L39': [{ d: 'FRI', c: 7 }], 'L40': [{ d: 'FRI', c: 8 }],
 
       // Paired backward compatibility
-      'L1+L2': [{d:'MON', c:0, span:2}], 'L3+L4': [{d:'MON', c:2, span:2}],
-      'L5+L6': [{d:'TUE', c:0, span:2}], 'L7+L8': [{d:'TUE', c:2, span:2}],
-      'L9+L10': [{d:'WED', c:0, span:2}], 'L11+L12': [{d:'WED', c:2, span:2}],
-      'L13+L14': [{d:'THU', c:0, span:2}], 'L15+L16': [{d:'THU', c:2, span:2}],
-      'L17+L18': [{d:'FRI', c:0, span:2}], 'L19+L20': [{d:'FRI', c:2, span:2}],
-      'L21+L22': [{d:'MON', c:5, span:2}], 'L23+L24': [{d:'MON', c:7, span:2}],
-      'L25+L26': [{d:'TUE', c:5, span:2}], 'L27+L28': [{d:'TUE', c:7, span:2}],
-      'L29+L30': [{d:'WED', c:5, span:2}], 'L31+L32': [{d:'WED', c:7, span:2}],
-      'L33+L34': [{d:'THU', c:5, span:2}], 'L35+L36': [{d:'THU', c:7, span:2}],
-      'L37+L38': [{d:'FRI', c:5, span:2}], 'L39+L40': [{d:'FRI', c:7, span:2}]
+      'L1+L2': [{ d: 'MON', c: 0, span: 2 }], 'L3+L4': [{ d: 'MON', c: 2, span: 2 }],
+      'L5+L6': [{ d: 'TUE', c: 0, span: 2 }], 'L7+L8': [{ d: 'TUE', c: 2, span: 2 }],
+      'L9+L10': [{ d: 'WED', c: 0, span: 2 }], 'L11+L12': [{ d: 'WED', c: 2, span: 2 }],
+      'L13+L14': [{ d: 'THU', c: 0, span: 2 }], 'L15+L16': [{ d: 'THU', c: 2, span: 2 }],
+      'L17+L18': [{ d: 'FRI', c: 0, span: 2 }], 'L19+L20': [{ d: 'FRI', c: 2, span: 2 }],
+      'L21+L22': [{ d: 'MON', c: 5, span: 2 }], 'L23+L24': [{ d: 'MON', c: 7, span: 2 }],
+      'L25+L26': [{ d: 'TUE', c: 5, span: 2 }], 'L27+L28': [{ d: 'TUE', c: 7, span: 2 }],
+      'L29+L30': [{ d: 'WED', c: 5, span: 2 }], 'L31+L32': [{ d: 'WED', c: 7, span: 2 }],
+      'L33+L34': [{ d: 'THU', c: 5, span: 2 }], 'L35+L36': [{ d: 'THU', c: 7, span: 2 }],
+      'L37+L38': [{ d: 'FRI', c: 5, span: 2 }], 'L39+L40': [{ d: 'FRI', c: 7, span: 2 }]
     };
 
     /* =========================================================
@@ -4218,21 +4419,8 @@
       const semSelect = document.getElementById('timetableSemSelect');
       const sem = parseInt(semSelect ? semSelect.value : state.currentSemester);
       if (semSelect) semSelect.value = sem;
-      
-      const rows = state.semesters[sem] || [];
 
-      const getOccupiedSlots = (skipIdx) => {
-        const occupied = new Set();
-        rows.forEach((r, idx) => {
-          if (idx === skipIdx) return;
-          getSlotParts(r.theorySlot).forEach(slot => occupied.add(slot));
-          getSlotParts(r.labSlot).forEach(slot => occupied.add(slot));
-          getSlotParts(r.labSlot2).forEach(slot => occupied.add(slot));
-          const rLabs = Array.isArray(r.labSlots) ? r.labSlots : [];
-          rLabs.forEach(l => occupied.add(l));
-        });
-        return occupied;
-      };
+      const rows = state.semesters[sem] || [];
 
       // Render Course Slot Assignment Table
       const assignBody = document.getElementById('timetableCourseAssignmentBody');
@@ -4273,7 +4461,14 @@
           assignBody.querySelectorAll('.tt-type').forEach(sel => {
             sel.addEventListener('change', e => {
               const idx = +e.target.dataset.i;
-              rows[idx].type = e.target.value;
+              const newType = e.target.value;
+              rows[idx].type = newType;
+              if (newType === 'Theory') {
+                rows[idx].labSlot = '';
+                rows[idx].labSlot2 = '';
+              } else if (newType === 'Lab') {
+                rows[idx].theorySlot = '';
+              }
               triggerAutoSave();
               renderTimetable();
             });
@@ -4283,12 +4478,10 @@
             sel.addEventListener('change', e => {
               const idx = +e.target.dataset.i;
               const newVal = e.target.value;
-              const nextSlots = getSlotConflictSet(newVal);
               if (newVal) {
-                const occupied = getOccupiedSlots(idx);
-                const conflict = Array.from(nextSlots).find(slot => occupied.has(slot));
-                if (conflict) {
-                  alert(`Slot conflict detected. This slot is already assigned.`);
+                const check = hasConflict('Theory', newVal, rows, idx, 'theorySlot');
+                if (check.conflict) {
+                  alert(check.message);
                   e.target.value = rows[idx].theorySlot || '';
                   return;
                 }
@@ -4303,12 +4496,10 @@
             sel.addEventListener('change', e => {
               const idx = +e.target.dataset.i;
               const newVal = e.target.value;
-              const nextSlots = getSlotConflictSet(newVal);
               if (newVal) {
-                const occupied = getOccupiedSlots(idx);
-                const conflict = Array.from(nextSlots).find(slot => occupied.has(slot));
-                if (conflict) {
-                  alert(`Lab slot conflict detected. One or more slots in this combination are already assigned to another course.`);
+                const check = hasConflict('Lab', newVal, rows, idx, 'labSlot');
+                if (check.conflict) {
+                  alert(check.message);
                   e.target.value = rows[idx].labSlot || '';
                   return;
                 }
@@ -4323,12 +4514,10 @@
             sel.addEventListener('change', e => {
               const idx = +e.target.dataset.i;
               const newVal = e.target.value;
-              const nextSlots = getSlotConflictSet(newVal);
               if (newVal) {
-                const occupied = getOccupiedSlots(idx);
-                const conflict = Array.from(nextSlots).find(slot => occupied.has(slot));
-                if (conflict) {
-                  alert(`Lab slot conflict detected. One or more slots in this combination are already assigned to another course.`);
+                const check = hasConflict('Lab', newVal, rows, idx, 'labSlot2');
+                if (check.conflict) {
+                  alert(check.message);
                   e.target.value = rows[idx].labSlot2 || '';
                   return;
                 }
@@ -4344,72 +4533,72 @@
       // Render Weekly Schedule Grid
       const days = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
       const grid = { MON: Array(9).fill(null), TUE: Array(9).fill(null), WED: Array(9).fill(null), THU: Array(9).fill(null), FRI: Array(9).fill(null) };
-      
+
       rows.forEach(r => {
-         const typeColor = r.type === 'Theory + Lab' ? 'rgba(168,85,247,0.15)' : (r.type === 'Lab' ? 'rgba(34,197,94,0.15)' : 'rgba(56,189,248,0.15)');
-         const borderColor = r.type === 'Theory + Lab' ? '#A855F7' : (r.type === 'Lab' ? '#22C55E' : '#38BDF8');
-         
-         const renderCell = (mapping, slotName) => {
-             mapping.forEach(m => {
-                 if(grid[m.d]) {
-                     const cellHtml = `<div style="padding:6px; background:${typeColor}; border-left:3px solid ${borderColor}; border-radius:4px; font-size:11px; height:100%; display:flex; flex-direction:column; justify-content:center;">
+        const typeColor = r.type === 'Theory + Lab' ? 'rgba(168,85,247,0.15)' : (r.type === 'Lab' ? 'rgba(34,197,94,0.15)' : 'rgba(56,189,248,0.15)');
+        const borderColor = r.type === 'Theory + Lab' ? '#A855F7' : (r.type === 'Lab' ? '#22C55E' : '#38BDF8');
+
+        const renderCell = (mapping, slotName) => {
+          mapping.forEach(m => {
+            if (grid[m.d]) {
+              const cellHtml = `<div style="padding:6px; background:${typeColor}; border-left:3px solid ${borderColor}; border-radius:4px; font-size:11px; height:100%; display:flex; flex-direction:column; justify-content:center;">
                          <b style="color:var(--ink); font-size:12px;">${r.code}</b>
                          <span style="color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${r.name}">${r.name}</span>
                          <div style="margin-top:4px; font-weight:600; color:${borderColor};">${slotName}</div>
                          <div style="font-size:10px; color:var(--ink-soft); margin-top:2px;">${r.instructor || 'TBA'}</div>
                      </div>`;
-                     
-                     if (m.span === 2) {
-                         grid[m.d][m.c] = { html: cellHtml, span: 2 };
-                         if (grid[m.d][m.c+1] === null) grid[m.d][m.c+1] = 'skip';
-                     } else {
-                         grid[m.d][m.c] = { html: cellHtml, span: 1 };
-                     }
-                 }
-             });
-         };
 
-         if (r.theorySlot) {
-             const theorySlots = getSlotParts(r.theorySlot);
-             theorySlots.forEach(slot => {
-                 if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
-             });
-         }
+              if (m.span === 2) {
+                grid[m.d][m.c] = { html: cellHtml, span: 2 };
+                if (grid[m.d][m.c + 1] === null) grid[m.d][m.c + 1] = 'skip';
+              } else {
+                grid[m.d][m.c] = { html: cellHtml, span: 1 };
+              }
+            }
+          });
+        };
 
-         if (r.labSlot) {
-             const labSlots = getSlotParts(r.labSlot);
-             labSlots.forEach(slot => {
-                 if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
-             });
-         }
+        if (r.theorySlot) {
+          const theorySlots = getSlotParts(r.theorySlot);
+          theorySlots.forEach(slot => {
+            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+          });
+        }
 
-         if (r.labSlot2) {
-             const labSlots2 = getSlotParts(r.labSlot2);
-             labSlots2.forEach(slot => {
-                 if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
-             });
-         }
+        if (r.labSlot) {
+          const labSlots = getSlotParts(r.labSlot);
+          labSlots.forEach(slot => {
+            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+          });
+        }
+
+        if (r.labSlot2) {
+          const labSlots2 = getSlotParts(r.labSlot2);
+          labSlots2.forEach(slot => {
+            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+          });
+        }
       });
-      
+
       const tbody = document.getElementById('timetableBody');
       if (tbody) {
-          tbody.innerHTML = days.map(d => {
-              let tr = `<tr><td style="font-weight:700; padding:10px; border:1px solid rgba(140, 130, 255, .2);">${d}</td>`;
-              for(let c=0; c<9; c++) {
-                  if (c === 4) { // LUNCH
-                      if (d === 'MON') tr += `<td rowspan="5" style="border:1px solid rgba(140, 130, 255, .2); writing-mode:vertical-rl; transform:rotate(180deg); text-align:center; font-weight:700; color:var(--ink-soft); background:rgba(0,0,0,0.02);">LUNCH</td>`;
-                      continue;
-                  }
-                  const cell = grid[d][c];
-                  if (cell === 'skip') continue;
-                  if (cell) {
-                      tr += `<td colspan="${cell.span}" style="padding:4px; border:1px solid rgba(140, 130, 255, .2); min-width:100px; max-width:140px; vertical-align:top; height:80px;">${cell.html}</td>`;
-                  } else {
-                      tr += `<td style="border:1px solid rgba(140, 130, 255, .2); padding:10px; color:var(--ink-soft); font-size:11px; height:80px;">Free</td>`;
-                  }
-              }
-              return tr + '</tr>';
-          }).join('');
+        tbody.innerHTML = days.map(d => {
+          let tr = `<tr><td style="font-weight:700; padding:10px; border:1px solid rgba(140, 130, 255, .2);">${d}</td>`;
+          for (let c = 0; c < 9; c++) {
+            if (c === 4) { // LUNCH
+              if (d === 'MON') tr += `<td rowspan="5" style="border:1px solid rgba(140, 130, 255, .2); writing-mode:vertical-rl; transform:rotate(180deg); text-align:center; font-weight:700; color:var(--ink-soft); background:rgba(0,0,0,0.02);">LUNCH</td>`;
+              continue;
+            }
+            const cell = grid[d][c];
+            if (cell === 'skip') continue;
+            if (cell) {
+              tr += `<td colspan="${cell.span}" style="padding:4px; border:1px solid rgba(140, 130, 255, .2); min-width:100px; max-width:140px; vertical-align:top; height:80px;">${cell.html}</td>`;
+            } else {
+              tr += `<td style="border:1px solid rgba(140, 130, 255, .2); padding:10px; color:var(--ink-soft); font-size:11px; height:80px;">Free</td>`;
+            }
+          }
+          return tr + '</tr>';
+        }).join('');
       }
     }
 
@@ -4589,26 +4778,26 @@
 
       renderSmartWarnings(basketStats);
     }
-    
+
     function renderSmartWarnings(basketStats) {
-       const wContainer = document.getElementById('smartWarningsContainer');
-       if (!wContainer) return;
-       let warns = [];
-       Object.keys(basketStats).forEach(b => {
-           const s = basketStats[b];
-           if (!s.required) return;
-           const deficit = s.earned - s.required;
-           if (deficit < 0) {
-               warns.push(`You still need <b>${Math.abs(deficit)}</b> credits in <b>${b}</b>.`);
-           } else if (deficit === 0) {
-               warns.push(`<b>${b}</b> requirement completed. ✅`);
-           } else {
-               warns.push(`You have exceeded the minimum requirement by <b>${deficit}</b> credits in <b>${b}</b>.`);
-           }
-       });
-       if (warns.length === 0) warns.push("You are on track with all your credit requirements.");
-       
-       wContainer.innerHTML = warns.slice(0, 4).map(w => `<div class="tip-row"><span class="b"></span>${w}</div>`).join('');
+      const wContainer = document.getElementById('smartWarningsContainer');
+      if (!wContainer) return;
+      let warns = [];
+      Object.keys(basketStats).forEach(b => {
+        const s = basketStats[b];
+        if (!s.required) return;
+        const deficit = s.earned - s.required;
+        if (deficit < 0) {
+          warns.push(`You still need <b>${Math.abs(deficit)}</b> credits in <b>${b}</b>.`);
+        } else if (deficit === 0) {
+          warns.push(`<b>${b}</b> requirement completed. ✅`);
+        } else {
+          warns.push(`You have exceeded the minimum requirement by <b>${deficit}</b> credits in <b>${b}</b>.`);
+        }
+      });
+      if (warns.length === 0) warns.push("You are on track with all your credit requirements.");
+
+      wContainer.innerHTML = warns.slice(0, 4).map(w => `<div class="tip-row"><span class="b"></span>${w}</div>`).join('');
     }
 
     function renderAll() {
@@ -5000,6 +5189,200 @@
       window.print();
     }
 
+    function buildSemesterTimetableHtml(semNum) {
+      const courses = state.semesters[semNum] || [];
+
+      let assignRows = '';
+      if (courses.length === 0) {
+        assignRows = `<tr><td colspan="5" style="text-align:center; padding:10px; color:#666;">No courses registered for Semester ${semNum}.</td></tr>`;
+      } else {
+        assignRows = courses.map((c, i) => {
+          return `<tr>
+            <td style="padding:6px 8px; border-bottom:1px solid #ddd;"><strong>${c.code}</strong><br><small style="color:#666;">${c.name}</small></td>
+            <td style="padding:6px 8px; border-bottom:1px solid #ddd;">${c.instructor || 'TBA'}</td>
+            <td style="padding:6px 8px; border-bottom:1px solid #ddd;">${c.type || 'Theory'}</td>
+            <td style="padding:6px 8px; border-bottom:1px solid #ddd;">${c.type === 'Lab' ? 'N/A' : (c.theorySlot || 'None')}</td>
+            <td style="padding:6px 8px; border-bottom:1px solid #ddd;">${c.type === 'Theory' ? 'N/A' : ([c.labSlot, c.labSlot2].filter(Boolean).join(', ') || 'None')}</td>
+          </tr>`;
+        }).join('');
+      }
+
+      const days = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
+      const grid = { MON: Array(9).fill(null), TUE: Array(9).fill(null), WED: Array(9).fill(null), THU: Array(9).fill(null), FRI: Array(9).fill(null) };
+
+      courses.forEach(r => {
+        const isLabOnly = r.type === 'Lab';
+        const isTheoryOnly = r.type === 'Theory';
+        const typeColor = r.type === 'Theory + Lab' ? 'rgba(168,85,247,0.1)' : (r.type === 'Lab' ? 'rgba(34,197,94,0.1)' : 'rgba(56,189,248,0.1)');
+        const borderColor = r.type === 'Theory + Lab' ? '#A855F7' : (r.type === 'Lab' ? '#22C55E' : '#38BDF8');
+
+        const renderCell = (mapping, slotName) => {
+          mapping.forEach(m => {
+            if (grid[m.d]) {
+              const cellHtml = `<div style="padding:4px; background:${typeColor}; border-left:3px solid ${borderColor}; border-radius:4px; font-size:10px;">
+                <b style="color:#111; font-size:10.5px;">${r.code}</b><br>
+                <span style="color:#333; font-size:9.5px;">${r.name}</span><br>
+                <strong style="color:${borderColor}; font-size:9px;">${slotName}</strong>
+              </div>`;
+              if (m.span === 2) {
+                grid[m.d][m.c] = { html: cellHtml, span: 2 };
+                if (grid[m.d][m.c + 1] === null) grid[m.d][m.c + 1] = 'skip';
+              } else {
+                grid[m.d][m.c] = { html: cellHtml, span: 1 };
+              }
+            }
+          });
+        };
+
+        if (!isLabOnly && r.theorySlot) {
+          getSlotParts(r.theorySlot).forEach(slot => {
+            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+          });
+        }
+        if (!isTheoryOnly && r.labSlot) {
+          getSlotParts(r.labSlot).forEach(slot => {
+            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+          });
+        }
+        if (!isTheoryOnly && r.labSlot2) {
+          getSlotParts(r.labSlot2).forEach(slot => {
+            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+          });
+        }
+      });
+
+      const times = ['9:00-9:50', '9:55-10:45', '10:50-11:40', '11:45-12:35', 'LUNCH', '1:15-2:05', '2:10-3:00', '3:05-3:55', '4:00-4:50'];
+
+      let gridTableHtml = `<table style="width:100%; border-collapse:collapse; text-align:center; font-size:11px; margin-bottom:16px;">
+        <thead>
+          <tr style="background:#f1f3f5;">
+            <th style="padding:6px; border:1px solid #ccc; font-size:10px;">Day / Time</th>
+            ${times.map(t => `<th style="padding:6px; border:1px solid #ccc; font-size:10px;">${t}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>`;
+
+      days.forEach(d => {
+        gridTableHtml += `<tr><td style="font-weight:700; padding:6px; border:1px solid #ccc; background:#f8f9fa;">${d}</td>`;
+        for (let c = 0; c < 9; c++) {
+          if (c === 4) {
+            if (d === 'MON') gridTableHtml += `<td rowspan="5" style="border:1px solid #ccc; writing-mode:vertical-rl; transform:rotate(180deg); text-align:center; font-weight:700; color:#666; background:#f1f3f5;">LUNCH</td>`;
+            continue;
+          }
+          const cell = grid[d][c];
+          if (cell === 'skip') continue;
+          if (cell) {
+            gridTableHtml += `<td colspan="${cell.span}" style="padding:3px; border:1px solid #ccc; vertical-align:top;">${cell.html}</td>`;
+          } else {
+            gridTableHtml += `<td style="border:1px solid #ccc; padding:6px; color:#aaa; font-size:10px;">Free</td>`;
+          }
+        }
+        gridTableHtml += '</tr>';
+      });
+      gridTableHtml += `</tbody></table>`;
+
+      return `
+        <div style="font-family:'Inter', Arial, sans-serif; max-width:960px; margin:0 auto; padding:16px; color:#000; background:#fff; page-break-after:always; break-after:page;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #000; padding-bottom:10px; margin-bottom:14px;">
+            <div>
+              <h1 style="font-size:20px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.05em;">SCFC Academic Timetable</h1>
+              <p style="margin:2px 0 0 0; font-size:12px; color:#444;">School of Computer Science & Engineering</p>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:11px; color:#666;">Date Generated</div>
+              <div style="font-size:12px; font-weight:600;">${new Date().toLocaleDateString()}</div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:8px; padding:10px 14px; margin-bottom:16px;">
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Student Name</span>
+              <strong style="font-size:14px; color:#111;">${state.studentName || 'N/A'}</strong>
+            </div>
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">USN</span>
+              <strong style="font-size:14px; color:#111;">${state.usn || 'N/A'}</strong>
+            </div>
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Semester</span>
+              <strong style="font-size:14px; color:#111;">Semester ${semNum}</strong>
+            </div>
+          </div>
+
+          <h3 style="font-size:13px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.03em;">Weekly Schedule Grid</h3>
+          ${gridTableHtml}
+
+          <h3 style="font-size:13px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.03em;">Course Slot Assignments</h3>
+          <table style="width:100%; border-collapse:collapse; margin-bottom:14px; font-size:11.5px;">
+            <thead>
+              <tr style="background:#f1f3f5; border-bottom:2px solid #dee2e6; text-align:left;">
+                <th style="padding:6px;">Course</th>
+                <th style="padding:6px;">Instructor</th>
+                <th style="padding:6px;">Type</th>
+                <th style="padding:6px;">Theory Slot</th>
+                <th style="padding:6px;">Lab Slot</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${assignRows}
+            </tbody>
+          </table>
+
+          <div style="border-top:1px solid #eee; padding-top:6px; font-size:10px; color:#888; text-align:center;">
+            Official Academic Timetable • Semester ${semNum} • SCFC Grade Calculator
+          </div>
+        </div>
+      `;
+    }
+
+    function printTimetableReport() {
+      const semSelect = document.getElementById('timetableSemSelect');
+      const val = semSelect ? semSelect.value : String(state.currentSemester);
+
+      let fullReportHtml = '';
+      if (val === 'all') {
+        let hasAny = false;
+        for (let s = 1; s <= 8; s++) {
+          if ((state.semesters[s] || []).length > 0) {
+            hasAny = true;
+            fullReportHtml += buildSemesterTimetableHtml(s);
+          }
+        }
+        if (!hasAny) {
+          fullReportHtml = buildSemesterTimetableHtml(state.currentSemester || 1);
+        }
+      } else {
+        const semNum = parseInt(val) || state.currentSemester || 1;
+        fullReportHtml = buildSemesterTimetableHtml(semNum);
+      }
+
+      const printArea = document.getElementById('printableReport');
+      printArea.innerHTML = fullReportHtml;
+      window.print();
+    }
+
+    function preparePrintReportForActiveView() {
+      const printArea = document.getElementById('printableReport');
+      if (!printArea || !printArea.innerHTML.trim()) {
+        if (typeof activeView !== 'undefined' && activeView === 'timetable') {
+          printTimetableReport();
+        } else if (typeof activeView !== 'undefined' && activeView === 'tracker') {
+          printTrackerReport();
+        } else {
+          printCleanReport(state.currentSemester || 1);
+        }
+      }
+    }
+
+    window.addEventListener('beforeprint', () => {
+      preparePrintReportForActiveView();
+    });
+
+    window.addEventListener('afterprint', () => {
+      const printArea = document.getElementById('printableReport');
+      if (printArea) printArea.innerHTML = '';
+    });
+
     /* =========================================================
        SETTINGS VIEW
     ========================================================= */
@@ -5069,7 +5452,7 @@
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         try {
           const imported = JSON.parse(e.target.result);
           if (imported && imported.semesters) {
@@ -5218,11 +5601,11 @@
         if (takenMap.has(code)) return;
         const c = courseBankUnique.find(x => x.code === code);
         if (c) {
-          currentRows.push({ 
-            code: c.code, 
-            name: c.name, 
-            credits: c.credits, 
-            grade: 'S', 
+          currentRows.push({
+            code: c.code,
+            name: c.name,
+            credits: c.credits,
+            grade: 'S',
             basket: c.basket || 'Open Elective',
             type: 'Theory',
             instructor: '',
@@ -5299,17 +5682,17 @@
   </script>
   <script>
     // Ensure mobile bottom nav contains all primary dock views (fixes missing Timetable/Tracker on small screens)
-    (function rebuildMobileNav(){
+    (function rebuildMobileNav() {
       const bottom = document.querySelector('.mobile-bottomnav');
-      if(!bottom) return;
-      const views = ['dashboard','semester','timetable','tracker','analytics','reports','settings'];
+      if (!bottom) return;
+      const views = ['dashboard', 'semester', 'timetable', 'tracker', 'analytics', 'reports', 'settings'];
       bottom.innerHTML = '';
-      views.forEach(v=>{
+      views.forEach(v => {
         const dock = document.querySelector(`.dock-item[data-view="${v}"]`);
         const div = document.createElement('div');
         div.className = 'mnav-item';
         div.dataset.view = v;
-        div.onclick = ()=> switchView(v);
+        div.onclick = () => switchView(v);
         if (typeof activeView !== 'undefined' && activeView === v) div.classList.add('active');
         if (dock) {
           const svg = dock.querySelector('svg');
