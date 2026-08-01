@@ -2262,6 +2262,84 @@
       display: block;
     }
 
+    /* =========================================================
+       MOBILE & SECTION KEYFRAME ANIMATIONS
+    ========================================================= */
+    .page-view {
+      display: none;
+    }
+
+    .page-view.active {
+      display: block;
+      animation: mobileSectionEnter 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes mobileSectionEnter {
+      0% {
+        opacity: 0;
+        transform: translateY(22px) scale(0.985);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes mobileCardSlide {
+      0% {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes mobileNavPop {
+      0% {
+        transform: scale(0.85);
+      }
+      50% {
+        transform: scale(1.18);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes fabPulse {
+      0%, 100% {
+        box-shadow: 0 12px 28px -6px rgba(108, 99, 255, .6);
+      }
+      50% {
+        box-shadow: 0 16px 36px -4px rgba(108, 99, 255, .85);
+      }
+    }
+
+    @keyframes mobileModalBounce {
+      0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.94);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .mnav-item.active svg {
+      animation: mobileNavPop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .fab {
+      animation: fabPulse 3.2s infinite ease-in-out;
+    }
+
+    .modal-overlay.open .modal {
+      animation: mobileModalBounce 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
     .fade-up {
       animation: fadeUp .6s cubic-bezier(.22, 1, .36, 1) both;
     }
@@ -2767,6 +2845,13 @@
                 </div>
               </div>
 
+              <div class="glass spot card-pad fade-up" style="animation-delay:.65s">
+                <div class="card-title">
+                  <h3>Action Items & Tasks</h3>
+                </div>
+                <div class="tasks-list" id="taskList"></div>
+              </div>
+
             </div>
           </div>
 
@@ -3264,6 +3349,13 @@
 
 
 
+          <div class="glass spot card-pad" style="margin-bottom:24px;">
+            <div class="card-title">
+              <h3>SGPA Trend Analysis</h3>
+            </div>
+            <div id="analyticsChartWrap" class="chart-container" style="padding:20px 0;"></div>
+          </div>
+
           <div class="glass spot card-pad">
             <div class="card-title">
               <h3>Semester Breakdown Table</h3>
@@ -3580,13 +3672,14 @@
           <div class="form-group">
             <label>USN (University Serial Number)</label>
             <input type="text" id="loginUsnInput" class="form-input" placeholder="e.g. 1SC21CS001"
-              style="text-transform:uppercase;" autofocus>
+              style="text-transform:uppercase;" autofocus onkeydown="if(event.key==='Enter' && !event.repeat) handleLoginSubmit()">
           </div>
           <div class="form-group">
             <label>Password</label>
-            <input type="password" id="loginPasswordInput" class="form-input" placeholder="Enter your password">
+            <input type="password" id="loginPasswordInput" class="form-input" placeholder="Enter your password"
+              onkeydown="if(event.key==='Enter' && !event.repeat) handleLoginSubmit()">
           </div>
-          <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;"
+          <button class="btn btn-primary" id="loginSubmitBtn" style="width:100%; justify-content:center; padding:12px;"
             onclick="handleLoginSubmit()">Login to Dashboard</button>
           <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
             Student not found? <a href="#" style="color:var(--indigo); font-weight:700;"
@@ -3610,13 +3703,15 @@
           </div>
           <div class="form-group">
             <label>New Password</label>
-            <input type="password" id="setupPasswordInput" class="form-input" placeholder="Enter a new password">
+            <input type="password" id="setupPasswordInput" class="form-input" placeholder="Enter a new password"
+              onkeydown="if(event.key==='Enter' && !event.repeat) handleSetupPasswordSubmit()">
           </div>
           <div class="form-group">
             <label>Confirm Password</label>
-            <input type="password" id="setupConfirmPasswordInput" class="form-input" placeholder="Confirm password">
+            <input type="password" id="setupConfirmPasswordInput" class="form-input" placeholder="Confirm password"
+              onkeydown="if(event.key==='Enter' && !event.repeat) handleSetupPasswordSubmit()">
           </div>
-          <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;"
+          <button class="btn btn-primary" id="setupSubmitBtn" style="width:100%; justify-content:center; padding:12px;"
             onclick="handleSetupPasswordSubmit()">Create Password</button>
           <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
             Already secured? <a href="#" style="color:var(--indigo); font-weight:700;"
@@ -3636,22 +3731,25 @@
           <div class="auth-banner" id="registerBanner"></div>
           <div class="form-group">
             <label>Student Full Name</label>
-            <input type="text" id="registerNameInput" class="form-input" placeholder="e.g. student name">
+            <input type="text" id="registerNameInput" class="form-input" placeholder="e.g. student name"
+              onkeydown="if(event.key==='Enter' && !event.repeat) handleRegisterSubmit()">
           </div>
           <div class="form-group">
             <label>USN (University Serial Number)</label>
             <input type="text" id="registerUsnInput" class="form-input" placeholder="e.g. 1SC21CS001"
-              style="text-transform:uppercase;">
+              style="text-transform:uppercase;" onkeydown="if(event.key==='Enter' && !event.repeat) handleRegisterSubmit()">
           </div>
           <div class="form-group">
             <label>Password</label>
-            <input type="password" id="registerPasswordInput" class="form-input" placeholder="Enter a password">
+            <input type="password" id="registerPasswordInput" class="form-input" placeholder="Enter a password"
+              onkeydown="if(event.key==='Enter' && !event.repeat) handleRegisterSubmit()">
           </div>
           <div class="form-group">
             <label>Confirm Password</label>
-            <input type="password" id="registerConfirmPasswordInput" class="form-input" placeholder="Confirm password">
+            <input type="password" id="registerConfirmPasswordInput" class="form-input" placeholder="Confirm password"
+              onkeydown="if(event.key==='Enter' && !event.repeat) handleRegisterSubmit()">
           </div>
-          <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;"
+          <button class="btn btn-primary" id="registerSubmitBtn" style="width:100%; justify-content:center; padding:12px;"
             onclick="handleRegisterSubmit()">Create Student Account</button>
           <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
             Already registered? <a href="#" style="color:var(--indigo); font-weight:700;"
@@ -4223,6 +4321,43 @@
       }
     };
 
+    function setElementText(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    }
+
+    function setElementHtml(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = val;
+    }
+
+    function getApiBaseUrl() {
+      const origin = window.location.origin || '';
+      const protocol = window.location.protocol || '';
+      if (protocol === 'file:' || ((origin.includes('localhost') || origin.includes('127.0.0.1')) && !origin.includes(':3000'))) {
+        return 'http://localhost:3000';
+      }
+      return '';
+    }
+
+    async function safeFetchJson(url, options = {}) {
+      try {
+        const fullUrl = (url.startsWith('/api/') ? getApiBaseUrl() : '') + url;
+        const res = await fetch(fullUrl, options);
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const data = await res.json();
+          return { ok: res.ok, status: res.status, data };
+        }
+        const text = await res.text();
+        console.error(`Non-JSON response (${res.status}) from ${fullUrl}:`, text.slice(0, 300));
+        return { ok: false, status: res.status, data: { success: false, message: `Server error (${res.status}). Please try again.` } };
+      } catch (e) {
+        console.error(`Fetch error for ${url}:`, e);
+        return { ok: false, status: 0, data: { success: false, message: 'Server connection error. Please try again.' } };
+      }
+    }
+
     let autoSaveTimer = null;
 
     function triggerAutoSave() {
@@ -4230,7 +4365,7 @@
       clearTimeout(autoSaveTimer);
       autoSaveTimer = setTimeout(async () => {
         try {
-          await fetch(`/api/student/${encodeURIComponent(state.usn)}`, {
+          const { ok, data } = await safeFetchJson(`/api/student/${encodeURIComponent(state.usn)}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -4243,6 +4378,9 @@
               examConfig: state.examConfig
             })
           });
+          if (!ok && data) {
+            console.warn('Auto-save warning:', data.message);
+          }
         } catch (e) {
           console.error('MongoDB Auto-save error:', e);
         }
@@ -4338,47 +4476,79 @@
       }
     }
 
+    let isAuthSubmitting = false;
+
     async function handleLoginSubmit() {
-      const usn = document.getElementById('loginUsnInput').value.trim();
-      const password = document.getElementById('loginPasswordInput').value || '';
+      if (isAuthSubmitting) return;
+
+      const usnInput = document.getElementById('loginUsnInput');
+      const passwordInput = document.getElementById('loginPasswordInput');
+      const usn = usnInput ? usnInput.value.trim().toUpperCase() : '';
+      const password = passwordInput ? passwordInput.value : '';
       const banner = document.getElementById('loginBanner');
+      const btn = document.getElementById('loginSubmitBtn');
 
       if (!usn || !password) {
-        banner.textContent = 'Please enter both USN and Password.';
-        banner.className = 'auth-banner error';
+        if (banner) {
+          banner.textContent = 'Please enter both USN and Password.';
+          banner.className = 'auth-banner error';
+        }
         return;
       }
 
+      isAuthSubmitting = true;
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Logging in...';
+      }
+
       try {
-        const res = await fetch('/api/auth/login', {
+        const { ok, data } = await safeFetchJson('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ usn, password })
         });
-        const data = await res.json();
+
         if (data && data.migrationRequired) {
-          // Show password setup screen
-          document.getElementById('setupUsnInput').value = usn.toUpperCase();
-          document.getElementById('setupBanner').textContent = data.message || 'Please create a password to secure your account.';
-          document.getElementById('setupBanner').className = 'auth-banner';
+          document.getElementById('setupUsnInput').value = usn;
+          const setupBanner = document.getElementById('setupBanner');
+          if (setupBanner) {
+            setupBanner.textContent = data.message || 'Please create a password to secure your account.';
+            setupBanner.className = 'auth-banner';
+          }
           switchAuthTab('setup');
           return;
         }
 
-        if (!res.ok || !data.success) {
-          banner.textContent = data.message || 'Invalid USN or Password.';
-          banner.className = 'auth-banner error';
+        if (!ok || !data || !data.success) {
+          if (banner) {
+            banner.textContent = (data && data.message) ? data.message : 'Invalid USN or Password.';
+            banner.className = 'auth-banner error';
+          }
           return;
         }
 
         // Success Login
         applyStudentData(data.student);
         localStorage.setItem('scfc_active_usn', data.student.usn);
-        document.getElementById('authScreenOverlay').classList.remove('open');
-        document.getElementById('mainAppShell').style.display = 'block';
-      } catch (e) {
-        banner.textContent = 'Server connection error. Please try again.';
-        banner.className = 'auth-banner error';
+        const overlay = document.getElementById('authScreenOverlay');
+        if (overlay) {
+          overlay.classList.remove('open');
+        }
+        const appShell = document.getElementById('mainAppShell');
+        if (appShell) appShell.style.display = 'block';
+      } catch (err) {
+        console.error('Login submit error:', err);
+        if (banner) {
+          banner.textContent = 'Connection error. Please try again.';
+          banner.className = 'auth-banner error';
+        }
+      } finally {
+        isAuthSubmitting = false;
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Login to Dashboard';
+        }
       }
     }
 
@@ -4387,49 +4557,72 @@
       const password = document.getElementById('setupPasswordInput').value || '';
       const confirmPassword = document.getElementById('setupConfirmPasswordInput').value || '';
       const banner = document.getElementById('setupBanner');
+      const btn = document.getElementById('setupSubmitBtn');
 
       if (!usn || !password || !confirmPassword) {
-        banner.textContent = 'Please fill in all fields.';
-        banner.className = 'auth-banner error';
+        if (banner) {
+          banner.textContent = 'Please fill in all fields.';
+          banner.className = 'auth-banner error';
+        }
         return;
       }
 
       if (password.length < 8) {
-        banner.textContent = 'Password must be at least 8 characters.';
-        banner.className = 'auth-banner error';
+        if (banner) {
+          banner.textContent = 'Password must be at least 8 characters.';
+          banner.className = 'auth-banner error';
+        }
         return;
       }
 
       if (password !== confirmPassword) {
-        banner.textContent = 'Password and Confirm Password must match.';
-        banner.className = 'auth-banner error';
+        if (banner) {
+          banner.textContent = 'Password and Confirm Password must match.';
+          banner.className = 'auth-banner error';
+        }
         return;
       }
 
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Saving Password...';
+      }
+
       try {
-        const res = await fetch('/api/auth/setup-password', {
+        const { ok, data } = await safeFetchJson('/api/auth/setup-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ usn, password, confirmPassword })
         });
-        const data = await res.json();
 
-        if (!res.ok || !data.success) {
-          banner.textContent = data.message || 'Failed to create password.';
-          banner.className = 'auth-banner error';
+        if (!ok || !data || !data.success) {
+          if (banner) {
+            banner.textContent = (data && data.message) ? data.message : 'Failed to create password.';
+            banner.className = 'auth-banner error';
+          }
           return;
         }
 
         // Success - redirect to login
         const loginBanner = document.getElementById('loginBanner');
-        loginBanner.textContent = 'Password created successfully. Please login.';
-        loginBanner.className = 'auth-banner success';
+        if (loginBanner) {
+          loginBanner.textContent = 'Password created successfully. Please login.';
+          loginBanner.className = 'auth-banner success';
+        }
         document.getElementById('loginUsnInput').value = usn.toUpperCase();
         document.getElementById('loginPasswordInput').value = '';
         switchAuthTab('login');
-      } catch (e) {
-        banner.textContent = 'Server connection error. Please try again.';
-        banner.className = 'auth-banner error';
+      } catch (err) {
+        console.error('Setup password submit error:', err);
+        if (banner) {
+          banner.textContent = 'Connection error. Please try again.';
+          banner.className = 'auth-banner error';
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Create Password';
+        }
       }
     }
 
@@ -4439,49 +4632,72 @@
       const password = document.getElementById('registerPasswordInput').value || '';
       const confirmPassword = document.getElementById('registerConfirmPasswordInput').value || '';
       const banner = document.getElementById('registerBanner');
+      const btn = document.getElementById('registerSubmitBtn');
 
-      if (!name || !usn || !password || !confirmPassword) {
-        banner.textContent = 'Please fill in all registration fields.';
-        banner.className = 'auth-banner error';
+      if (!name || !usn) {
+        if (banner) {
+          banner.textContent = 'Please fill in Name and USN.';
+          banner.className = 'auth-banner error';
+        }
         return;
       }
 
-      if (password.length < 8) {
-        banner.textContent = 'Password must be at least 8 characters.';
-        banner.className = 'auth-banner error';
+      if ((password || confirmPassword) && password !== confirmPassword) {
+        if (banner) {
+          banner.textContent = 'Password and Confirm Password must match.';
+          banner.className = 'auth-banner error';
+        }
         return;
       }
 
-      if (password !== confirmPassword) {
-        banner.textContent = 'Password and Confirm Password must match.';
-        banner.className = 'auth-banner error';
+      if (password && password.length < 8) {
+        if (banner) {
+          banner.textContent = 'Password must be at least 8 characters.';
+          banner.className = 'auth-banner error';
+        }
         return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Creating Account...';
       }
 
       try {
-        const res = await fetch('/api/auth/register', {
+        const { ok, data } = await safeFetchJson('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, usn, password, confirmPassword })
         });
-        const data = await res.json();
 
-        if (!res.ok || !data.success) {
-          banner.textContent = data.message || 'This USN is already registered. Please Login.';
-          banner.className = 'auth-banner error';
+        if (!ok || !data || !data.success) {
+          if (banner) {
+            banner.textContent = (data && data.message) ? data.message : 'This USN is already registered. Please Login.';
+            banner.className = 'auth-banner error';
+          }
           return;
         }
 
         // Success Register -> Redirect to Login
         const loginBanner = document.getElementById('loginBanner');
-        loginBanner.textContent = 'Registration successful! Please login now.';
-        loginBanner.className = 'auth-banner success';
+        if (loginBanner) {
+          loginBanner.textContent = 'Registration successful! Please login now.';
+          loginBanner.className = 'auth-banner success';
+        }
 
         document.getElementById('loginUsnInput').value = usn.toUpperCase();
         switchAuthTab('login');
-      } catch (e) {
-        banner.textContent = 'Server connection error. Please try again.';
-        banner.className = 'auth-banner error';
+      } catch (err) {
+        console.error('Register submit error:', err);
+        if (banner) {
+          banner.textContent = 'Connection error. Please try again.';
+          banner.className = 'auth-banner error';
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Create Student Account';
+        }
       }
     }
 
@@ -4533,17 +4749,12 @@
     async function checkSavedSession() {
       const activeUsn = localStorage.getItem('scfc_active_usn');
       if (activeUsn) {
-        try {
-          const res = await fetch(`/api/student/${encodeURIComponent(activeUsn)}`);
-          const data = await res.json();
-          if (res.ok && data.success && data.student) {
-            applyStudentData(data.student);
-            document.getElementById('authScreenOverlay').classList.remove('open');
-            document.getElementById('mainAppShell').style.display = 'block';
-            return;
-          }
-        } catch (e) {
-          console.error('Session restore error:', e);
+        const { ok, data } = await safeFetchJson(`/api/student/${encodeURIComponent(activeUsn)}`);
+        if (ok && data && data.success && data.student) {
+          applyStudentData(data.student);
+          document.getElementById('authScreenOverlay').classList.remove('open');
+          document.getElementById('mainAppShell').style.display = 'block';
+          return;
         }
       }
       document.getElementById('mainAppShell').style.display = 'none';
@@ -4700,6 +4911,11 @@
     }
 
     function renderDonut() {
+      const elCircles = document.getElementById('donutCircles');
+      const elCount = document.getElementById('donutCount');
+      const elLegend = document.getElementById('donutLegend');
+      if (!elCircles || !elCount || !elLegend) return;
+
       const currentRows = state.semesters[state.currentSemester] || [];
       const counts = {}; GRADES.forEach(g => counts[g.g] = 0);
       currentRows.forEach(r => counts[r.grade]++);
@@ -4718,13 +4934,15 @@
           legend += `<div class="legend-row"><span class="lk"><span class="dotc" style="background:${g.color}"></span>${g.g} (GP ${g.gp})</span><span>${count} (${Math.round(count / total * 100)}%)</span></div>`;
         }
       });
-      document.getElementById('donutCircles').innerHTML = circles;
-      document.getElementById('donutCount').textContent = total;
-      document.getElementById('donutLegend').innerHTML = legend || '<div class="legend-row"><span class="lk">No subjects in semester</span></div>';
+      elCircles.innerHTML = circles;
+      elCount.textContent = total;
+      elLegend.innerHTML = legend || '<div class="legend-row"><span class="lk">No subjects in semester</span></div>';
     }
 
     function renderTasks() {
       const container = document.getElementById('taskList');
+      if (!container) return;
+      if (!Array.isArray(state.tasks)) state.tasks = [];
       container.innerHTML = state.tasks.map((t, i) => `
     <div class="task-row ${t.done ? 'strike' : ''}" onclick="toggleTask(${i})">
       <div class="task-check ${t.done ? 'done' : ''}">${t.done ? '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>' : ''}</div>
@@ -4735,6 +4953,7 @@
     }
 
     function toggleTask(i) {
+      if (!state.tasks || !state.tasks[i]) return;
       state.tasks[i].done = !state.tasks[i].done;
       triggerAutoSave();
       renderTasks();
@@ -4785,28 +5004,31 @@
       const allStats = computeAllStats();
       const currentRows = state.semesters[state.currentSemester] || [];
 
-      semesterSelect.value = state.currentSemester;
-      document.getElementById('statSubjects').textContent = currentRows.length;
-      document.getElementById('statCredits').textContent = allStats.currentCredits;
-      document.getElementById('statSGPA').textContent = allStats.currentSgpa.toFixed(2);
-      document.getElementById('statCGPA').textContent = allStats.cgpa.toFixed(2);
+      if (semesterSelect) semesterSelect.value = state.currentSemester;
+      setElementText('statSubjects', currentRows.length);
+      setElementText('statCredits', allStats.currentCredits);
+      setElementText('statSGPA', allStats.currentSgpa.toFixed(2));
+      setElementText('statCGPA', allStats.cgpa.toFixed(2));
 
-      document.getElementById('footCredits').textContent = allStats.currentCredits;
-      document.getElementById('footSGPA').textContent = allStats.currentSgpa.toFixed(2);
-      document.getElementById('gaugeSGPA').textContent = allStats.currentSgpa.toFixed(2);
+      setElementText('footCredits', allStats.currentCredits);
+      setElementText('footSGPA', allStats.currentSgpa.toFixed(2));
+      setElementText('gaugeSGPA', allStats.currentSgpa.toFixed(2));
 
       const sBand = bandLabel(allStats.currentSgpa), cBand = bandLabel(allStats.cgpa);
-      document.getElementById('statSGPALabel').textContent = currentRows.length ? sBand.t : 'No Data';
-      document.getElementById('statCGPALabel').textContent = allStats.completedCount ? cBand.t : 'No Data';
+      setElementText('statSGPALabel', currentRows.length ? sBand.t : 'No Data');
+      setElementText('statCGPALabel', allStats.completedCount ? cBand.t : 'No Data');
 
-      const circumference = 452.4;
-      const offset = circumference - Math.max(0, Math.min(1, allStats.currentSgpa / 10)) * circumference;
-      document.getElementById('gaugeFg').setAttribute('stroke-dashoffset', offset);
+      const gaugeFg = document.getElementById('gaugeFg');
+      if (gaugeFg) {
+        const circumference = 452.4;
+        const offset = circumference - Math.max(0, Math.min(1, allStats.currentSgpa / 10)) * circumference;
+        gaugeFg.setAttribute('stroke-dashoffset', offset);
+      }
 
-      document.getElementById('sumTotalCredits').textContent = `${allStats.totalOverallCredits} / 160`;
-      document.getElementById('sumEarned').textContent = allStats.currentCredits;
-      document.getElementById('sumRemaining').textContent = Math.max(0, 160 - allStats.totalOverallCredits);
-      document.getElementById('sumPoints').textContent = allStats.currentPoints.toFixed(1);
+      setElementText('sumTotalCredits', `${allStats.totalOverallCredits} / 160`);
+      setElementText('sumEarned', allStats.currentCredits);
+      setElementText('sumRemaining', Math.max(0, 160 - allStats.totalOverallCredits));
+      setElementText('sumPoints', allStats.currentPoints.toFixed(1));
 
       renderDonut();
       renderTasks();
@@ -5062,14 +5284,15 @@
       const completedCourses = Array.from(gradeMap.values()).filter(isTrackerCourseCompleted).length;
       const pendingCourses = Array.from(gradeMap.values()).filter(r => getTrackerCourseStatus(r) === 'pending').length;
 
-      document.getElementById('trackerRequiredCredits').textContent = degreeTotal;
-      document.getElementById('trackerCompletedCredits').textContent = totalEarned;
-      document.getElementById('trackerRemaining').textContent = Math.max(0, degreeTotal - totalEarned);
-      document.getElementById('trackerPct').textContent = `${overallPct}%`;
-      document.getElementById('trackerTotalProg').style.width = `${overallPct}%`;
-      document.getElementById('trackerCurrentSemCredits').textContent = currentSemCredits;
-      document.getElementById('trackerCompletedCourses').textContent = completedCourses;
-      document.getElementById('trackerPendingCourses').textContent = pendingCourses;
+      setElementText('trackerRequiredCredits', degreeTotal);
+      setElementText('trackerCompletedCredits', totalEarned);
+      setElementText('trackerRemaining', Math.max(0, degreeTotal - totalEarned));
+      setElementText('trackerPct', `${overallPct}%`);
+      const totalProg = document.getElementById('trackerTotalProg');
+      if (totalProg) totalProg.style.width = `${overallPct}%`;
+      setElementText('trackerCurrentSemCredits', currentSemCredits);
+      setElementText('trackerCompletedCourses', completedCourses);
+      setElementText('trackerPendingCourses', pendingCourses);
 
       const basketStats = {};
       courseBankUnique.forEach(course => {
@@ -5289,10 +5512,10 @@
         if (sg !== null && sg > highest) highest = sg;
       }
 
-      document.getElementById('analyticHighestSgpa').textContent = highest ? highest.toFixed(2) : '0.00';
-      document.getElementById('analyticCgpa').textContent = allStats.cgpa.toFixed(2);
-      document.getElementById('analyticCompletedSems').textContent = `${allStats.completedCount} / 8`;
-      document.getElementById('analyticTotalCredits').textContent = `${allStats.totalOverallCredits} / 160`;
+      setElementText('analyticHighestSgpa', highest ? highest.toFixed(2) : '0.00');
+      setElementText('analyticCgpa', allStats.cgpa.toFixed(2));
+      setElementText('analyticCompletedSems', `${allStats.completedCount} / 8`);
+      setElementText('analyticTotalCredits', `${allStats.totalOverallCredits} / 160`);
 
       const svgWrap = document.getElementById('analyticsChartWrap');
       svgWrap.innerHTML = `<svg viewBox="0 0 800 200" preserveAspectRatio="none" width="100%" height="200" id="analyticsBigSvg"></svg>`;
