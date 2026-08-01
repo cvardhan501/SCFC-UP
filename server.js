@@ -315,7 +315,17 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`SCFC Grade Calculator server listening on http://localhost:${PORT}`);
   console.log('Database: MongoDB Atlas');
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`❌ Port ${PORT} is already in use by another running process.`);
+    console.error(`💡 Close the existing node process or run with: npx kill-port 3000`);
+    process.exit(1);
+  } else {
+    throw err;
+  }
 });
