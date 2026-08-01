@@ -2723,20 +2723,6 @@
                 </div>
               </div>
 
-              <div class="glass spot card-pad fade-up" style="animation-delay:.4s">
-                <div class="card-title">
-                  <h3>Performance Trend</h3><span class="link" onclick="switchView('analytics')">View Report</span>
-                </div>
-                <svg class="chart-box" viewBox="0 0 300 130" preserveAspectRatio="none" width="100%" height="130"
-                  id="dashboardTrendSvg">
-                  <!-- Injected via JS -->
-                </svg>
-                <div
-                  style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink-soft);margin-top:4px;">
-                  <span>S1</span><span>S2</span><span>S3</span><span>S4</span><span>S5</span><span>S6</span><span>S7</span><span>S8</span>
-                </div>
-              </div>
-
               <div class="glass spot card-pad fade-up" style="animation-delay:.45s">
                 <div class="card-title">
                   <h3>Grade Distribution</h3>
@@ -2751,15 +2737,6 @@
                     <text x="21" y="26" text-anchor="middle" font-size="3.6" fill="var(--ink-soft)">Subjects</text>
                   </svg>
                   <div style="flex:1;display:flex;flex-direction:column;gap:7px;" id="donutLegend"></div>
-                </div>
-              </div>
-
-              <div class="glass spot card-pad fade-up" style="animation-delay:.5s">
-                <div class="card-title">
-                  <h3>Tasks & Checklists</h3>
-                </div>
-                <div class="tasks-list" id="taskList">
-                  <!-- tasks injected -->
                 </div>
               </div>
 
@@ -2822,20 +2799,7 @@
               </div>
             </div>
 
-            <div class="glass spot bottom-card fade-up" style="animation-delay:.05s">
-              <div class="bc-head">
-                <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="1.8">
-                    <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z" />
-                  </svg></div>
-                <h4>Key Features</h4>
-              </div>
-              <div class="tip-row"><span class="b"></span>MongoDB real-time automatic synchronization.</div>
-              <div class="tip-row"><span class="b"></span>Grade points follow the 10-point scale: S=10 … F=0.</div>
-              <div class="tip-row"><span class="b"></span>Student account authentication with unique USN validation.
-              </div>
-              <div class="tip-row"><span class="b"></span>Clean single-page printable report export with USN.</div>
-            </div>
+
 
             <div class="glass spot bottom-card fade-up" style="animation-delay:.1s">
               <div class="bc-head">
@@ -2866,8 +2830,7 @@
               style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; flex-wrap:wrap;">
               <h3 style="margin:0;">Course Slot Assignments</h3>
               <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <select class="form-input" id="timetableSemSelect" style="width:200px;" onchange="renderTimetable()">
-                  <option value="all">All Semesters (1-8)</option>
+                <select class="form-input" id="timetableSemSelect" style="width:200px;" onchange="changeTimetableSemester(this.value)">
                   <option value="1">Semester 1</option>
                   <option value="2">Semester 2</option>
                   <option value="3">Semester 3</option>
@@ -2884,7 +2847,8 @@
               <thead>
                 <tr>
                   <th style="padding:8px;">Course</th>
-                  <th style="padding:8px;">Instructor Name</th>
+                  <th style="padding:8px;">Theory Instructor</th>
+                  <th style="padding:8px;">Lab Instructor</th>
                   <th style="padding:8px;">Course Type</th>
                   <th style="padding:8px;">Theory Slot</th>
                   <th style="padding:8px;">Lab Slot</th>
@@ -2956,7 +2920,16 @@
               </div>
               <div>
                 <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Semester</span>
-                <strong style="font-size:14px; color:var(--ink);" id="examSemDisplay">Semester 1</strong>
+                <select class="select-glass" id="examSemSelect" style="padding:4px 8px; font-size:13px; font-weight:700; background:var(--glass-bg-2); color:var(--ink); border:1px solid var(--glass-border); border-radius:6px; cursor:pointer;" onchange="changeExamSemester(this.value)" title="Select Semester">
+                  <option value="1">Semester 1</option>
+                  <option value="2">Semester 2</option>
+                  <option value="3">Semester 3</option>
+                  <option value="4">Semester 4</option>
+                  <option value="5">Semester 5</option>
+                  <option value="6">Semester 6</option>
+                  <option value="7">Semester 7</option>
+                  <option value="8">Semester 8</option>
+                </select>
               </div>
               <div>
                 <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Department</span>
@@ -3107,13 +3080,36 @@
             </div>
           </div>
 
+          <!-- HOLIDAY MANAGER SECTION -->
+          <div class="glass card-pad fade-up" style="margin-bottom:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+              <div>
+                <h3 style="margin:0; font-size:16px;">Holiday Manager</h3>
+                <p style="margin:2px 0 0 0; font-size:12px; color:var(--ink-soft);">Add custom holidays (Sunday, Festival, Study Leave). Holidays highlight on the Calendar and adjust exam gap calculations.</p>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:14px;">
+              <input type="date" id="holidayDateInput" class="form-input" style="width:160px; padding:6px 10px; font-size:12.5px;" />
+              <input type="text" id="holidayTitleInput" placeholder="Holiday Title (e.g. Independence Day, Study Break)" class="form-input" style="flex:1; min-width:200px; padding:6px 10px; font-size:12.5px;" />
+              <button class="btn btn-primary" onclick="addHolidayFromInput()" style="padding:6px 16px; font-size:12.5px;">+ Add Holiday</button>
+            </div>
+            <div id="holidayChipsContainer" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <!-- Holiday chips injected via JS -->
+            </div>
+          </div>
+
           <!-- CALENDAR & TIMELINE ROW -->
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;" class="exam-cal-timeline-grid">
             <!-- EXAM CALENDAR -->
             <div class="glass card-pad fade-up">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
                 <h3 style="margin:0; font-size:16px;">Exam Calendar</h3>
-                <div style="font-size:12px; font-weight:700; color:var(--indigo);" id="examCalendarMonthYear">September 2026</div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <button class="btn btn-ghost" onclick="changeExamCalendarMonth(-1)" style="padding:2px 8px; font-size:12px;" title="Previous Month">◄</button>
+                  <div style="font-size:13px; font-weight:700; color:var(--indigo);" id="examCalendarMonthYear">September 2026</div>
+                  <button class="btn btn-ghost" onclick="changeExamCalendarMonth(1)" style="padding:2px 8px; font-size:12px;" title="Next Month">►</button>
+                  <button class="btn btn-ghost" onclick="jumpExamCalendarToday()" style="padding:2px 8px; font-size:11px;" title="Current Month">Today</button>
+                </div>
               </div>
               <div id="examCalendarGridContainer"></div>
             </div>
@@ -3126,22 +3122,7 @@
             </div>
           </div>
 
-          <!-- AI STUDY PLANNER & RECOMMENDATIONS -->
-          <div class="glass card-pad fade-up" style="margin-bottom:24px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
-              <div>
-                <h3 style="margin:0; font-size:16px;">AI Study Planner & Revision Recommendations</h3>
-                <p style="margin:2px 0 0 0; font-size:12px; color:var(--ink-soft);">Automated revision schedule prioritized by nearest exam date and credit weightage.</p>
-              </div>
-              <button class="btn btn-ghost" onclick="generateAIStudyPlan()"><svg width="14" height="14" viewBox="0 0 24 24"
-                  fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
-                </svg> Regenerate Plan</button>
-            </div>
-            <div id="aiStudyPlannerContent" style="display:grid; grid-template-columns:2fr 1fr; gap:20px;" class="ai-plan-grid">
-              <!-- Dynamically Injected -->
-            </div>
-          </div>
+
         </div>
 
         <!-- VIEW: CREDIT TRACKER -->
@@ -3281,14 +3262,7 @@
             </div>
           </div>
 
-          <div class="glass spot card-pad" style="margin-bottom:20px;">
-            <div class="card-title">
-              <h3>Multi-Semester SGPA Progression</h3>
-            </div>
-            <div style="height:220px; width:100%;" id="analyticsChartWrap">
-              <!-- Detailed Chart SVG injected -->
-            </div>
-          </div>
+
 
           <div class="glass spot card-pad">
             <div class="card-title">
@@ -4102,22 +4076,25 @@
       const occupiedCells = new Map();
 
       (rows || []).forEach((r, idx) => {
+        // Exclude slots of the same course being edited
+        if (idx === currentCourseIndex) return;
+
         const isTheoryAllowed = r.type !== 'Lab';
         const isLabAllowed = r.type !== 'Theory';
 
-        if (isTheoryAllowed && r.theorySlot && !(idx === currentCourseIndex && slotField === 'theorySlot')) {
+        if (isTheoryAllowed && r.theorySlot) {
           getGridCells(r.theorySlot).forEach(c => {
             occupiedCells.set(c, { type: 'Theory', code: r.code, slot: r.theorySlot });
           });
         }
 
-        if (isLabAllowed && r.labSlot && !(idx === currentCourseIndex && slotField === 'labSlot')) {
+        if (isLabAllowed && r.labSlot) {
           getGridCells(r.labSlot).forEach(c => {
             occupiedCells.set(c, { type: 'Lab', code: r.code, slot: r.labSlot });
           });
         }
 
-        if (isLabAllowed && r.labSlot2 && !(idx === currentCourseIndex && slotField === 'labSlot2')) {
+        if (isLabAllowed && r.labSlot2) {
           getGridCells(r.labSlot2).forEach(c => {
             occupiedCells.set(c, { type: 'Lab', code: r.code, slot: r.labSlot2 });
           });
@@ -4135,17 +4112,10 @@
       for (const cell of targetCells) {
         if (occupiedCells.has(cell)) {
           const existing = occupiedCells.get(cell);
-          if (slotType === 'Lab') {
-            return {
-              conflict: true,
-              message: "Cannot add lab. Both consecutive slots must be empty."
-            };
-          } else {
-            return {
-              conflict: true,
-              message: "Cannot add theory subject. This slot is already occupied by a lab."
-            };
-          }
+          return {
+            conflict: true,
+            message: `Slot Conflict: This time slot is already occupied by ${existing.code} (${existing.slot} - ${existing.type}). Please select a different slot.`
+          };
         }
       }
 
@@ -4530,9 +4500,24 @@
       state.history = student.history || [];
       state.tasks = student.tasks || [];
 
+      // Restore Exam System configuration with local fallback
+      const localExamConfig = localStorage.getItem(`scfc_exam_config_${student.usn}`);
+      if (student.examConfig && Object.keys(student.examConfig.schedules || {}).length > 0) {
+        state.examConfig = student.examConfig;
+      } else if (localExamConfig) {
+        try {
+          state.examConfig = JSON.parse(localExamConfig);
+        } catch (e) {}
+      }
+
+      if (!state.examConfig) {
+        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] }, holidays: [] };
+      }
+
       const root = document.documentElement;
       root.setAttribute('data-theme', state.theme);
 
+      syncSemesterDropdowns();
       updateStudentNameDisplays();
       renderAll();
     }
@@ -4606,9 +4591,19 @@
       else if (viewName === 'settings') renderSettingsView();
       else if (viewName === 'history') renderHistoryView();
       else if (viewName === 'gradesystem') renderGradeSystemView();
-      else if (viewName === 'timetable') renderTimetable();
+      else if (viewName === 'timetable') {
+        const ttSelect = document.getElementById('timetableSemSelect');
+        if (ttSelect) {
+          ttSelect.value = String(state.currentSemester || 1);
+        }
+        renderTimetable();
+      }
       else if (viewName === 'tracker') renderTracker();
-      else if (viewName === 'exams') renderExamDashboard();
+      else if (viewName === 'exams') {
+        const exSelect = document.getElementById('examSemSelect');
+        if (exSelect) exSelect.value = String(state.currentSemester || 1);
+        renderExamDashboard();
+      }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -4619,13 +4614,46 @@
     const tbody = document.getElementById('tableBody');
     const semesterSelect = document.getElementById('semesterSelect');
 
+    function syncSemesterDropdowns() {
+      const semStr = String(state.currentSemester || 1);
+      ['semesterSelect', 'timetableSemSelect', 'examSemSelect', 'reportSemSelect'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = semStr;
+      });
+    }
+
     semesterSelect.addEventListener('change', (e) => {
       const newSem = parseInt(e.target.value);
-      state.currentSemester = newSem;
-      logHistory(`Switched active workspace to Semester ${newSem}.`);
-      triggerAutoSave();
-      renderAll();
+      if (!isNaN(newSem)) {
+        state.currentSemester = newSem;
+        syncSemesterDropdowns();
+        logHistory(`Switched active workspace to Semester ${newSem}.`);
+        triggerAutoSave();
+        renderAll();
+      }
     });
+
+    function changeTimetableSemester(val) {
+      const semNum = parseInt(val);
+      if (!isNaN(semNum)) {
+        state.currentSemester = semNum;
+        syncSemesterDropdowns();
+        logHistory(`Switched active workspace to Semester ${semNum} from Timetable view.`);
+        triggerAutoSave();
+        renderAll();
+      }
+    }
+
+    function changeExamSemester(val) {
+      const semNum = parseInt(val);
+      if (!isNaN(semNum)) {
+        state.currentSemester = semNum;
+        syncSemesterDropdowns();
+        logHistory(`Switched active workspace to Semester ${semNum} from Exam view.`);
+        triggerAutoSave();
+        renderAll();
+      }
+    }
 
     function renderTable() {
       const currentRows = state.semesters[state.currentSemester] || [];
@@ -4782,21 +4810,21 @@
 
       renderDonut();
       renderTasks();
-      renderTrendChartSvg('dashboardTrendSvg');
     }
 
     function renderTimetable() {
+      const semNum = state.currentSemester || 1;
       const semSelect = document.getElementById('timetableSemSelect');
-      const sem = parseInt(semSelect ? semSelect.value : state.currentSemester);
-      if (semSelect) semSelect.value = sem;
+      if (semSelect) semSelect.value = String(semNum);
 
-      const rows = state.semesters[sem] || [];
+      const semLabel = `Semester ${semNum}`;
+      const rows = state.semesters[semNum] || [];
 
       // Render Course Slot Assignment Table
       const assignBody = document.getElementById('timetableCourseAssignmentBody');
       if (assignBody) {
         if (rows.length === 0) {
-          assignBody.innerHTML = `<tr><td colspan="5" style="padding:12px; text-align:center; color:var(--ink-soft);">No subjects added for Semester ${sem} yet. Add subjects in the Grade Calculator dashboard.</td></tr>`;
+          assignBody.innerHTML = `<tr><td colspan="5" style="padding:12px; text-align:center; color:var(--ink-soft);">No subjects added for ${semLabel} yet. Add subjects in the Grade Calculator dashboard.</td></tr>`;
         } else {
           assignBody.innerHTML = rows.map((r, i) => {
             const isLabOnly = r.type === 'Lab';
@@ -4809,7 +4837,12 @@
 
             return `<tr style="border-bottom:1px solid rgba(140, 130, 255, .1);">
               <td style="padding:8px;"><b style="color:var(--ink); font-size:13px;">${r.code}</b><br><span style="font-size:12px; color:var(--ink-soft);">${r.name}</span></td>
-              <td style="padding:8px;"><input type="text" class="form-input tt-inst" data-i="${i}" value="${r.instructor || ''}" placeholder="Instructor Name" style="width:140px; padding:4px 8px; font-size:12px;"></td>
+              <td style="padding:8px;">
+                ${isLabOnly ? '<span style="color:var(--ink-soft); font-size:11px;">N/A (Lab Only)</span>' : `<input type="text" class="form-input tt-inst" data-i="${i}" value="${r.instructor || ''}" placeholder="Theory Faculty Name" style="width:130px; padding:4px 8px; font-size:12px;">`}
+              </td>
+              <td style="padding:8px;">
+                ${isTheoryOnly ? '<span style="color:var(--ink-soft); font-size:11px;">N/A (Theory Only)</span>' : `<input type="text" class="form-input tt-lab-inst" data-i="${i}" value="${r.labInstructor || ''}" placeholder="Lab Faculty Name" style="width:130px; padding:4px 8px; font-size:12px;">`}
+              </td>
               <td style="padding:8px;"><select class="form-input tt-type" data-i="${i}" style="width:110px; padding:4px; font-size:12px;">${typeOptions}</select></td>
               <td style="padding:8px;">
                 ${isLabOnly ? '<span style="color:var(--ink-soft); font-size:11px;">N/A (Lab Only)</span>' : `<select class="form-input tt-tslot" data-i="${i}" style="width:150px; padding:4px; font-size:12px;">${tSlotOptions}</select>`}
@@ -4828,6 +4861,14 @@
             });
           });
 
+          assignBody.querySelectorAll('.tt-lab-inst').forEach(inp => {
+            inp.addEventListener('change', e => {
+              const idx = +e.target.dataset.i;
+              rows[idx].labInstructor = e.target.value;
+              triggerAutoSave();
+            });
+          });
+
           assignBody.querySelectorAll('.tt-type').forEach(sel => {
             sel.addEventListener('change', e => {
               const idx = +e.target.dataset.i;
@@ -4836,8 +4877,10 @@
               if (newType === 'Theory') {
                 rows[idx].labSlot = '';
                 rows[idx].labSlot2 = '';
+                rows[idx].labInstructor = '';
               } else if (newType === 'Lab') {
                 rows[idx].theorySlot = '';
+                rows[idx].instructor = '';
               }
               triggerAutoSave();
               renderTimetable();
@@ -4908,14 +4951,15 @@
         const typeColor = r.type === 'Theory + Lab' ? 'rgba(168,85,247,0.15)' : (r.type === 'Lab' ? 'rgba(34,197,94,0.15)' : 'rgba(56,189,248,0.15)');
         const borderColor = r.type === 'Theory + Lab' ? '#A855F7' : (r.type === 'Lab' ? '#22C55E' : '#38BDF8');
 
-        const renderCell = (mapping, slotName) => {
+        const renderCell = (mapping, slotName, isLab = false) => {
+          const instName = isLab ? (r.labInstructor || r.instructor || 'Faculty Name') : (r.instructor || 'Faculty Name');
           mapping.forEach(m => {
             if (grid[m.d]) {
               const cellHtml = `<div style="padding:6px; background:${typeColor}; border-left:3px solid ${borderColor}; border-radius:4px; font-size:11px; height:100%; display:flex; flex-direction:column; justify-content:center;">
                          <b style="color:var(--ink); font-size:12px;">${r.code}</b>
                          <span style="color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${r.name}">${r.name}</span>
                          <div style="margin-top:4px; font-weight:600; color:${borderColor};">${slotName}</div>
-                         <div style="font-size:10px; color:var(--ink-soft); margin-top:2px;">${r.instructor || 'TBA'}</div>
+                         <div style="font-size:10px; color:var(--ink-soft); margin-top:2px;">${instName}</div>
                      </div>`;
 
               if (m.span === 2) {
@@ -4931,21 +4975,21 @@
         if (r.theorySlot) {
           const theorySlots = getSlotParts(r.theorySlot);
           theorySlots.forEach(slot => {
-            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot, false);
           });
         }
 
         if (r.labSlot) {
           const labSlots = getSlotParts(r.labSlot);
           labSlots.forEach(slot => {
-            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot, true);
           });
         }
 
         if (r.labSlot2) {
           const labSlots2 = getSlotParts(r.labSlot2);
           labSlots2.forEach(slot => {
-            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot, true);
           });
         }
       });
@@ -5172,6 +5216,7 @@
 
     function renderAll() {
       updateStudentNameDisplays();
+      syncSemesterDropdowns();
       renderTable();
       renderStats();
       if (typeof renderTimetable === 'function') renderTimetable();
@@ -5568,9 +5613,13 @@
         assignRows = `<tr><td colspan="5" style="text-align:center; padding:10px; color:#666;">No courses registered for Semester ${semNum}.</td></tr>`;
       } else {
         assignRows = courses.map((c, i) => {
+          const instDisplay = c.type === 'Lab'
+            ? (c.labInstructor || c.instructor || 'Faculty Name')
+            : (c.type === 'Theory + Lab' && c.labInstructor ? `${c.instructor || 'Faculty Name'}<br><small style="color:#666;">Lab: ${c.labInstructor}</small>` : (c.instructor || 'Faculty Name'));
+
           return `<tr>
             <td style="padding:6px 8px; border-bottom:1px solid #ddd;"><strong>${c.code}</strong><br><small style="color:#666;">${c.name}</small></td>
-            <td style="padding:6px 8px; border-bottom:1px solid #ddd;">${c.instructor || 'TBA'}</td>
+            <td style="padding:6px 8px; border-bottom:1px solid #ddd;">${instDisplay}</td>
             <td style="padding:6px 8px; border-bottom:1px solid #ddd;">${c.type || 'Theory'}</td>
             <td style="padding:6px 8px; border-bottom:1px solid #ddd;">${c.type === 'Lab' ? 'N/A' : (c.theorySlot || 'None')}</td>
             <td style="padding:6px 8px; border-bottom:1px solid #ddd;">${c.type === 'Theory' ? 'N/A' : ([c.labSlot, c.labSlot2].filter(Boolean).join(', ') || 'None')}</td>
@@ -5587,13 +5636,15 @@
         const typeColor = r.type === 'Theory + Lab' ? 'rgba(168,85,247,0.1)' : (r.type === 'Lab' ? 'rgba(34,197,94,0.1)' : 'rgba(56,189,248,0.1)');
         const borderColor = r.type === 'Theory + Lab' ? '#A855F7' : (r.type === 'Lab' ? '#22C55E' : '#38BDF8');
 
-        const renderCell = (mapping, slotName) => {
+        const renderCell = (mapping, slotName, isLab = false) => {
+          const instName = isLab ? (r.labInstructor || r.instructor || 'Faculty Name') : (r.instructor || 'Faculty Name');
           mapping.forEach(m => {
             if (grid[m.d]) {
               const cellHtml = `<div style="padding:4px; background:${typeColor}; border-left:3px solid ${borderColor}; border-radius:4px; font-size:10px;">
                 <b style="color:#111; font-size:10.5px;">${r.code}</b><br>
                 <span style="color:#333; font-size:9.5px;">${r.name}</span><br>
-                <strong style="color:${borderColor}; font-size:9px;">${slotName}</strong>
+                <strong style="color:${borderColor}; font-size:9px;">${slotName}</strong><br>
+                <span style="color:#555; font-size:9px;">${instName}</span>
               </div>`;
               if (m.span === 2) {
                 grid[m.d][m.c] = { html: cellHtml, span: 2 };
@@ -5607,17 +5658,17 @@
 
         if (!isLabOnly && r.theorySlot) {
           getSlotParts(r.theorySlot).forEach(slot => {
-            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot, false);
           });
         }
         if (!isTheoryOnly && r.labSlot) {
           getSlotParts(r.labSlot).forEach(slot => {
-            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot, true);
           });
         }
         if (!isTheoryOnly && r.labSlot2) {
           getSlotParts(r.labSlot2).forEach(slot => {
-            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot);
+            if (SLOT_MAP[slot]) renderCell(SLOT_MAP[slot], slot, true);
           });
         }
       });
@@ -5735,6 +5786,55 @@
     /* =========================================================
        ENTERPRISE EXAM MANAGEMENT SYSTEM MODULE
     ========================================================= */
+    function getHolidayInfoForDate(dateStr) {
+      if (!dateStr) return null;
+      const holidays = (state.examConfig && state.examConfig.holidays) ? state.examConfig.holidays : [];
+      const foundCustom = holidays.find(h => h.date === dateStr);
+      if (foundCustom) {
+        return { title: foundCustom.title, isCustom: true };
+      }
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        const day = d.getDay();
+        if (day === 0) return { title: 'Sunday (Weekend)', isWeekend: true };
+        if (day === 6) return { title: 'Saturday (Weekend)', isWeekend: true };
+      }
+      return null;
+    }
+
+    const LAB_TO_EXAM_SLOT = {
+      // Forenoon / Morning Lab Slots
+      'L1': 'A1', 'L2': 'A1', 'L1+L2': 'A1',
+      'L3': 'F1', 'L4': 'F1', 'L3+L4': 'F1',
+      'L5': 'B1', 'L6': 'B1', 'L5+L6': 'B1',
+      'L7': 'E1', 'L8': 'E1', 'L7+L8': 'E1',
+      'L9': 'C1', 'L10': 'C1', 'L9+L10': 'C1',
+      'L11': 'A1', 'L12': 'A1', 'L11+L12': 'A1',
+      'L13': 'D1', 'L14': 'D1', 'L13+L14': 'D1',
+      'L15': 'G1', 'L16': 'G1', 'L15+L16': 'G1',
+      'L17': 'E1', 'L18': 'E1', 'L17+L18': 'E1',
+      'L19': 'C1', 'L20': 'C1', 'L19+L20': 'C1',
+
+      // Afternoon Lab Slots
+      'L21': 'A2', 'L22': 'A2', 'L21+L22': 'A2',
+      'L23': 'D2', 'L24': 'D2', 'L23+L24': 'D2',
+      'L25': 'B2', 'L26': 'B2', 'L25+L26': 'B2',
+      'L27': 'E2', 'L28': 'E2', 'L27+L28': 'E2',
+      'L29': 'C2', 'L30': 'C2', 'L29+L30': 'C2',
+      'L31': 'F2', 'L32': 'F2', 'L31+L32': 'F2',
+      'L33': 'D2', 'L34': 'D2', 'L33+L34': 'D2',
+      'L35': 'C2', 'L36': 'C2', 'L35+L36': 'C2',
+      'L37': 'E2', 'L38': 'E2', 'L37+L38': 'E2',
+      'L39': 'G2', 'L40': 'G2', 'L39+L40': 'G2',
+
+      // Extra theory slots
+      'TA1': 'A1', 'TA2': 'A2',
+      'TB1': 'B1', 'TB2': 'B2',
+      'TC1': 'C1', 'TC2': 'C2',
+      'TD1': 'D1', 'TD2': 'D2'
+    };
+
     function getPrimarySlotToken(slotStr) {
       if (!slotStr) return null;
       const parts = String(slotStr).split(/[\s+,]+/);
@@ -5769,11 +5869,28 @@
       return dateString;
     }
 
+    function changeExamSemester(val) {
+      const semNum = parseInt(val);
+      if (!isNaN(semNum)) {
+        state.currentSemester = semNum;
+        const mainSelect = document.getElementById('semesterSelect');
+        if (mainSelect) mainSelect.value = semNum;
+        const ttSelect = document.getElementById('timetableSemSelect');
+        if (ttSelect && ttSelect.value !== 'all') ttSelect.value = semNum;
+        logHistory(`Switched active semester to Semester ${semNum} from Exam Management.`);
+        triggerAutoSave();
+        renderAll();
+      }
+    }
+
     function switchExamTab(tabName) {
       if (!state.examConfig) {
         state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] } };
       }
       state.examConfig.activeExamTab = tabName;
+      delete state.examConfig.calendarViewYear;
+      delete state.examConfig.calendarViewMonth;
+
       document.querySelectorAll('.exam-tab-btn').forEach(btn => btn.classList.remove('active'));
       const activeBtn = document.getElementById(`tab${tabName}`);
       if (activeBtn) activeBtn.classList.add('active');
@@ -5783,7 +5900,7 @@
 
     function updateExamSlotDate(caTab, slotName, dateValue) {
       if (!state.examConfig) {
-        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] } };
+        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] }, holidays: [] };
       }
       if (!state.examConfig.schedules[caTab]) {
         state.examConfig.schedules[caTab] = { slotDates: {} };
@@ -5800,18 +5917,36 @@
           return;
         }
 
-        // Validation 2: Check for duplicate exam date within the same CA series
+        // Validation 1.5: Prevent selecting Sunday dates for exams
+        if (selected.getDay() === 0) {
+          alert(`Invalid Selection: ${formatDateFormatted(dateValue)} is a Sunday. Exams cannot be scheduled on Sundays. Please select a weekday (Monday to Saturday).`);
+          renderExamDashboard();
+          return;
+        }
+
+        // Validation 2: Allow 1 Morning slot and 1 Afternoon slot on the same date!
+        // Block duplicate date ONLY within the same session group (Morning vs Morning, Afternoon vs Afternoon)
+        const isMorning = slotName.endsWith('1');
         const slotDates = state.examConfig.schedules[caTab].slotDates || {};
+
         for (let otherSlot of Object.keys(slotDates)) {
           if (otherSlot !== slotName && slotDates[otherSlot] === dateValue) {
-            alert(`Duplicate Date Warning: Slot ${otherSlot} is already scheduled on ${formatDateFormatted(dateValue)} for ${caTab}. Please choose a different exam date.`);
-            renderExamDashboard();
-            return;
+            const otherIsMorning = otherSlot.endsWith('1');
+            if ((isMorning && otherIsMorning) || (!isMorning && !otherIsMorning)) {
+              alert(`Conflict Warning: ${isMorning ? 'Morning' : 'Afternoon'} Slot ${otherSlot} is already scheduled on ${formatDateFormatted(dateValue)} for ${caTab}. You can schedule 1 Morning exam and 1 Afternoon exam on the same day, but not two in the same session.`);
+              renderExamDashboard();
+              return;
+            }
           }
         }
       }
 
       state.examConfig.schedules[caTab].slotDates[slotName] = dateValue;
+
+      // 100% Persistence Guarantee to localStorage + MongoDB
+      if (state.usn) {
+        localStorage.setItem(`scfc_exam_config_${state.usn}`, JSON.stringify(state.examConfig));
+      }
       logHistory(`Updated ${caTab} exam date for Slot ${slotName} to ${dateValue || 'Cleared'}.`);
       triggerAutoSave();
       renderExamDashboard();
@@ -5824,8 +5959,11 @@
 
       const now = new Date();
 
-      return courses.map(c => {
-        const slotToken = getPrimarySlotToken(c.theorySlot || c.labSlot || c.labSlot2);
+      // Labs do not have written/CA exams - filter out pure Lab courses and only map theory slots
+      const theoryCourses = courses.filter(c => c.type !== 'Lab' && c.type !== 'Practical' && c.theorySlot);
+
+      return theoryCourses.map(c => {
+        const slotToken = getPrimarySlotToken(c.theorySlot);
         const dateVal = slotToken ? caSchedule[slotToken] : null;
         const slotMeta = slotToken ? EXAM_SLOT_TIMES[slotToken] : null;
         const dayName = getDayOfWeek(dateVal);
@@ -5852,8 +5990,8 @@
 
         return {
           course: c,
-          slot: slotToken || (c.theorySlot || c.labSlot || 'N/A'),
-          rawSlot: c.theorySlot || c.labSlot || 'N/A',
+          slot: slotToken || (c.theorySlot || 'N/A'),
+          rawSlot: c.theorySlot || 'N/A',
           session: slotMeta ? slotMeta.session : 'N/A',
           timeStr: slotMeta ? slotMeta.timeStr : 'N/A',
           dateVal: dateVal,
@@ -5866,18 +6004,134 @@
       });
     }
 
+    function calculateExamGaps(mappedExams) {
+      const scheduled = mappedExams.filter(m => m.examStartDate).sort((a, b) => a.examStartDate - b.examStartDate);
+      const gapMap = {};
+
+      for (let i = 0; i < scheduled.length; i++) {
+        const current = scheduled[i];
+        if (i === 0) {
+          gapMap[current.course.code] = { gapDays: null, label: 'First Exam', holidayCount: 0 };
+        } else {
+          const prev = scheduled[i - 1];
+
+          const d1 = new Date(prev.examStartDate.getFullYear(), prev.examStartDate.getMonth(), prev.examStartDate.getDate());
+          const d2 = new Date(current.examStartDate.getFullYear(), current.examStartDate.getMonth(), current.examStartDate.getDate());
+
+          const diffMs = d2.getTime() - d1.getTime();
+          const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+          const netGapDays = Math.max(0, diffDays - 1);
+
+          let hCount = 0;
+          let tempDate = new Date(d1.getTime() + (24 * 60 * 60 * 1000));
+
+          while (tempDate < d2) {
+            const mStr = String(tempDate.getMonth() + 1).padStart(2, '0');
+            const dStr = String(tempDate.getDate()).padStart(2, '0');
+            const yStr = tempDate.getFullYear();
+            const dateStr = `${yStr}-${mStr}-${dStr}`;
+
+            if (getHolidayInfoForDate(dateStr)) {
+              hCount++;
+            }
+            tempDate.setDate(tempDate.getDate() + 1);
+          }
+
+          let label = '';
+          if (diffDays === 0) {
+            label = `Same Day (${prev.slot} & ${current.slot})`;
+          } else if (netGapDays === 0) {
+            label = 'Next Day (0 Gap)';
+          } else {
+            label = `${netGapDays} Day${netGapDays > 1 ? 's' : ''} Gap`;
+            if (hCount > 0) {
+              label += ` (${hCount} Holiday${hCount > 1 ? 's' : ''})`;
+            }
+          }
+
+          gapMap[current.course.code] = {
+            gapDays: netGapDays,
+            prevCourseCode: prev.course.code,
+            label: label,
+            holidayCount: hCount
+          };
+        }
+      }
+
+      return gapMap;
+    }
+
+    function addHolidayFromInput() {
+      const dateEl = document.getElementById('holidayDateInput');
+      const titleEl = document.getElementById('holidayTitleInput');
+      if (!dateEl || !titleEl) return;
+
+      const dateVal = dateEl.value;
+      const titleVal = titleEl.value.trim() || 'Holiday';
+
+      if (!dateVal) {
+        alert('Please select a valid date for the holiday.');
+        return;
+      }
+
+      if (!state.examConfig) {
+        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] }, holidays: [] };
+      }
+      if (!state.examConfig.holidays) state.examConfig.holidays = [];
+
+      if (state.examConfig.holidays.some(h => h.date === dateVal)) {
+        alert(`Holiday for ${formatDateFormatted(dateVal)} is already added.`);
+        return;
+      }
+
+      state.examConfig.holidays.push({ date: dateVal, title: titleVal });
+      logHistory(`Added holiday "${titleVal}" on ${formatDateFormatted(dateVal)}.`);
+      triggerAutoSave();
+      dateEl.value = '';
+      titleEl.value = '';
+      renderExamDashboard();
+    }
+
+    function removeHoliday(dateVal) {
+      if (state.examConfig && state.examConfig.holidays) {
+        state.examConfig.holidays = state.examConfig.holidays.filter(h => h.date !== dateVal);
+        logHistory(`Removed holiday for ${formatDateFormatted(dateVal)}.`);
+        triggerAutoSave();
+        renderExamDashboard();
+      }
+    }
+
+    function renderHolidayChips() {
+      const container = document.getElementById('holidayChipsContainer');
+      if (!container) return;
+
+      const holidays = (state.examConfig && state.examConfig.holidays) ? state.examConfig.holidays : [];
+
+      if (holidays.length === 0) {
+        container.innerHTML = `<span style="font-size:12px; color:var(--ink-soft); font-style:italic;">Saturdays and Sundays are automatically marked as holidays. Use the form above to add custom festival/study holidays.</span>`;
+        return;
+      }
+
+      container.innerHTML = holidays.sort((a, b) => a.date.localeCompare(b.date)).map(h => `
+        <span class="badge-sm" style="background:rgba(245,158,11,0.18); color:#F59E0B; border:1px solid rgba(245,158,11,0.4); font-size:12px; padding:4px 10px; display:inline-flex; align-items:center; gap:6px;">
+          <strong>${h.title}</strong> (${formatDateFormatted(h.date)})
+          <button onclick="removeHoliday('${h.date}')" style="background:none; border:none; color:#F59E0B; cursor:pointer; font-weight:bold; padding:0 2px; font-size:14px;" title="Remove Holiday">&times;</button>
+        </span>
+      `).join('');
+    }
+
     function renderExamDashboard() {
       if (!state.examConfig) {
-        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] } };
+        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] }, holidays: [] };
       }
       const caTab = state.examConfig.activeExamTab || 'CA1';
-      const semDisplay = document.getElementById('examSemDisplay');
-      if (semDisplay) semDisplay.textContent = `Semester ${state.currentSemester || 1}`;
+      const semSelect = document.getElementById('examSemSelect');
+      if (semSelect) semSelect.value = String(state.currentSemester || 1);
 
       const adminTabBadge = document.getElementById('adminTabBadge');
       if (adminTabBadge) adminTabBadge.textContent = caTab;
 
-      // Render Admin Slot Table Body (Forenoon & Afternoon Paired with Holiday)
+      // Render Admin Slot Table Body (Forenoon & Afternoon Paired)
       const adminBody = document.getElementById('adminExamSlotTableBody');
       const caSchedule = (state.examConfig.schedules[caTab] && state.examConfig.schedules[caTab].slotDates) ? state.examConfig.schedules[caTab].slotDates : {};
       const todayStr = new Date().toISOString().split('T')[0];
@@ -5888,81 +6142,97 @@
         { fn: 'C1', an: 'C2' },
         { fn: 'D1', an: 'D2' },
         { fn: 'E1', an: 'E2' },
-        'HOLIDAY',
         { fn: 'F1', an: 'F2' },
         { fn: 'G1', an: 'G2' }
       ];
 
+      // Calculate mapped exams for active semester
+      const mappedExams = getMappedExamsForCA(caTab);
+      const gapMap = calculateExamGaps(mappedExams);
+
       let adminRowsHtml = '';
       slotPairs.forEach(pair => {
-        if (pair === 'HOLIDAY') {
-          adminRowsHtml += `<tr style="background:rgba(245,158,11,0.14); border-top:1.5px solid var(--glass-border); border-bottom:1.5px solid var(--glass-border);">
-            <td colspan="6" style="padding:8px; text-align:center; font-weight:800; font-size:13px; color:#F59E0B; letter-spacing:0.12em; text-transform:uppercase;">
-              Holiday
-            </td>
-          </tr>`;
-        } else {
-          const fnDate = caSchedule[pair.fn] || '';
-          const fnDay = getDayOfWeek(fnDate);
-          const anDate = caSchedule[pair.an] || '';
-          const anDay = getDayOfWeek(anDate);
+        const fnHasCourse = mappedExams.some(m => m.slot === pair.fn);
+        const anHasCourse = mappedExams.some(m => m.slot === pair.an);
 
-          adminRowsHtml += `<tr style="border-bottom:1px solid var(--glass-border);">
-            <td style="padding:6px; font-weight:800; color:var(--indigo); background:rgba(56,189,248,0.05);">${pair.fn}</td>
-            <td style="padding:6px;">
-              <input type="date" min="${todayStr}" value="${fnDate}" class="form-input" style="padding:4px 6px; font-size:12px; width:135px;" onchange="updateExamSlotDate('${caTab}', '${pair.fn}', this.value)" />
-            </td>
-            <td style="padding:6px; border-right:2px solid var(--glass-border);">
-              <span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${fnDay}</span>
-            </td>
-            <td style="padding:6px; font-weight:800; color:var(--purple); background:rgba(245,158,11,0.05);">${pair.an}</td>
-            <td style="padding:6px;">
-              <input type="date" min="${todayStr}" value="${anDate}" class="form-input" style="padding:4px 6px; font-size:12px; width:135px;" onchange="updateExamSlotDate('${caTab}', '${pair.an}', this.value)" />
-            </td>
-            <td style="padding:6px;">
-              <span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${anDay}</span>
-            </td>
-          </tr>`;
-        }
+        const fnDate = caSchedule[pair.fn] || '';
+        const fnDay = getDayOfWeek(fnDate);
+        const anDate = caSchedule[pair.an] || '';
+        const anDay = getDayOfWeek(anDate);
+
+        const fnDateInput = fnHasCourse
+          ? `<input type="date" value="${fnDate}" class="form-input" style="padding:4px 6px; font-size:12px; width:135px;" onchange="updateExamSlotDate('${caTab}', '${pair.fn}', this.value)" />`
+          : `<input type="date" disabled value="" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; opacity:0.85; cursor:not-allowed; border:1.5px solid #EF4444; background:rgba(239,68,68,0.3); color:#ffffff; font-weight:600;" title="No course assigned to slot ${pair.fn} in active semester" />`;
+
+        const fnDayBadge = fnHasCourse
+          ? `<span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${fnDay}</span>`
+          : `<span class="badge-sm" style="background:#EF4444; color:#ffffff; font-weight:800; font-size:11px; padding:3px 10px; border-radius:20px; display:inline-block; border:1px solid #F87171; box-shadow:0 1px 3px rgba(0,0,0,0.2);">No Course</span>`;
+
+        const anDateInput = anHasCourse
+          ? `<input type="date" value="${anDate}" class="form-input" style="padding:4px 6px; font-size:12px; width:135px;" onchange="updateExamSlotDate('${caTab}', '${pair.an}', this.value)" />`
+          : `<input type="date" disabled value="" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; opacity:0.85; cursor:not-allowed; border:1.5px solid #EF4444; background:rgba(239,68,68,0.3); color:#ffffff; font-weight:600;" title="No course assigned to slot ${pair.an} in active semester" />`;
+
+        const anDayBadge = anHasCourse
+          ? `<span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${anDay}</span>`
+          : `<span class="badge-sm" style="background:#EF4444; color:#ffffff; font-weight:800; font-size:11px; padding:3px 10px; border-radius:20px; display:inline-block; border:1px solid #F87171; box-shadow:0 1px 3px rgba(0,0,0,0.2);">No Course</span>`;
+
+        adminRowsHtml += `<tr style="border-bottom:1px solid var(--glass-border);">
+          <!-- Forenoon Slot Bar -->
+          <td style="padding:6px; font-weight:800; ${!fnHasCourse ? 'color:#ffffff; background:#EF4444;' : 'color:var(--indigo); background:rgba(56,189,248,0.05);'}">${pair.fn}</td>
+          <td style="padding:6px; ${!fnHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${fnDateInput}</td>
+          <td style="padding:6px; border-right:2px solid var(--glass-border); ${!fnHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${fnDayBadge}</td>
+          <!-- Afternoon Slot Bar -->
+          <td style="padding:6px; font-weight:800; ${!anHasCourse ? 'color:#ffffff; background:#EF4444;' : 'color:var(--purple); background:rgba(245,158,11,0.05);'}">${pair.an}</td>
+          <td style="padding:6px; ${!anHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${anDateInput}</td>
+          <td style="padding:6px; ${!anHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${anDayBadge}</td>
+        </tr>`;
       });
 
       if (adminBody) adminBody.innerHTML = adminRowsHtml;
 
-      // Render Mapped Student Exams (Matching Image Structure)
-      const mappedExams = getMappedExamsForCA(caTab);
       const studentBody = document.getElementById('studentExamScheduleBody');
       if (studentBody) {
         let studentRowsHtml = '';
         slotPairs.forEach(pair => {
-          if (pair === 'HOLIDAY') {
-            studentRowsHtml += `<tr style="background:rgba(245,158,11,0.14); border-top:1.5px solid var(--glass-border); border-bottom:1.5px solid var(--glass-border);">
-              <td colspan="6" style="padding:8px; text-align:center; font-weight:800; font-size:13px; color:#F59E0B; letter-spacing:0.12em; text-transform:uppercase;">
-                Holiday
-              </td>
-            </tr>`;
-          } else {
-            const fnMatch = mappedExams.find(m => m.slot === pair.fn);
-            const anMatch = mappedExams.find(m => m.slot === pair.an);
+          const fnMatches = mappedExams.filter(m => m.slot === pair.fn);
+          const anMatches = mappedExams.filter(m => m.slot === pair.an);
 
-            studentRowsHtml += `<tr style="border-bottom:1px solid var(--glass-border);">
-              <!-- Forenoon Slot -->
-              <td style="padding:6px; font-weight:800; color:var(--indigo); background:rgba(56,189,248,0.05);">${pair.fn}</td>
-              <td style="padding:6px; text-align:left;">
-                ${fnMatch ? `<strong>${fnMatch.course.code}</strong><br><small style="color:var(--ink-soft);">${fnMatch.course.name}</small>` : '<span style="color:var(--ink-soft); font-style:italic;">No Course</span>'}
-              </td>
-              <td style="padding:6px; border-right:2px solid var(--glass-border);">
-                ${fnMatch && fnMatch.dateVal ? `<strong>${fnMatch.formattedDate}</strong><br><small style="color:var(--indigo); font-weight:600;">${fnMatch.dayName}</small>` : '<span style="color:var(--ink-soft); font-style:italic;">Unscheduled</span>'}
-              </td>
-              <!-- Afternoon Slot -->
-              <td style="padding:6px; font-weight:800; color:var(--purple); background:rgba(245,158,11,0.05);">${pair.an}</td>
-              <td style="padding:6px; text-align:left;">
-                ${anMatch ? `<strong>${anMatch.course.code}</strong><br><small style="color:var(--ink-soft);">${anMatch.course.name}</small>` : '<span style="color:var(--ink-soft); font-style:italic;">No Course</span>'}
-              </td>
-              <td style="padding:6px;">
-                ${anMatch && anMatch.dateVal ? `<strong>${anMatch.formattedDate}</strong><br><small style="color:var(--purple); font-weight:600;">${anMatch.dayName}</small>` : '<span style="color:var(--ink-soft); font-style:italic;">Unscheduled</span>'}
-              </td>
-            </tr>`;
-          }
+          const fnHasCourse = fnMatches.length > 0;
+          const anHasCourse = anMatches.length > 0;
+
+          const fnDateVal = caSchedule[pair.fn] || (fnMatches.find(m => m.dateVal) ? fnMatches.find(m => m.dateVal).dateVal : null);
+          const anDateVal = caSchedule[pair.an] || (anMatches.find(m => m.dateVal) ? anMatches.find(m => m.dateVal).dateVal : null);
+
+          const fnFormattedDate = formatDateFormatted(fnDateVal);
+          const fnDayName = getDayOfWeek(fnDateVal);
+          const anFormattedDate = formatDateFormatted(anDateVal);
+          const anDayName = getDayOfWeek(anDateVal);
+
+          const fnGap = fnMatches.length > 0 ? gapMap[fnMatches[0].course.code] : null;
+          const anGap = anMatches.length > 0 ? gapMap[anMatches[0].course.code] : null;
+
+          const fnCourseInfo = fnHasCourse
+            ? fnMatches.map(m => `<strong>${m.course.code}</strong><br><small style="color:var(--ink-soft);">${m.course.name}</small>`).join('<hr style="margin:4px 0; border:0; border-top:1px dashed var(--glass-border);"/>')
+            : '<span class="badge-sm" style="background:#EF4444; color:#ffffff; font-weight:800; padding:4px 10px; border-radius:20px; display:inline-block; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;">No Course</span>';
+
+          const anCourseInfo = anHasCourse
+            ? anMatches.map(m => `<strong>${m.course.code}</strong><br><small style="color:var(--ink-soft);">${m.course.name}</small>`).join('<hr style="margin:4px 0; border:0; border-top:1px dashed var(--glass-border);"/>')
+            : '<span class="badge-sm" style="background:#EF4444; color:#ffffff; font-weight:800; padding:4px 10px; border-radius:20px; display:inline-block; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;">No Course</span>';
+
+          studentRowsHtml += `<tr style="border-bottom:1px solid var(--glass-border);">
+            <!-- Forenoon Slot Bar -->
+            <td style="padding:6px; font-weight:800; ${!fnHasCourse ? 'color:#ffffff; background:#EF4444;' : 'color:var(--indigo); background:rgba(56,189,248,0.05);'}">${pair.fn}</td>
+            <td style="padding:6px; text-align:left; ${!fnHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${fnCourseInfo}</td>
+            <td style="padding:6px; border-right:2px solid var(--glass-border); ${!fnHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">
+              ${fnHasCourse && fnDateVal ? `<strong>${fnFormattedDate} (${fnDayName})</strong>${fnGap ? `<br><span class="badge-sm" style="background:rgba(56,189,248,0.12); color:#38BDF8; font-weight:700; font-size:10px; margin-top:2px;">${fnGap.label}</span>` : ''}` : `<span style="color:${!fnHasCourse ? '#EF4444' : 'var(--ink-soft)'}; font-weight:${!fnHasCourse ? '800' : 'normal'}; font-style:italic;">${!fnHasCourse ? 'No Course' : 'Unscheduled'}</span>`}
+            </td>
+            <!-- Afternoon Slot Bar -->
+            <td style="padding:6px; font-weight:800; ${!anHasCourse ? 'color:#ffffff; background:#EF4444;' : 'color:var(--purple); background:rgba(245,158,11,0.05);'}">${pair.an}</td>
+            <td style="padding:6px; text-align:left; ${!anHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${anCourseInfo}</td>
+            <td style="padding:6px; ${!anHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">
+              ${anHasCourse && anDateVal ? `<strong>${anFormattedDate} (${anDayName})</strong>${anGap ? `<br><span class="badge-sm" style="background:rgba(245,158,11,0.12); color:#F59E0B; font-weight:700; font-size:10px; margin-top:2px;">${anGap.label}</span>` : ''}` : `<span style="color:${!anHasCourse ? '#EF4444' : 'var(--ink-soft)'}; font-weight:${!anHasCourse ? '800' : 'normal'}; font-style:italic;">${!anHasCourse ? 'No Course' : 'Unscheduled'}</span>`}
+            </td>
+          </tr>`;
         });
         studentBody.innerHTML = studentRowsHtml;
       }
@@ -5992,14 +6262,36 @@
       const elGap = document.getElementById('statExamAvgGap');
       if (elGap) elGap.textContent = `${avgGapDays} Day${avgGapDays !== 1 ? 's' : ''}`;
 
-      // Live Hero & Countdown Update
+      // Render Holiday Chips & Countdown
+      renderHolidayChips();
       updateExamHeroContent(mappedExams, caTab);
 
-      // Render Calendar, Timeline & AI Study Planner
+      // Render Calendar, Timeline & Notifications
       renderExamCalendar(mappedExams);
-      renderExamTimeline(mappedExams);
-      renderAIStudyPlanner(mappedExams);
+      renderExamTimeline(mappedExams, gapMap);
       updateExamNotifications(mappedExams);
+    }
+
+    function changeExamCalendarMonth(offset) {
+      if (!state.examConfig) return;
+      let y = state.examConfig.calendarViewYear !== undefined ? state.examConfig.calendarViewYear : new Date().getFullYear();
+      let m = state.examConfig.calendarViewMonth !== undefined ? state.examConfig.calendarViewMonth : new Date().getMonth();
+
+      m += offset;
+      if (m > 11) { m = 0; y++; }
+      else if (m < 0) { m = 11; y--; }
+
+      state.examConfig.calendarViewYear = y;
+      state.examConfig.calendarViewMonth = m;
+      renderExamCalendar(getMappedExamsForCA(state.examConfig.activeExamTab || 'CA1'));
+    }
+
+    function jumpExamCalendarToday() {
+      if (!state.examConfig) return;
+      const today = new Date();
+      state.examConfig.calendarViewYear = today.getFullYear();
+      state.examConfig.calendarViewMonth = today.getMonth();
+      renderExamCalendar(getMappedExamsForCA(state.examConfig.activeExamTab || 'CA1'));
     }
 
     function updateExamHeroContent(mappedExams, caTab) {
@@ -6087,15 +6379,38 @@
       if (!calContainer) return;
 
       const examDatesMap = {};
+      const scheduledExamDates = [];
+
       mappedExams.forEach(m => {
         if (m.dateVal) {
-          examDatesMap[m.dateVal] = m;
+          if (!examDatesMap[m.dateVal]) examDatesMap[m.dateVal] = [];
+          examDatesMap[m.dateVal].push(m);
+          if (!scheduledExamDates.includes(m.dateVal)) {
+            scheduledExamDates.push(m.dateVal);
+          }
         }
       });
 
+      scheduledExamDates.sort();
+      const firstExamDate = scheduledExamDates.length > 0 ? scheduledExamDates[0] : null;
+      const lastExamDate = scheduledExamDates.length > 0 ? scheduledExamDates[scheduledExamDates.length - 1] : null;
+
       const today = new Date();
-      const year = today.getFullYear();
-      const month = today.getMonth();
+      let year = today.getFullYear();
+      let month = today.getMonth();
+
+      if (state.examConfig && state.examConfig.calendarViewYear !== undefined) {
+        year = state.examConfig.calendarViewYear;
+        month = state.examConfig.calendarViewMonth;
+      } else {
+        const scheduled = mappedExams.filter(m => m.examStartDate).sort((a, b) => a.examStartDate - b.examStartDate);
+        if (scheduled.length > 0) {
+          year = scheduled[0].examStartDate.getFullYear();
+          month = scheduled[0].examStartDate.getMonth();
+          state.examConfig.calendarViewYear = year;
+          state.examConfig.calendarViewMonth = month;
+        }
+      }
 
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       const monthYearTitle = document.getElementById('examCalendarMonthYear');
@@ -6117,12 +6432,56 @@
         const mStr = String(month + 1).padStart(2, '0');
         const dStr = String(day).padStart(2, '0');
         const dateKey = `${year}-${mStr}-${dStr}`;
-        const examItem = examDatesMap[dateKey];
-        const isToday = (day === today.getDate());
+        const dayOfWeek = new Date(year, month, day).getDay();
+        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+        const examItems = examDatesMap[dateKey] || [];
+        const holidayItem = getHolidayInfoForDate(dateKey);
+        const isToday = (day === today.getDate() && month === today.getMonth() && year === today.getFullYear());
+        const isGapDay = (firstExamDate && lastExamDate && dateKey > firstExamDate && dateKey < lastExamDate && examItems.length === 0);
 
-        calHtml += `<div class="exam-cal-cell ${examItem ? 'has-exam' : ''} ${isToday ? 'spot' : ''}" onclick="showExamCalendarDetail('${dateKey}')">
-          <span>${day}</span>
-          ${examItem ? `<small style="font-size:8.5px; margin-top:2px;">${examItem.slot}</small>` : ''}
+        let bgStyle = '';
+        let numColorStyle = '';
+
+        if (examItems.length > 0) {
+          // Exam Day Color - overrides weekend/holiday
+          bgStyle = 'background:rgba(108,99,255,0.2); border:1.5px solid var(--indigo);';
+          numColorStyle = 'color:var(--indigo); font-weight:800;';
+        } else if (isWeekend) {
+          // Saturday & Sunday No-Exam Day -> RED
+          bgStyle = 'background:rgba(239,68,68,0.22); border:1.5px solid #EF4444;';
+          numColorStyle = 'color:#EF4444; font-weight:800;';
+        } else if (isGapDay) {
+          // Weekday Gap Day -> ORANGE
+          bgStyle = 'background:rgba(249,115,22,0.22); border:1.5px solid #F97316;';
+          numColorStyle = 'color:#F97316; font-weight:800;';
+        } else if (holidayItem) {
+          // Weekday Custom Holiday -> GOLD
+          bgStyle = 'background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.6);';
+          numColorStyle = 'color:#F59E0B; font-weight:800;';
+        }
+
+        const courseSlotBadges = examItems.map(x => `
+          <small style="font-size:7.5px; font-weight:800; display:block; color:var(--indigo); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;" title="${x.course.code} - ${x.course.name} (Slot ${x.slot})">
+            ${x.course.code} (${x.slot})
+          </small>
+        `).join('');
+
+        let labelHtml = '';
+        if (examItems.length > 0) {
+          labelHtml = courseSlotBadges;
+        } else if (isWeekend) {
+          const weekendLabel = holidayItem ? holidayItem.title.replace(' (Weekend)', '') : (dayOfWeek === 0 ? 'Sunday' : 'Saturday');
+          labelHtml = `<small style="font-size:7.5px; color:#EF4444; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${weekendLabel}</small>`;
+        } else if (isGapDay) {
+          const gapLabel = holidayItem ? holidayItem.title : 'Gap Day';
+          labelHtml = `<small style="font-size:7.5px; color:#F97316; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${gapLabel}</small>`;
+        } else if (holidayItem) {
+          labelHtml = `<small style="font-size:7.5px; color:#F59E0B; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${holidayItem.title}</small>`;
+        }
+
+        calHtml += `<div class="exam-cal-cell ${examItems.length > 0 ? 'has-exam' : ''} ${isWeekend ? 'has-weekend' : ''} ${isGapDay ? 'has-gap' : ''} ${holidayItem ? 'has-holiday' : ''} ${isToday ? 'spot' : ''}" style="${bgStyle}" onclick="showExamCalendarDetail('${dateKey}')">
+          <span style="${numColorStyle}">${day}</span>
+          ${labelHtml}
         </div>`;
       }
 
@@ -6133,20 +6492,54 @@
     function showExamCalendarDetail(dateKey) {
       const caTab = (state.examConfig && state.examConfig.activeExamTab) ? state.examConfig.activeExamTab : 'CA1';
       const mappedExams = getMappedExamsForCA(caTab);
-      const match = mappedExams.find(m => m.dateVal === dateKey);
+      const matches = mappedExams.filter(m => m.dateVal === dateKey);
+      const holiday = getHolidayInfoForDate(dateKey);
 
-      if (match) {
-        alert(`Exam Details (${dateKey}):\n\nCourse: ${match.course.name} (${match.course.code})\nSlot: ${match.slot}\nSession: ${match.session}\nTime: ${match.timeStr}\nFaculty: ${match.course.instructor || 'TBA'}\nStatus: ${match.status}`);
-      } else {
-        alert(`No exam scheduled on ${formatDateFormatted(dateKey)}.`);
+      const parts = dateKey.split('-');
+      let isWeekend = false;
+      let dayOfWeek = -1;
+      if (parts.length === 3) {
+        const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        dayOfWeek = d.getDay();
+        isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
       }
+
+      const scheduledExamDates = mappedExams.filter(m => m.dateVal).map(m => m.dateVal).sort();
+      const firstExamDate = scheduledExamDates.length > 0 ? scheduledExamDates[0] : null;
+      const lastExamDate = scheduledExamDates.length > 0 ? scheduledExamDates[scheduledExamDates.length - 1] : null;
+      const isGapDay = (firstExamDate && lastExamDate && dateKey > firstExamDate && dateKey < lastExamDate && matches.length === 0);
+
+      let msg = `Details for ${formatDateFormatted(dateKey)}:\n`;
+      if (matches.length > 0) {
+        msg += `\nEXAMS SCHEDULED (${matches.length}):\n`;
+        matches.forEach(m => {
+          msg += `• ${m.course.code} - ${m.course.name} | Slot ${m.slot} (${m.session}: ${m.timeStr})\n`;
+        });
+        if (holiday || isWeekend) {
+          msg += `\nNote: Exam scheduled on a ${isWeekend ? (dayOfWeek === 0 ? 'Sunday' : 'Saturday') : 'Holiday'}.`;
+        }
+      } else if (isWeekend) {
+        msg += `\nSTATUS: Weekend (${dayOfWeek === 0 ? 'Sunday' : 'Saturday'}) - No Exam Scheduled.\n`;
+        if (holiday) msg += `Holiday: ${holiday.title}\n`;
+      } else if (isGapDay) {
+        msg += `\nSTATUS: Preparation / Study Gap Day between exams.\n`;
+        if (holiday) msg += `Holiday: ${holiday.title}\n`;
+      } else if (holiday) {
+        msg += `\nHOLIDAY: ${holiday.title}\n`;
+      } else {
+        msg += `\nNo exams or holidays scheduled on this date.`;
+      }
+
+      alert(msg);
     }
 
-    function renderExamTimeline(mappedExams) {
+    function renderExamTimeline(mappedExams, gapMap) {
       const container = document.getElementById('examTimelineContainer');
       if (!container) return;
 
       const sorted = mappedExams.filter(m => m.dateVal).sort((a, b) => (a.examStartDate || 0) - (b.examStartDate || 0));
+
+      if (!gapMap) gapMap = calculateExamGaps(mappedExams);
 
       if (sorted.length === 0) {
         container.innerHTML = `<div style="color:var(--ink-soft); text-align:center; padding:20px; font-size:13px;">No exam dates configured yet. Set exam dates in the Admin table above.</div>`;
@@ -6158,6 +6551,8 @@
         if (m.status === 'Completed') borderClr = 'var(--green)';
         else if (m.status === 'Today') borderClr = '#EF4444';
 
+        const gapInfo = gapMap[m.course.code];
+
         return `<div style="display:flex; gap:12px; align-items:center; background:rgba(255,255,255,0.03); border-left:3px solid ${borderClr}; border-radius:8px; padding:10px 12px; border-top:1px solid var(--glass-border); border-right:1px solid var(--glass-border); border-bottom:1px solid var(--glass-border);">
           <div style="min-width:100px;">
             <strong style="font-size:12px; display:block; color:var(--ink);">${m.formattedDate}</strong>
@@ -6165,7 +6560,10 @@
           </div>
           <div style="flex:1;">
             <b style="font-size:13px; color:var(--ink); display:block;">${m.course.code} - ${m.course.name}</b>
-            <span style="font-size:11px; color:var(--ink-soft);">${m.timeStr} • Slot ${m.slot}</span>
+            <div style="font-size:11px; color:var(--ink-soft); margin-top:2px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <span>${m.timeStr} • Slot ${m.slot}</span>
+              ${gapInfo ? `<span class="badge-sm" style="background:rgba(56,189,248,0.15); color:#38BDF8; font-size:10px; font-weight:700;">${gapInfo.label}</span>` : ''}
+            </div>
           </div>
           <div>
             <span class="badge-sm" style="background:${m.status === 'Completed' ? 'rgba(34,197,94,0.15)' : (m.status === 'Today' ? 'rgba(239,68,68,0.15)' : 'rgba(108,99,255,0.15)')}; color:${borderClr}; font-weight:700;">${m.status}</span>
@@ -6174,107 +6572,7 @@
       }).join('');
     }
 
-    function renderAIStudyPlanner(mappedExams) {
-      const container = document.getElementById('aiStudyPlannerContent');
-      if (!container) return;
 
-      const upcoming = mappedExams.filter(m => m.status !== 'Completed').sort((a, b) => (a.examStartDate || Infinity) - (b.examStartDate || Infinity));
-      const completedTaskIds = new Set((state.examConfig && state.examConfig.studyPlanner) ? state.examConfig.studyPlanner.completedTasks : []);
-
-      let tasksHtml = '';
-      if (upcoming.length === 0) {
-        tasksHtml = `<div style="color:var(--ink-soft); font-size:13px; padding:12px;">No upcoming exams requiring study tasks.</div>`;
-      } else {
-        tasksHtml = upcoming.map((m, idx) => {
-          const taskId = `task_${m.course.code}`;
-          const isDone = completedTaskIds.has(taskId);
-          const priority = idx === 0 ? 'High Priority' : 'Medium Priority';
-          const pColor = idx === 0 ? '#EF4444' : '#F59E0B';
-
-          return `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); border-radius:10px; margin-bottom:8px;">
-            <div style="display:flex; gap:10px; align-items:center;">
-              <input type="checkbox" ${isDone ? 'checked' : ''} style="width:16px; height:16px; cursor:pointer;" onchange="toggleStudyTask('${taskId}')" />
-              <div>
-                <strong style="font-size:13px; text-decoration:${isDone ? 'line-through' : 'none'}; color:${isDone ? 'var(--ink-soft)' : 'var(--ink)'};">${m.course.name} (${m.course.code})</strong>
-                <div style="font-size:11px; color:var(--ink-soft); margin-top:2px;">Slot ${m.slot} • Target Revision: 3 Hours • Focus: Core Concepts</div>
-              </div>
-            </div>
-            <span class="badge-sm" style="background:rgba(255,255,255,0.08); color:${pColor}; border:1px solid ${pColor}; font-weight:700;">${priority}</span>
-          </div>`;
-        }).join('');
-      }
-
-      // Calculate Readiness Score
-      const totalUpcoming = upcoming.length;
-      const doneCount = upcoming.filter(m => completedTaskIds.has(`task_${m.course.code}`)).length;
-      let score = 65;
-      if (totalUpcoming > 0) {
-        score = Math.round(50 + (doneCount / totalUpcoming) * 45);
-      } else if (mappedExams.length > 0) {
-        score = 100;
-      }
-
-      let readinessLabel = 'Ready';
-      let readinessClr = 'var(--green)';
-      if (score < 50) { readinessLabel = 'Critical'; readinessClr = '#EF4444'; }
-      else if (score < 70) { readinessLabel = 'Needs Revision'; readinessClr = '#F59E0B'; }
-      else if (score < 85) { readinessLabel = 'Almost Ready'; readinessClr = '#38BDF8'; }
-
-      const readinessScoreVal = document.getElementById('readinessScoreVal');
-      const readinessBadge = document.getElementById('readinessBadge');
-      const readinessCircle = document.getElementById('readinessCircle');
-
-      if (readinessScoreVal) readinessScoreVal.textContent = `${score}%`;
-      if (readinessBadge) {
-        readinessBadge.textContent = readinessLabel;
-        readinessBadge.style.color = readinessClr;
-      }
-      if (readinessCircle) {
-        const offset = 314 - (314 * score / 100);
-        readinessCircle.style.strokeDashoffset = offset;
-        readinessCircle.style.stroke = readinessClr;
-      }
-
-      container.innerHTML = `
-        <div>
-          <h4 style="margin:0 0 10px 0; font-size:14px; font-weight:700;">Prioritized Revision Checklist</h4>
-          ${tasksHtml}
-        </div>
-        <div style="background:rgba(108,99,255,0.06); border:1px solid var(--glass-border); border-radius:12px; padding:14px;">
-          <h4 style="margin:0 0 10px 0; font-size:14px; font-weight:700; color:var(--indigo);">AI Weak Area Analysis</h4>
-          <div class="tip-row"><span class="b"></span>Prioritize <b>${upcoming[0] ? upcoming[0].course.name : 'Nearest Subject'}</b> as its exam date is closest.</div>
-          <div class="tip-row"><span class="b"></span>Allocate at least 3 hours for 4-credit courses.</div>
-          <div class="tip-row"><span class="b"></span>Review formulas and past question papers 24 hours prior to paper.</div>
-        </div>
-      `;
-    }
-
-    function toggleStudyTask(taskId) {
-      if (!state.examConfig) {
-        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] } };
-      }
-      if (!state.examConfig.studyPlanner) state.examConfig.studyPlanner = { completedTasks: [] };
-      const tasks = state.examConfig.studyPlanner.completedTasks || [];
-      const idx = tasks.indexOf(taskId);
-      if (idx > -1) {
-        tasks.splice(idx, 1);
-      } else {
-        tasks.push(taskId);
-      }
-      state.examConfig.studyPlanner.completedTasks = tasks;
-      triggerAutoSave();
-      renderExamDashboard();
-    }
-
-    function generateAIStudyPlan() {
-      if (state.examConfig && state.examConfig.studyPlanner) {
-        state.examConfig.studyPlanner.completedTasks = [];
-      }
-      logHistory('Regenerated AI Study Planner schedule.');
-      triggerAutoSave();
-      renderExamDashboard();
-      alert('AI Study Plan regenerated successfully based on latest exam schedule!');
-    }
 
     function updateExamNotifications(mappedExams) {
       const container = document.getElementById('examNotificationContainer');
@@ -6285,12 +6583,12 @@
         container.innerHTML = `
           <div class="glass fade-up" style="padding:14px 18px; margin-bottom:20px; background:linear-gradient(135deg, rgba(239,68,68,0.18), rgba(245,158,11,0.12)); border:1.5px solid #EF4444; border-radius:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
             <div>
-              <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#EF4444; letter-spacing:0.05em; display:block;">🔥 TODAY'S EXAM ALERT</span>
+              <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#EF4444; letter-spacing:0.05em; display:block;">TODAY'S EXAM ALERT</span>
               <strong style="font-size:16px; color:var(--ink);">${todayExam.course.name} (${todayExam.course.code})</strong>
               <div style="font-size:12px; color:var(--ink-soft); margin-top:2px;">Time: ${todayExam.timeStr} • Slot ${todayExam.slot}</div>
             </div>
             <div style="background:#EF4444; color:#fff; font-weight:800; font-size:14px; padding:8px 16px; border-radius:20px;">
-              Best of Luck! 👍
+              Best of Luck!
             </div>
           </div>
         `;
@@ -6309,42 +6607,33 @@
         { fn: 'C1', an: 'C2' },
         { fn: 'D1', an: 'D2' },
         { fn: 'E1', an: 'E2' },
-        'HOLIDAY',
         { fn: 'F1', an: 'F2' },
         { fn: 'G1', an: 'G2' }
       ];
 
       let rowsHtml = '';
       slotPairs.forEach(pair => {
-        if (pair === 'HOLIDAY') {
-          rowsHtml += `<tr style="background:#fff3cd; border-top:1.5px solid #000; border-bottom:1.5px solid #000;">
-            <td colspan="6" style="padding:10px; text-align:center; font-weight:800; font-size:14px; color:#856404; letter-spacing:0.15em; text-transform:uppercase;">
-              Holiday
-            </td>
-          </tr>`;
-        } else {
-          const fnMatch = mappedExams.find(m => m.slot === pair.fn);
-          const anMatch = mappedExams.find(m => m.slot === pair.an);
+        const fnMatch = mappedExams.find(m => m.slot === pair.fn);
+        const anMatch = mappedExams.find(m => m.slot === pair.an);
 
           rowsHtml += `<tr style="border-bottom:1px solid #ddd; font-size:12px;">
             <!-- Forenoon -->
             <td style="padding:8px; font-weight:800; text-align:center; background:#f8f9fa; border-right:1px solid #eee;">${pair.fn}</td>
-            <td style="padding:8px;">
-              ${fnMatch ? `<strong>${fnMatch.course.code}</strong><br><small style="color:#555;">${fnMatch.course.name}</small>` : '<span style="color:#999; font-style:italic;">No Course</span>'}
+            <td style="padding:8px; ${!fnMatch ? 'background:#fff5f5;' : ''}">
+              ${fnMatch ? `<strong>${fnMatch.course.code}</strong><br><small style="color:#555;">${fnMatch.course.name}</small>` : '<span style="color:#dc2626; font-weight:bold; background:#fee2e2; border:1px solid #fca5a5; padding:2px 8px; border-radius:4px; font-size:11px; display:inline-block;">No Course</span>'}
             </td>
-            <td style="padding:8px; border-right:2px solid #000; text-align:center;">
+            <td style="padding:8px; border-right:2px solid #000; text-align:center; ${!fnMatch ? 'background:#fff5f5;' : ''}">
               ${fnMatch && fnMatch.dateVal ? `<strong>${fnMatch.formattedDate}</strong><br><small style="color:#444;">${fnMatch.dayName}</small>` : '<span style="color:#999; font-style:italic;">Unscheduled</span>'}
             </td>
             <!-- Afternoon -->
             <td style="padding:8px; font-weight:800; text-align:center; background:#f8f9fa; border-right:1px solid #eee;">${pair.an}</td>
-            <td style="padding:8px;">
-              ${anMatch ? `<strong>${anMatch.course.code}</strong><br><small style="color:#555;">${anMatch.course.name}</small>` : '<span style="color:#999; font-style:italic;">No Course</span>'}
+            <td style="padding:8px; ${!anMatch ? 'background:#fff5f5;' : ''}">
+              ${anMatch ? `<strong>${anMatch.course.code}</strong><br><small style="color:#555;">${anMatch.course.name}</small>` : '<span style="color:#dc2626; font-weight:bold; background:#fee2e2; border:1px solid #fca5a5; padding:2px 8px; border-radius:4px; font-size:11px; display:inline-block;">No Course</span>'}
             </td>
-            <td style="padding:8px; text-align:center;">
+            <td style="padding:8px; text-align:center; ${!anMatch ? 'background:#fff5f5;' : ''}">
               ${anMatch && anMatch.dateVal ? `<strong>${anMatch.formattedDate}</strong><br><small style="color:#444;">${anMatch.dayName}</small>` : '<span style="color:#999; font-style:italic;">Unscheduled</span>'}
             </td>
           </tr>`;
-        }
       });
 
       const printArea = document.getElementById('printableReport');
