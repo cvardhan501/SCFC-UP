@@ -6021,9 +6021,85 @@
     /* =========================================================
        ENTERPRISE EXAM MANAGEMENT SYSTEM MODULE
     ========================================================= */
+    function ensureExamConfigStructure() {
+      if (!state.examConfig) {
+        state.examConfig = {
+          activeExamTab: 'CA1',
+          semesters: {},
+          schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } },
+          studyPlanner: { completedTasks: [] },
+          holidays: []
+        };
+      }
+      if (!state.examConfig.semesters) state.examConfig.semesters = {};
+
+      const currentSem = state.currentSemester || 1;
+      if (!state.examConfig.semesters[currentSem]) {
+        state.examConfig.semesters[currentSem] = {
+          schedules: {
+            CA1: { slotDates: {} },
+            CA2: { slotDates: {} },
+            CA3: { slotDates: {} }
+          },
+          holidays: []
+        };
+
+        // Migration: Copy legacy root schedules into currentSem if available
+        if (state.examConfig.schedules) {
+          ['CA1', 'CA2', 'CA3'].forEach(tab => {
+            if (state.examConfig.schedules[tab] && state.examConfig.schedules[tab].slotDates) {
+              state.examConfig.semesters[currentSem].schedules[tab].slotDates = { ...state.examConfig.schedules[tab].slotDates };
+            }
+          });
+        }
+        if (Array.isArray(state.examConfig.holidays) && state.examConfig.holidays.length > 0) {
+          state.examConfig.semesters[currentSem].holidays = [...state.examConfig.holidays];
+        }
+      }
+    }
+
+    function getSemExamSchedule(semNum, caTab) {
+      ensureExamConfigStructure();
+      const sem = semNum || state.currentSemester || 1;
+      if (!state.examConfig.semesters[sem]) {
+        state.examConfig.semesters[sem] = {
+          schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } },
+          holidays: []
+        };
+      }
+      if (!state.examConfig.semesters[sem].schedules) {
+        state.examConfig.semesters[sem].schedules = { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } };
+      }
+      if (!state.examConfig.semesters[sem].schedules[caTab]) {
+        state.examConfig.semesters[sem].schedules[caTab] = { slotDates: {} };
+      }
+      return state.examConfig.semesters[sem].schedules[caTab].slotDates || {};
+    }
+
+    function setSemExamSlotDate(semNum, caTab, slotName, dateValue) {
+      ensureExamConfigStructure();
+      const sem = semNum || state.currentSemester || 1;
+      const slotDates = getSemExamSchedule(sem, caTab);
+      slotDates[slotName] = dateValue;
+
+      // Keep root schedules updated as fallback
+      if (!state.examConfig.schedules) state.examConfig.schedules = { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } };
+      if (!state.examConfig.schedules[caTab]) state.examConfig.schedules[caTab] = { slotDates: {} };
+      state.examConfig.schedules[caTab].slotDates[slotName] = dateValue;
+    }
+
+    function getSemHolidays(semNum) {
+      ensureExamConfigStructure();
+      const sem = semNum || state.currentSemester || 1;
+      if (state.examConfig.semesters && state.examConfig.semesters[sem] && Array.isArray(state.examConfig.semesters[sem].holidays)) {
+        return state.examConfig.semesters[sem].holidays;
+      }
+      return state.examConfig.holidays || [];
+    }
+
     function getHolidayInfoForDate(dateStr) {
       if (!dateStr) return null;
-      const holidays = (state.examConfig && state.examConfig.holidays) ? state.examConfig.holidays : [];
+      const holidays = getSemHolidays(state.currentSemester || 1);
       const foundCustom = holidays.find(h => h.date === dateStr);
       if (foundCustom) {
         return { title: foundCustom.title, isCustom: true };
@@ -6119,9 +6195,7 @@
     }
 
     function switchExamTab(tabName) {
-      if (!state.examConfig) {
-        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] } };
-      }
+      ensureExamConfigStructure();
       state.examConfig.activeExamTab = tabName;
       delete state.examConfig.calendarViewYear;
       delete state.examConfig.calendarViewMonth;
@@ -6130,7 +6204,7 @@
       const activeBtn = document.getElementById(`tab${tabName}`);
       if (activeBtn) activeBtn.classList.add('active');
       triggerAutoSave();
-      renderExamDashboard();
+      renderExamDashboard(true);
     }
 
     function showSlotToastBanner(caTab, slotName, msg, show = true) {
@@ -6165,14 +6239,11 @@
     }
 
     function updateExamSlotDate(caTab, slotName, dateValue, inputEl = null) {
-      if (!state.examConfig) {
-        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] }, holidays: [] };
-      }
-      if (!state.examConfig.schedules[caTab]) {
-        state.examConfig.schedules[caTab] = { slotDates: {} };
-      }
+      ensureExamConfigStructure();
+      const currentSem = state.currentSemester || 1;
+      const semSchedule = getSemExamSchedule(currentSem, caTab);
 
-      const prevValue = state.examConfig.schedules[caTab].slotDates[slotName] || '';
+      const prevValue = semSchedule[slotName] || '';
       const targetInput = inputEl || document.getElementById(`dateInput_${caTab}_${slotName}`);
       const dayBadgeEl = document.getElementById(`dayBadge_${caTab}_${slotName}`);
 
@@ -6191,10 +6262,9 @@
         } else {
           // Validation 2: Allow 1 Morning slot and 1 Afternoon slot on same date, block duplicate in same session group
           const isMorning = slotName.endsWith('1');
-          const slotDates = state.examConfig.schedules[caTab].slotDates || {};
 
-          for (let otherSlot of Object.keys(slotDates)) {
-            if (otherSlot !== slotName && slotDates[otherSlot] === dateValue) {
+          for (let otherSlot of Object.keys(semSchedule)) {
+            if (otherSlot !== slotName && semSchedule[otherSlot] === dateValue) {
               const otherIsMorning = otherSlot.endsWith('1');
               if ((isMorning && otherIsMorning) || (!isMorning && !otherIsMorning)) {
                 validationError = `Conflict: ${isMorning ? 'Morning' : 'Afternoon'} Slot ${otherSlot} is already scheduled on ${formatDateFormatted(dateValue)} for ${caTab}.`;
@@ -6229,7 +6299,7 @@
       }
       showSlotToastBanner(caTab, slotName, '', false);
 
-      state.examConfig.schedules[caTab].slotDates[slotName] = dateValue;
+      setSemExamSlotDate(currentSem, caTab, slotName, dateValue);
 
       // Update day badge in-place to valid day
       if (dayBadgeEl) {
@@ -6241,7 +6311,7 @@
       if (state.usn) {
         localStorage.setItem(`scfc_exam_config_${state.usn}`, JSON.stringify(state.examConfig));
       }
-      logHistory(`Updated ${caTab} exam date for Slot ${slotName} to ${dateValue || 'Cleared'}.`);
+      logHistory(`Updated ${caTab} exam date for Slot ${slotName} to ${dateValue || 'Cleared'} in Semester ${currentSem}.`);
       triggerAutoSave();
       
       // Update sub-views without re-building admin table HTML (preserves mobile focus)
@@ -6251,7 +6321,7 @@
     function getMappedExamsForCA(caTab) {
       const activeSem = state.currentSemester || 1;
       const courses = state.semesters[activeSem] || [];
-      const caSchedule = (state.examConfig && state.examConfig.schedules && state.examConfig.schedules[caTab]) ? state.examConfig.schedules[caTab].slotDates : {};
+      const caSchedule = getSemExamSchedule(activeSem, caTab);
 
       const now = new Date();
 
@@ -6370,18 +6440,22 @@
         return;
       }
 
-      if (!state.examConfig) {
-        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] }, holidays: [] };
-      }
-      if (!state.examConfig.holidays) state.examConfig.holidays = [];
+      ensureExamConfigStructure();
+      const currentSem = state.currentSemester || 1;
+      const holidays = getSemHolidays(currentSem);
 
-      if (state.examConfig.holidays.some(h => h.date === dateVal)) {
+      if (holidays.some(h => h.date === dateVal)) {
         alert(`Holiday for ${formatDateFormatted(dateVal)} is already added.`);
         return;
       }
 
-      state.examConfig.holidays.push({ date: dateVal, title: titleVal });
-      logHistory(`Added holiday "${titleVal}" on ${formatDateFormatted(dateVal)}.`);
+      holidays.push({ date: dateVal, title: titleVal });
+      if (!state.examConfig.holidays) state.examConfig.holidays = [];
+      if (!state.examConfig.holidays.some(h => h.date === dateVal)) {
+        state.examConfig.holidays.push({ date: dateVal, title: titleVal });
+      }
+
+      logHistory(`Added holiday "${titleVal}" on ${formatDateFormatted(dateVal)} for Semester ${currentSem}.`);
       triggerAutoSave();
       dateEl.value = '';
       titleEl.value = '';
@@ -6389,19 +6463,24 @@
     }
 
     function removeHoliday(dateVal) {
+      ensureExamConfigStructure();
+      const currentSem = state.currentSemester || 1;
+      if (state.examConfig && state.examConfig.semesters && state.examConfig.semesters[currentSem] && state.examConfig.semesters[currentSem].holidays) {
+        state.examConfig.semesters[currentSem].holidays = state.examConfig.semesters[currentSem].holidays.filter(h => h.date !== dateVal);
+      }
       if (state.examConfig && state.examConfig.holidays) {
         state.examConfig.holidays = state.examConfig.holidays.filter(h => h.date !== dateVal);
-        logHistory(`Removed holiday for ${formatDateFormatted(dateVal)}.`);
-        triggerAutoSave();
-        renderExamDashboard(true);
       }
+      logHistory(`Removed holiday for ${formatDateFormatted(dateVal)} in Semester ${currentSem}.`);
+      triggerAutoSave();
+      renderExamDashboard(true);
     }
 
     function renderHolidayChips() {
       const container = document.getElementById('holidayChipsContainer');
       if (!container) return;
 
-      const holidays = (state.examConfig && state.examConfig.holidays) ? state.examConfig.holidays : [];
+      const holidays = getSemHolidays(state.currentSemester || 1);
 
       if (holidays.length === 0) {
         container.innerHTML = `<span style="font-size:12px; color:var(--ink-soft); font-style:italic;">Saturdays and Sundays are automatically marked as holidays. Use the form above to add custom festival/study holidays.</span>`;
@@ -6417,9 +6496,7 @@
     }
 
     function renderExamDashboard(rebuildAdminTable = true) {
-      if (!state.examConfig) {
-        state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] }, holidays: [] };
-      }
+      ensureExamConfigStructure();
       const caTab = state.examConfig.activeExamTab || 'CA1';
       const semSelect = document.getElementById('examSemSelect');
       if (semSelect) semSelect.value = String(state.currentSemester || 1);
@@ -6427,7 +6504,7 @@
       const adminTabBadge = document.getElementById('adminTabBadge');
       if (adminTabBadge) adminTabBadge.textContent = caTab;
 
-      const caSchedule = (state.examConfig.schedules[caTab] && state.examConfig.schedules[caTab].slotDates) ? state.examConfig.schedules[caTab].slotDates : {};
+      const caSchedule = getSemExamSchedule(state.currentSemester || 1, caTab);
       const todayStr = new Date().toISOString().split('T')[0];
 
       const slotPairs = [
