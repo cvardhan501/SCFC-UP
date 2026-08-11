@@ -1747,6 +1747,14 @@
       width: 100%;
     }
 
+    input[type="date"].form-input {
+      min-height: 38px;
+      -webkit-appearance: date-field;
+      touch-action: manipulation;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
     /* History View */
     .history-list {
       display: flex;
@@ -3174,7 +3182,7 @@
               </div>
             </div>
             <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:14px;">
-              <input type="date" id="holidayDateInput" class="form-input" style="width:160px; padding:6px 10px; font-size:12.5px;" />
+              <input type="date" id="holidayDateInput" class="form-input" style="width:160px; padding:6px 10px; font-size:12.5px; min-height:36px; -webkit-appearance:date-field; touch-action:manipulation;" />
               <input type="text" id="holidayTitleInput" placeholder="Holiday Title (e.g. Independence Day, Study Break)" class="form-input" style="flex:1; min-width:200px; padding:6px 10px; font-size:12.5px;" />
               <button class="btn btn-primary" onclick="addHolidayFromInput()" style="padding:6px 16px; font-size:12.5px;">+ Add Holiday</button>
             </div>
@@ -6121,13 +6129,16 @@
       renderExamDashboard();
     }
 
-    function updateExamSlotDate(caTab, slotName, dateValue) {
+    function updateExamSlotDate(caTab, slotName, dateValue, inputEl = null) {
       if (!state.examConfig) {
         state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] }, holidays: [] };
       }
       if (!state.examConfig.schedules[caTab]) {
         state.examConfig.schedules[caTab] = { slotDates: {} };
       }
+
+      const prevValue = state.examConfig.schedules[caTab].slotDates[slotName] || '';
+      const targetInput = inputEl || document.getElementById(`dateInput_${caTab}_${slotName}`);
 
       if (dateValue) {
         // Validation 1: Prevent selecting past dates
@@ -6136,14 +6147,14 @@
         today.setHours(0, 0, 0, 0);
         if (selected < today) {
           alert(`Invalid Selection: ${formatDateFormatted(dateValue)} is a past date. Please select a current or future exam date.`);
-          renderExamDashboard();
+          if (targetInput) targetInput.value = prevValue;
           return;
         }
 
         // Validation 1.5: Prevent selecting Sunday dates for exams
         if (selected.getDay() === 0) {
           alert(`Invalid Selection: ${formatDateFormatted(dateValue)} is a Sunday. Exams cannot be scheduled on Sundays. Please select a weekday (Monday to Saturday).`);
-          renderExamDashboard();
+          if (targetInput) targetInput.value = prevValue;
           return;
         }
 
@@ -6157,7 +6168,7 @@
             const otherIsMorning = otherSlot.endsWith('1');
             if ((isMorning && otherIsMorning) || (!isMorning && !otherIsMorning)) {
               alert(`Conflict Warning: ${isMorning ? 'Morning' : 'Afternoon'} Slot ${otherSlot} is already scheduled on ${formatDateFormatted(dateValue)} for ${caTab}. You can schedule 1 Morning exam and 1 Afternoon exam on the same day, but not two in the same session.`);
-              renderExamDashboard();
+              if (targetInput) targetInput.value = prevValue;
               return;
             }
           }
@@ -6166,13 +6177,22 @@
 
       state.examConfig.schedules[caTab].slotDates[slotName] = dateValue;
 
+      // Update day badge in-place without destroying date input element (preserves native date picker on mobile)
+      const dayBadgeEl = document.getElementById(`dayBadge_${caTab}_${slotName}`);
+      if (dayBadgeEl) {
+        const dayName = getDayOfWeek(dateValue);
+        dayBadgeEl.innerHTML = `<span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${dayName}</span>`;
+      }
+
       // 100% Persistence Guarantee to localStorage + MongoDB
       if (state.usn) {
         localStorage.setItem(`scfc_exam_config_${state.usn}`, JSON.stringify(state.examConfig));
       }
       logHistory(`Updated ${caTab} exam date for Slot ${slotName} to ${dateValue || 'Cleared'}.`);
       triggerAutoSave();
-      renderExamDashboard();
+      
+      // Update sub-views without re-building admin table HTML (preserves mobile touch focus)
+      renderExamDashboard(false);
     }
 
     function getMappedExamsForCA(caTab) {
@@ -6312,7 +6332,7 @@
       triggerAutoSave();
       dateEl.value = '';
       titleEl.value = '';
-      renderExamDashboard();
+      renderExamDashboard(true);
     }
 
     function removeHoliday(dateVal) {
@@ -6320,7 +6340,7 @@
         state.examConfig.holidays = state.examConfig.holidays.filter(h => h.date !== dateVal);
         logHistory(`Removed holiday for ${formatDateFormatted(dateVal)}.`);
         triggerAutoSave();
-        renderExamDashboard();
+        renderExamDashboard(true);
       }
     }
 
@@ -6343,7 +6363,7 @@
       `).join('');
     }
 
-    function renderExamDashboard() {
+    function renderExamDashboard(rebuildAdminTable = true) {
       if (!state.examConfig) {
         state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] }, holidays: [] };
       }
@@ -6354,8 +6374,6 @@
       const adminTabBadge = document.getElementById('adminTabBadge');
       if (adminTabBadge) adminTabBadge.textContent = caTab;
 
-      // Render Admin Slot Table Body (Forenoon & Afternoon Paired)
-      const adminBody = document.getElementById('adminExamSlotTableBody');
       const caSchedule = (state.examConfig.schedules[caTab] && state.examConfig.schedules[caTab].slotDates) ? state.examConfig.schedules[caTab].slotDates : {};
       const todayStr = new Date().toISOString().split('T')[0];
 
@@ -6373,45 +6391,48 @@
       const mappedExams = getMappedExamsForCA(caTab);
       const gapMap = calculateExamGaps(mappedExams);
 
-      let adminRowsHtml = '';
-      slotPairs.forEach(pair => {
-        const fnHasCourse = mappedExams.some(m => m.slot === pair.fn);
-        const anHasCourse = mappedExams.some(m => m.slot === pair.an);
+      if (rebuildAdminTable) {
+        const adminBody = document.getElementById('adminExamSlotTableBody');
+        let adminRowsHtml = '';
+        slotPairs.forEach(pair => {
+          const fnHasCourse = mappedExams.some(m => m.slot === pair.fn);
+          const anHasCourse = mappedExams.some(m => m.slot === pair.an);
 
-        const fnDate = caSchedule[pair.fn] || '';
-        const fnDay = getDayOfWeek(fnDate);
-        const anDate = caSchedule[pair.an] || '';
-        const anDay = getDayOfWeek(anDate);
+          const fnDate = caSchedule[pair.fn] || '';
+          const fnDay = getDayOfWeek(fnDate);
+          const anDate = caSchedule[pair.an] || '';
+          const anDay = getDayOfWeek(anDate);
 
-        const fnDateInput = fnHasCourse
-          ? `<input type="date" value="${fnDate}" class="form-input" style="padding:4px 6px; font-size:12px; width:135px;" onchange="updateExamSlotDate('${caTab}', '${pair.fn}', this.value)" />`
-          : `<input type="date" disabled value="" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; opacity:0.85; cursor:not-allowed; border:1.5px solid #EF4444; background:rgba(239,68,68,0.3); color:#ffffff; font-weight:600;" title="No course assigned to slot ${pair.fn} in active semester" />`;
+          const fnDateInput = fnHasCourse
+            ? `<input type="date" id="dateInput_${caTab}_${pair.fn}" value="${fnDate}" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; -webkit-appearance:date-field; touch-action:manipulation;" onchange="updateExamSlotDate('${caTab}', '${pair.fn}', this.value, this)" />`
+            : `<input type="date" id="dateInput_${caTab}_${pair.fn}" disabled value="" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; opacity:0.85; cursor:not-allowed; border:1.5px solid #EF4444; background:rgba(239,68,68,0.3); color:#ffffff; font-weight:600;" title="No course assigned to slot ${pair.fn} in active semester" />`;
 
-        const fnDayBadge = fnHasCourse
-          ? `<span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${fnDay}</span>`
-          : `<span class="badge-sm" style="background:#EF4444; color:#ffffff; font-weight:800; font-size:11px; padding:3px 10px; border-radius:20px; display:inline-block; border:1px solid #F87171; box-shadow:0 1px 3px rgba(0,0,0,0.2);">No Course</span>`;
+          const fnDayBadge = fnHasCourse
+            ? `<span id="dayBadge_${caTab}_${pair.fn}"><span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${fnDay}</span></span>`
+            : `<span id="dayBadge_${caTab}_${pair.fn}"><span class="badge-sm" style="background:#EF4444; color:#ffffff; font-weight:800; font-size:11px; padding:3px 10px; border-radius:20px; display:inline-block; border:1px solid #F87171; box-shadow:0 1px 3px rgba(0,0,0,0.2);">No Course</span></span>`;
 
-        const anDateInput = anHasCourse
-          ? `<input type="date" value="${anDate}" class="form-input" style="padding:4px 6px; font-size:12px; width:135px;" onchange="updateExamSlotDate('${caTab}', '${pair.an}', this.value)" />`
-          : `<input type="date" disabled value="" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; opacity:0.85; cursor:not-allowed; border:1.5px solid #EF4444; background:rgba(239,68,68,0.3); color:#ffffff; font-weight:600;" title="No course assigned to slot ${pair.an} in active semester" />`;
+          const anDateInput = anHasCourse
+            ? `<input type="date" id="dateInput_${caTab}_${pair.an}" value="${anDate}" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; -webkit-appearance:date-field; touch-action:manipulation;" onchange="updateExamSlotDate('${caTab}', '${pair.an}', this.value, this)" />`
+            : `<input type="date" id="dateInput_${caTab}_${pair.an}" disabled value="" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; opacity:0.85; cursor:not-allowed; border:1.5px solid #EF4444; background:rgba(239,68,68,0.3); color:#ffffff; font-weight:600;" title="No course assigned to slot ${pair.an} in active semester" />`;
 
-        const anDayBadge = anHasCourse
-          ? `<span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${anDay}</span>`
-          : `<span class="badge-sm" style="background:#EF4444; color:#ffffff; font-weight:800; font-size:11px; padding:3px 10px; border-radius:20px; display:inline-block; border:1px solid #F87171; box-shadow:0 1px 3px rgba(0,0,0,0.2);">No Course</span>`;
+          const anDayBadge = anHasCourse
+            ? `<span id="dayBadge_${caTab}_${pair.an}"><span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${anDay}</span></span>`
+            : `<span id="dayBadge_${caTab}_${pair.an}"><span class="badge-sm" style="background:#EF4444; color:#ffffff; font-weight:800; font-size:11px; padding:3px 10px; border-radius:20px; display:inline-block; border:1px solid #F87171; box-shadow:0 1px 3px rgba(0,0,0,0.2);">No Course</span></span>`;
 
-        adminRowsHtml += `<tr style="border-bottom:1px solid var(--glass-border);">
-          <!-- Forenoon Slot Bar -->
-          <td style="padding:6px; font-weight:800; ${!fnHasCourse ? 'color:#ffffff; background:#EF4444;' : 'color:var(--indigo); background:rgba(56,189,248,0.05);'}">${pair.fn}</td>
-          <td style="padding:6px; ${!fnHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${fnDateInput}</td>
-          <td style="padding:6px; border-right:2px solid var(--glass-border); ${!fnHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${fnDayBadge}</td>
-          <!-- Afternoon Slot Bar -->
-          <td style="padding:6px; font-weight:800; ${!anHasCourse ? 'color:#ffffff; background:#EF4444;' : 'color:var(--purple); background:rgba(245,158,11,0.05);'}">${pair.an}</td>
-          <td style="padding:6px; ${!anHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${anDateInput}</td>
-          <td style="padding:6px; ${!anHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${anDayBadge}</td>
-        </tr>`;
-      });
+          adminRowsHtml += `<tr style="border-bottom:1px solid var(--glass-border);">
+            <!-- Forenoon Slot Bar -->
+            <td style="padding:6px; font-weight:800; ${!fnHasCourse ? 'color:#ffffff; background:#EF4444;' : 'color:var(--indigo); background:rgba(56,189,248,0.05);'}">${pair.fn}</td>
+            <td style="padding:6px; ${!fnHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${fnDateInput}</td>
+            <td style="padding:6px; border-right:2px solid var(--glass-border); ${!fnHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${fnDayBadge}</td>
+            <!-- Afternoon Slot Bar -->
+            <td style="padding:6px; font-weight:800; ${!anHasCourse ? 'color:#ffffff; background:#EF4444;' : 'color:var(--purple); background:rgba(245,158,11,0.05);'}">${pair.an}</td>
+            <td style="padding:6px; ${!anHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${anDateInput}</td>
+            <td style="padding:6px; ${!anHasCourse ? 'background:rgba(239,68,68,0.22); border-top:1px solid rgba(239,68,68,0.4); border-bottom:1px solid rgba(239,68,68,0.4);' : ''}">${anDayBadge}</td>
+          </tr>`;
+        });
 
-      if (adminBody) adminBody.innerHTML = adminRowsHtml;
+        if (adminBody) adminBody.innerHTML = adminRowsHtml;
+      }
 
       const studentBody = document.getElementById('studentExamScheduleBody');
       if (studentBody) {
