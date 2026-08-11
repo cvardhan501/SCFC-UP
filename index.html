@@ -3113,6 +3113,7 @@
                 </div>
                 <span class="announce-badge" id="adminTabBadge">CA1</span>
               </div>
+              <div id="adminExamDateToast" style="display:none; padding:8px 12px; margin-bottom:12px; border-radius:10px; background:rgba(239,68,68,0.18); border:1px solid #EF4444; color:#ffffff; font-size:12px; font-weight:600; text-align:left;"></div>
               <div style="overflow-x:auto;">
                 <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:center;">
                   <thead>
@@ -6129,6 +6130,37 @@
       renderExamDashboard();
     }
 
+    function showSlotToastBanner(caTab, slotName, msg, show = true) {
+      const banner = document.getElementById('adminExamDateToast');
+      if (!banner) return;
+      if (show && msg) {
+        banner.style.display = 'block';
+        banner.innerHTML = `⚠️ <strong>Slot ${slotName}:</strong> ${msg}`;
+      } else {
+        banner.style.display = 'none';
+        banner.innerHTML = '';
+      }
+    }
+
+    function handleExamSlotDateBlur(caTab, slotName, targetInput) {
+      if (!targetInput) return;
+      if (targetInput.dataset.invalid === 'true') {
+        const prevValue = targetInput.dataset.prevValue || '';
+        targetInput.value = prevValue;
+        targetInput.style.borderColor = 'var(--glass-border)';
+        targetInput.style.background = 'var(--glass-bg-2)';
+        delete targetInput.dataset.invalid;
+        delete targetInput.dataset.prevValue;
+
+        const dayBadgeEl = document.getElementById(`dayBadge_${caTab}_${slotName}`);
+        if (dayBadgeEl) {
+          const dayName = getDayOfWeek(prevValue);
+          dayBadgeEl.innerHTML = `<span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${dayName}</span>`;
+        }
+        showSlotToastBanner(caTab, slotName, '', false);
+      }
+    }
+
     function updateExamSlotDate(caTab, slotName, dateValue, inputEl = null) {
       if (!state.examConfig) {
         state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] }, holidays: [] };
@@ -6139,6 +6171,9 @@
 
       const prevValue = state.examConfig.schedules[caTab].slotDates[slotName] || '';
       const targetInput = inputEl || document.getElementById(`dateInput_${caTab}_${slotName}`);
+      const dayBadgeEl = document.getElementById(`dayBadge_${caTab}_${slotName}`);
+
+      let validationError = null;
 
       if (dateValue) {
         // Validation 1: Prevent selecting past dates
@@ -6146,39 +6181,54 @@
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         if (selected < today) {
-          alert(`Invalid Selection: ${formatDateFormatted(dateValue)} is a past date. Please select a current or future exam date.`);
-          if (targetInput) targetInput.value = prevValue;
-          return;
-        }
+          validationError = `Past Date: ${formatDateFormatted(dateValue)} is in the past. Please select a current or future date.`;
+        } else if (selected.getDay() === 0) {
+          // Validation 1.5: Prevent Sunday dates for exams
+          validationError = `Sunday Date: ${formatDateFormatted(dateValue)} is a Sunday. Exams cannot be scheduled on Sundays.`;
+        } else {
+          // Validation 2: Allow 1 Morning slot and 1 Afternoon slot on same date, block duplicate in same session group
+          const isMorning = slotName.endsWith('1');
+          const slotDates = state.examConfig.schedules[caTab].slotDates || {};
 
-        // Validation 1.5: Prevent selecting Sunday dates for exams
-        if (selected.getDay() === 0) {
-          alert(`Invalid Selection: ${formatDateFormatted(dateValue)} is a Sunday. Exams cannot be scheduled on Sundays. Please select a weekday (Monday to Saturday).`);
-          if (targetInput) targetInput.value = prevValue;
-          return;
-        }
-
-        // Validation 2: Allow 1 Morning slot and 1 Afternoon slot on the same date!
-        // Block duplicate date ONLY within the same session group (Morning vs Morning, Afternoon vs Afternoon)
-        const isMorning = slotName.endsWith('1');
-        const slotDates = state.examConfig.schedules[caTab].slotDates || {};
-
-        for (let otherSlot of Object.keys(slotDates)) {
-          if (otherSlot !== slotName && slotDates[otherSlot] === dateValue) {
-            const otherIsMorning = otherSlot.endsWith('1');
-            if ((isMorning && otherIsMorning) || (!isMorning && !otherIsMorning)) {
-              alert(`Conflict Warning: ${isMorning ? 'Morning' : 'Afternoon'} Slot ${otherSlot} is already scheduled on ${formatDateFormatted(dateValue)} for ${caTab}. You can schedule 1 Morning exam and 1 Afternoon exam on the same day, but not two in the same session.`);
-              if (targetInput) targetInput.value = prevValue;
-              return;
+          for (let otherSlot of Object.keys(slotDates)) {
+            if (otherSlot !== slotName && slotDates[otherSlot] === dateValue) {
+              const otherIsMorning = otherSlot.endsWith('1');
+              if ((isMorning && otherIsMorning) || (!isMorning && !otherIsMorning)) {
+                validationError = `Conflict: ${isMorning ? 'Morning' : 'Afternoon'} Slot ${otherSlot} is already scheduled on ${formatDateFormatted(dateValue)} for ${caTab}.`;
+                break;
+              }
             }
           }
         }
       }
 
+      if (validationError) {
+        // Non-blocking error handling: mark input invalid and show inline badge warning WITHOUT closing datepicker
+        if (targetInput) {
+          targetInput.style.borderColor = '#EF4444';
+          targetInput.style.background = 'rgba(239,68,68,0.15)';
+          targetInput.dataset.invalid = 'true';
+          targetInput.dataset.prevValue = prevValue;
+        }
+        if (dayBadgeEl) {
+          dayBadgeEl.innerHTML = `<span class="badge-sm" style="background:#EF4444; color:#ffffff; font-weight:700; font-size:10.5px; padding:3px 6px; border-radius:12px; display:inline-block;" title="${validationError}">⚠️ Conflict</span>`;
+        }
+        showSlotToastBanner(caTab, slotName, validationError, true);
+        return;
+      }
+
+      // Valid date selected: clear error highlights & toast
+      if (targetInput) {
+        targetInput.style.borderColor = 'var(--glass-border)';
+        targetInput.style.background = 'var(--glass-bg-2)';
+        delete targetInput.dataset.invalid;
+        delete targetInput.dataset.prevValue;
+      }
+      showSlotToastBanner(caTab, slotName, '', false);
+
       state.examConfig.schedules[caTab].slotDates[slotName] = dateValue;
 
-      // Update day badge in-place without destroying date input element (preserves native date picker on mobile)
-      const dayBadgeEl = document.getElementById(`dayBadge_${caTab}_${slotName}`);
+      // Update day badge in-place to valid day
       if (dayBadgeEl) {
         const dayName = getDayOfWeek(dateValue);
         dayBadgeEl.innerHTML = `<span class="badge-sm" style="background:rgba(140,130,255,0.15); color:var(--indigo); font-weight:700;">${dayName}</span>`;
@@ -6191,7 +6241,7 @@
       logHistory(`Updated ${caTab} exam date for Slot ${slotName} to ${dateValue || 'Cleared'}.`);
       triggerAutoSave();
       
-      // Update sub-views without re-building admin table HTML (preserves mobile touch focus)
+      // Update sub-views without re-building admin table HTML (preserves mobile focus)
       renderExamDashboard(false);
     }
 
@@ -6404,7 +6454,7 @@
           const anDay = getDayOfWeek(anDate);
 
           const fnDateInput = fnHasCourse
-            ? `<input type="date" id="dateInput_${caTab}_${pair.fn}" value="${fnDate}" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; -webkit-appearance:date-field; touch-action:manipulation;" onchange="updateExamSlotDate('${caTab}', '${pair.fn}', this.value, this)" />`
+            ? `<input type="date" id="dateInput_${caTab}_${pair.fn}" value="${fnDate}" min="${todayStr}" autocomplete="off" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; -webkit-appearance:date-field; touch-action:manipulation;" onchange="updateExamSlotDate('${caTab}', '${pair.fn}', this.value, this)" onblur="handleExamSlotDateBlur('${caTab}', '${pair.fn}', this)" />`
             : `<input type="date" id="dateInput_${caTab}_${pair.fn}" disabled value="" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; opacity:0.85; cursor:not-allowed; border:1.5px solid #EF4444; background:rgba(239,68,68,0.3); color:#ffffff; font-weight:600;" title="No course assigned to slot ${pair.fn} in active semester" />`;
 
           const fnDayBadge = fnHasCourse
@@ -6412,7 +6462,7 @@
             : `<span id="dayBadge_${caTab}_${pair.fn}"><span class="badge-sm" style="background:#EF4444; color:#ffffff; font-weight:800; font-size:11px; padding:3px 10px; border-radius:20px; display:inline-block; border:1px solid #F87171; box-shadow:0 1px 3px rgba(0,0,0,0.2);">No Course</span></span>`;
 
           const anDateInput = anHasCourse
-            ? `<input type="date" id="dateInput_${caTab}_${pair.an}" value="${anDate}" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; -webkit-appearance:date-field; touch-action:manipulation;" onchange="updateExamSlotDate('${caTab}', '${pair.an}', this.value, this)" />`
+            ? `<input type="date" id="dateInput_${caTab}_${pair.an}" value="${anDate}" min="${todayStr}" autocomplete="off" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; -webkit-appearance:date-field; touch-action:manipulation;" onchange="updateExamSlotDate('${caTab}', '${pair.an}', this.value, this)" onblur="handleExamSlotDateBlur('${caTab}', '${pair.an}', this)" />`
             : `<input type="date" id="dateInput_${caTab}_${pair.an}" disabled value="" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; opacity:0.85; cursor:not-allowed; border:1.5px solid #EF4444; background:rgba(239,68,68,0.3); color:#ffffff; font-weight:600;" title="No course assigned to slot ${pair.an} in active semester" />`;
 
           const anDayBadge = anHasCourse
