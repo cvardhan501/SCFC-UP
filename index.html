@@ -4725,13 +4725,16 @@
       state.history = student.history || [];
       state.tasks = student.tasks || [];
 
-      // Restore Exam System configuration with local fallback
+      // Restore Exam System configuration with local fallback and auto-sync to MongoDB
       const localExamConfig = localStorage.getItem(`scfc_exam_config_${student.usn}`);
       if (student.examConfig && Object.keys(student.examConfig.schedules || {}).length > 0) {
         state.examConfig = student.examConfig;
+        localStorage.setItem(`scfc_exam_config_${student.usn}`, JSON.stringify(student.examConfig));
       } else if (localExamConfig) {
         try {
           state.examConfig = JSON.parse(localExamConfig);
+          // Sync existing local exam schedule up to MongoDB Atlas
+          triggerAutoSave();
         } catch (e) {}
       }
 

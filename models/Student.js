@@ -60,6 +60,19 @@ const StudentSchema = new mongoose.Schema({
   tasks: {
     type: [TaskSchema],
     default: []
+  },
+  examConfig: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {
+      activeExamTab: 'CA1',
+      schedules: {
+        CA1: { slotDates: {} },
+        CA2: { slotDates: {} },
+        CA3: { slotDates: {} }
+      },
+      studyPlanner: { completedTasks: [] },
+      holidays: []
+    }
   }
 }, {
   timestamps: true,
