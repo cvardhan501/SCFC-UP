@@ -1306,9 +1306,10 @@
 
     .exam-cal-grid {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 6px;
       text-align: center;
+      width: 100%;
     }
 
     .exam-cal-day-header {
@@ -1332,6 +1333,20 @@
       cursor: pointer;
       position: relative;
       transition: all 0.2s ease;
+      overflow: hidden;
+      min-width: 0;
+      width: 100%;
+      padding: 2px;
+      box-sizing: border-box;
+    }
+
+    .exam-cal-cell small {
+      max-width: 100%;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
     }
 
     .exam-cal-cell:hover {
@@ -6200,19 +6215,33 @@
     function getSemHolidays(semNum) {
       ensureExamConfigStructure();
       const sem = semNum || state.currentSemester || 1;
+      let userHolidays = [];
       if (state.examConfig.semesters && state.examConfig.semesters[sem] && Array.isArray(state.examConfig.semesters[sem].holidays)) {
-        return state.examConfig.semesters[sem].holidays;
+        userHolidays = state.examConfig.semesters[sem].holidays;
+      } else if (Array.isArray(state.examConfig.holidays)) {
+        userHolidays = state.examConfig.holidays;
       }
-      return state.examConfig.holidays || [];
+
+      const dateMap = {};
+      DEFAULT_AMITY_HOLIDAYS.forEach(h => { dateMap[h.date] = { ...h }; });
+      userHolidays.forEach(h => { dateMap[h.date] = { ...h }; });
+      return Object.values(dateMap);
     }
 
     function getSemWorkingSaturdays(semNum) {
       ensureExamConfigStructure();
       const sem = semNum || state.currentSemester || 1;
+      let userWorkingSats = [];
       if (state.examConfig.semesters && state.examConfig.semesters[sem] && Array.isArray(state.examConfig.semesters[sem].workingSaturdays)) {
-        return state.examConfig.semesters[sem].workingSaturdays;
+        userWorkingSats = state.examConfig.semesters[sem].workingSaturdays;
+      } else if (Array.isArray(state.examConfig.workingSaturdays)) {
+        userWorkingSats = state.examConfig.workingSaturdays;
       }
-      return state.examConfig.workingSaturdays || [];
+
+      const dateMap = {};
+      DEFAULT_AMITY_WORKING_DAYS.forEach(w => { dateMap[w.date] = { ...w }; });
+      userWorkingSats.forEach(w => { dateMap[w.date] = { ...w }; });
+      return Object.values(dateMap);
     }
 
     function getWorkingSaturdayForDate(dateStr) {
@@ -7032,6 +7061,33 @@
       if (cdS) cdS.textContent = String(secs).padStart(2, '0');
     }
 
+    const DEFAULT_AMITY_ASSESSMENT_DAYS = {
+      '2026-11-25': 'CA-1 Assessment',
+      '2026-11-26': 'CA-1 Assessment',
+      '2026-11-27': 'CA-1 Assessment',
+      '2026-11-30': 'CA-1 Assessment',
+      '2026-12-01': 'CA-1 Assessment',
+      '2026-12-02': 'CA-1 Assessment',
+      '2026-12-03': 'CA-1 Assessment',
+
+      '2027-01-06': 'CA-2 Assessment',
+      '2027-01-07': 'CA-2 Assessment',
+      '2027-01-08': 'CA-2 Assessment',
+      '2027-01-09': 'CA-2 Assessment',
+      '2027-01-11': 'CA-2 Assessment',
+      '2027-01-12': 'CA-2 Assessment',
+      '2027-01-13': 'CA-2 Assessment',
+      '2027-01-14': 'CA-2 Assessment',
+
+      '2027-02-16': 'CA-3 Assessment',
+      '2027-02-17': 'CA-3 Assessment',
+      '2027-02-18': 'CA-3 Assessment',
+      '2027-02-19': 'CA-3 Assessment',
+      '2027-02-20': 'CA-3 Assessment',
+      '2027-02-22': 'CA-3 Assessment',
+      '2027-02-23': 'CA-3 Assessment'
+    };
+
     function renderExamCalendar(mappedExams) {
       const calContainer = document.getElementById('examCalendarGridContainer');
       if (!calContainer) return;
@@ -7065,9 +7121,12 @@
         if (scheduled.length > 0) {
           year = scheduled[0].examStartDate.getFullYear();
           month = scheduled[0].examStartDate.getMonth();
-          state.examConfig.calendarViewYear = year;
-          state.examConfig.calendarViewMonth = month;
+        } else {
+          year = 2026;
+          month = 9; // Default view to October 2026 (Fall 2026-27 start)
         }
+        state.examConfig.calendarViewYear = year;
+        state.examConfig.calendarViewMonth = month;
       }
 
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -7099,12 +7158,13 @@
 
         const workingSatItem = getWorkingSaturdayForDate(dateKey);
         const amitySpecialEvent = SPECIAL_AMITY_EVENT_DAYS[dateKey];
+        const amityAssessmentLabel = DEFAULT_AMITY_ASSESSMENT_DAYS[dateKey];
 
         let bgStyle = '';
         let numColorStyle = '';
 
         if (examItems.length > 0) {
-          // 📝 Exam Day: Background #20204A | Border #6366F1 | Text #818CF8
+          // 📝 Scheduled Course Exam: Background #20204A | Border #6366F1 | Text #818CF8
           bgStyle = 'background:#20204A; border:1.5px solid #6366F1;';
           numColorStyle = 'color:#818CF8; font-weight:800;';
         } else if (amitySpecialEvent) {
@@ -7129,6 +7189,10 @@
             bgStyle = 'background:#1E293B; border:1.5px solid #64748B;';
             numColorStyle = 'color:#94A3B8; font-weight:800;';
           }
+        } else if (amityAssessmentLabel) {
+          // 📝 CA Assessment Day: Background #20204A | Border #6366F1 | Text #818CF8
+          bgStyle = 'background:#20204A; border:1.5px solid #6366F1;';
+          numColorStyle = 'color:#818CF8; font-weight:800;';
         } else if (holidayItem && holidayItem.isWeekend) {
           // 🏖️ Holiday (Weekend): Background #3A1F2B | Border #FF4D5E | Text #FF6B78
           bgStyle = 'background:#3A1F2B; border:1.5px solid #FF4D5E;';
@@ -7149,25 +7213,37 @@
           </small>
         `).join('');
 
+    function getShortTitle(title) {
+      if (!title) return '';
+      if (title.includes('Deepavali') || title.includes('Balipadyami')) return 'Deepavali';
+      if (title.includes('Mahanavami') || title.includes('Ayudhapooja')) return 'Mahanavami';
+      if (title.includes('Commencement')) return 'Commencement';
+      if (title.includes('Guru Nanak')) return 'Guru Nanak';
+      if (title.includes('Additional Holiday')) return 'Holiday';
+      return title.length > 14 ? title.slice(0, 12) + '…' : title;
+    }
+
         let labelHtml = '';
         if (examItems.length > 0) {
           labelHtml = courseSlotBadges;
         } else if (amitySpecialEvent) {
-          labelHtml = `<small style="font-size:7.5px; color:#F472B6; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${amitySpecialEvent.title}</small>`;
+          labelHtml = `<small style="font-size:7.5px; color:#F472B6; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;" title="${amitySpecialEvent.title}">${getShortTitle(amitySpecialEvent.title)}</small>`;
         } else if (holidayItem && holidayItem.isCustom) {
-          labelHtml = `<small style="font-size:7.5px; color:#FF6B78; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${holidayItem.title}</small>`;
+          labelHtml = `<small style="font-size:7.5px; color:#FF6B78; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;" title="${holidayItem.title}">${getShortTitle(holidayItem.title)}</small>`;
         } else if (workingSatItem) {
           const wTag = dayOfWeek === 0 ? 'Working Sun' : (dayOfWeek === 6 ? 'Working Sat' : 'Working Day');
           const wColor = dayOfWeek === 0 ? '#38BDF8' : (dayOfWeek === 6 ? '#5EE6BC' : '#94A3B8');
           labelHtml = `<small style="font-size:7.5px; color:${wColor}; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;" title="${wTag} - Follows ${workingSatItem.followsDay} Timetable">${wTag} (${workingSatItem.followsDay.slice(0, 3)})</small>`;
+        } else if (amityAssessmentLabel) {
+          labelHtml = `<small style="font-size:7.5px; color:#818CF8; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${amityAssessmentLabel}</small>`;
         } else if (holidayItem && holidayItem.isWeekend) {
           const weekendLabel = holidayItem.title.replace(' (Weekend)', '');
           labelHtml = `<small style="font-size:7.5px; color:#FF6B78; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${weekendLabel}</small>`;
         } else if (isGapDay) {
           const gapLabel = holidayItem ? holidayItem.title : 'Gap Day';
-          labelHtml = `<small style="font-size:7.5px; color:#FBB24C; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${gapLabel}</small>`;
+          labelHtml = `<small style="font-size:7.5px; color:#FBB24C; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;" title="${gapLabel}">${getShortTitle(gapLabel)}</small>`;
         } else if (holidayItem) {
-          labelHtml = `<small style="font-size:7.5px; color:#FF6B78; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${holidayItem.title}</small>`;
+          labelHtml = `<small style="font-size:7.5px; color:#FF6B78; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;" title="${holidayItem.title}">${getShortTitle(holidayItem.title)}</small>`;
         }
 
         calHtml += `<div class="exam-cal-cell ${examItems.length > 0 ? 'has-exam' : ''} ${workingSatItem ? 'has-working-sat' : ''} ${holidayItem && holidayItem.isWeekend ? 'has-weekend' : ''} ${isGapDay ? 'has-gap' : ''} ${holidayItem ? 'has-holiday' : ''} ${isToday ? 'spot' : ''}" style="${bgStyle}" onclick="showExamCalendarDetail('${dateKey}')">
@@ -7219,11 +7295,14 @@
       const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
 
       const amitySpecialEvent = SPECIAL_AMITY_EVENT_DAYS[dateKey];
+      const amityAssessmentLabel = DEFAULT_AMITY_ASSESSMENT_DAYS[dateKey];
 
       // Render Status Banner
       let statusHtml = '';
       if (matches.length > 0) {
         statusHtml += `<div style="padding:10px 14px; border-radius:12px; background:#20204A; border:1px solid #6366F1; font-size:12.5px; color:#818CF8; font-weight:700;">📝 ${matches.length} Exam${matches.length > 1 ? 's' : ''} Scheduled on this date</div>`;
+      } else if (amityAssessmentLabel) {
+        statusHtml += `<div style="padding:10px 14px; border-radius:12px; background:#20204A; border:1px solid #6366F1; font-size:12.5px; color:#818CF8; font-weight:700;">📝 ${amityAssessmentLabel}</div>`;
       }
 
       if (amitySpecialEvent) {
