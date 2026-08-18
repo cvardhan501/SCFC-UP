@@ -6237,7 +6237,7 @@
         state.examConfig = {
           activeExamTab: 'CA1',
           semesters: {},
-          schedules: { CA1: { slotDates: { ...DEFAULT_AMITY_CA1_SLOTS } }, CA2: { slotDates: { ...DEFAULT_AMITY_CA2_SLOTS } }, CA3: { slotDates: { ...DEFAULT_AMITY_CA3_SLOTS } } },
+          schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } },
           studyPlanner: { completedTasks: [] },
           holidays: [...DEFAULT_AMITY_HOLIDAYS],
           workingSaturdays: [...DEFAULT_AMITY_WORKING_DAYS]
@@ -6245,9 +6245,9 @@
       }
       if (!state.examConfig.semesters) state.examConfig.semesters = {};
 
-      const currentSem = state.currentSemester || 1;
-      if (!state.examConfig.semesters[currentSem]) {
-        state.examConfig.semesters[currentSem] = {
+      // Ensure Semester 3 defaults to uploaded Amity schedule
+      if (!state.examConfig.semesters[3]) {
+        state.examConfig.semesters[3] = {
           schedules: {
             CA1: { slotDates: { ...DEFAULT_AMITY_CA1_SLOTS } },
             CA2: { slotDates: { ...DEFAULT_AMITY_CA2_SLOTS } },
@@ -6258,20 +6258,48 @@
         };
       }
 
+      const currentSem = state.currentSemester || 1;
+      const isSem3 = (currentSem === 3 || currentSem === '3');
+
+      if (!state.examConfig.semesters[currentSem]) {
+        state.examConfig.semesters[currentSem] = {
+          schedules: {
+            CA1: { slotDates: isSem3 ? { ...DEFAULT_AMITY_CA1_SLOTS } : {} },
+            CA2: { slotDates: isSem3 ? { ...DEFAULT_AMITY_CA2_SLOTS } : {} },
+            CA3: { slotDates: isSem3 ? { ...DEFAULT_AMITY_CA3_SLOTS } : {} }
+          },
+          holidays: [...DEFAULT_AMITY_HOLIDAYS],
+          workingSaturdays: [...DEFAULT_AMITY_WORKING_DAYS]
+        };
+      }
+
       // Ensure holidays and workingSaturdays are pre-populated if empty
-      if (!state.examConfig.semesters[currentSem].holidays || state.examConfig.semesters[currentSem].holidays.length === 0) {
+      if (!state.examConfig.semesters[currentSem].holidays) {
         state.examConfig.semesters[currentSem].holidays = [...DEFAULT_AMITY_HOLIDAYS];
       }
-      if (!state.examConfig.semesters[currentSem].workingSaturdays || state.examConfig.semesters[currentSem].workingSaturdays.length === 0) {
+      if (!state.examConfig.semesters[currentSem].workingSaturdays) {
         state.examConfig.semesters[currentSem].workingSaturdays = [...DEFAULT_AMITY_WORKING_DAYS];
       }
       ['CA1', 'CA2', 'CA3'].forEach(caTab => {
-        if (!state.examConfig.semesters[currentSem].schedules[caTab] || !state.examConfig.semesters[currentSem].schedules[caTab].slotDates || Object.keys(state.examConfig.semesters[currentSem].schedules[caTab].slotDates).length === 0) {
-          const defaultSlots = caTab === 'CA1' ? DEFAULT_AMITY_CA1_SLOTS : (caTab === 'CA2' ? DEFAULT_AMITY_CA2_SLOTS : DEFAULT_AMITY_CA3_SLOTS);
-          if (!state.examConfig.semesters[currentSem].schedules[caTab]) state.examConfig.semesters[currentSem].schedules[caTab] = { slotDates: {} };
-          state.examConfig.semesters[currentSem].schedules[caTab].slotDates = { ...defaultSlots };
+        if (!state.examConfig.semesters[currentSem].schedules) {
+          state.examConfig.semesters[currentSem].schedules = { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } };
+        }
+        if (!state.examConfig.semesters[currentSem].schedules[caTab]) {
+          state.examConfig.semesters[currentSem].schedules[caTab] = { slotDates: {} };
         }
       });
+
+      // Clean up legacy auto-populated Semester 3 default slots from non-Sem 3 semesters
+      for (let s in state.examConfig.semesters) {
+        if (parseInt(s) !== 3) {
+          ['CA1', 'CA2', 'CA3'].forEach(caTab => {
+            const sched = state.examConfig.semesters[s].schedules?.[caTab]?.slotDates;
+            if (sched && sched['A1'] === DEFAULT_AMITY_CA1_SLOTS['A1'] && sched['B1'] === DEFAULT_AMITY_CA1_SLOTS['B1']) {
+              state.examConfig.semesters[s].schedules[caTab].slotDates = {};
+            }
+          });
+        }
+      }
     }
 
     function getSemExamSchedule(semNum, caTab) {
@@ -6504,12 +6532,11 @@
       let validationError = null;
 
       if (dateValue) {
-        // Validation 1: Prevent selecting past dates
+        // Validation 1: Allow dates from Jan 2025 onwards
         const selected = new Date(dateValue + 'T00:00:00');
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        if (selected < today) {
-          validationError = `Past Date: ${formatDateFormatted(dateValue)} is in the past. Please select a current or future date.`;
+        const minAllowedDate = new Date('2025-01-01T00:00:00');
+        if (selected < minAllowedDate) {
+          validationError = `Invalid Date: ${formatDateFormatted(dateValue)} is before January 2025. Please select a date from Jan 2025 onwards.`;
         } else if (selected.getDay() === 0) {
           // Validation 1.5: Prevent Sunday dates for exams
           validationError = `Sunday Date: ${formatDateFormatted(dateValue)} is a Sunday. Exams cannot be scheduled on Sundays.`;
@@ -6939,7 +6966,7 @@
           const anDay = getDayOfWeek(anDate);
 
           const fnDateInput = fnHasCourse
-            ? `<input type="date" id="dateInput_${caTab}_${pair.fn}" value="${fnDate}" min="${todayStr}" autocomplete="off" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; -webkit-appearance:date-field; touch-action:manipulation;" onchange="updateExamSlotDate('${caTab}', '${pair.fn}', this.value, this)" onblur="handleExamSlotDateBlur('${caTab}', '${pair.fn}', this)" />`
+            ? `<input type="date" id="dateInput_${caTab}_${pair.fn}" value="${fnDate}" min="2025-01-01" autocomplete="off" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; -webkit-appearance:date-field; touch-action:manipulation;" onchange="updateExamSlotDate('${caTab}', '${pair.fn}', this.value, this)" onblur="handleExamSlotDateBlur('${caTab}', '${pair.fn}', this)" />`
             : `<input type="date" id="dateInput_${caTab}_${pair.fn}" disabled value="" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; opacity:0.85; cursor:not-allowed; border:1.5px solid #EF4444; background:rgba(239,68,68,0.3); color:#ffffff; font-weight:600;" title="No course assigned to slot ${pair.fn} in active semester" />`;
 
           const fnDayBadge = fnHasCourse
@@ -6947,7 +6974,7 @@
             : `<span id="dayBadge_${caTab}_${pair.fn}"><span class="badge-sm" style="background:#EF4444; color:#ffffff; font-weight:800; font-size:11px; padding:3px 10px; border-radius:20px; display:inline-block; border:1px solid #F87171; box-shadow:0 1px 3px rgba(0,0,0,0.2);">No Course</span></span>`;
 
           const anDateInput = anHasCourse
-            ? `<input type="date" id="dateInput_${caTab}_${pair.an}" value="${anDate}" min="${todayStr}" autocomplete="off" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; -webkit-appearance:date-field; touch-action:manipulation;" onchange="updateExamSlotDate('${caTab}', '${pair.an}', this.value, this)" onblur="handleExamSlotDateBlur('${caTab}', '${pair.an}', this)" />`
+            ? `<input type="date" id="dateInput_${caTab}_${pair.an}" value="${anDate}" min="2025-01-01" autocomplete="off" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; -webkit-appearance:date-field; touch-action:manipulation;" onchange="updateExamSlotDate('${caTab}', '${pair.an}', this.value, this)" onblur="handleExamSlotDateBlur('${caTab}', '${pair.an}', this)" />`
             : `<input type="date" id="dateInput_${caTab}_${pair.an}" disabled value="" class="form-input" style="padding:4px 6px; font-size:12px; width:135px; min-height:36px; opacity:0.85; cursor:not-allowed; border:1.5px solid #EF4444; background:rgba(239,68,68,0.3); color:#ffffff; font-weight:600;" title="No course assigned to slot ${pair.an} in active semester" />`;
 
           const anDayBadge = anHasCourse
@@ -7085,8 +7112,8 @@
 
       if (upcomingExams.length === 0) {
         heroContainer.innerHTML = `<div style="text-align:center; padding:20px; color:var(--ink-soft);">
-          <h3 style="margin:0 0 6px 0; color:var(--ink);">All ${caTab} Exams Completed</h3>
-          <p style="margin:0; font-size:13px;">No remaining upcoming exams scheduled for this series.</p>
+          <h3 style="margin:0 0 6px 0; color:var(--ink);">No Upcoming Exams Scheduled</h3>
+          <p style="margin:0; font-size:13px;">No exam dates have been set for Semester ${state.currentSemester} yet. Set slot dates in the table below to start countdown.</p>
         </div>`;
         return;
       }
@@ -7215,8 +7242,8 @@
           year = scheduled[0].examStartDate.getFullYear();
           month = scheduled[0].examStartDate.getMonth();
         } else {
-          year = 2026;
-          month = 9; // Default view to October 2026 (Fall 2026-27 start)
+          year = today.getFullYear();
+          month = today.getMonth();
         }
         state.examConfig.calendarViewYear = year;
         state.examConfig.calendarViewMonth = month;
