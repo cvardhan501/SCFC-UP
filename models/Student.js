@@ -71,7 +71,8 @@ const StudentSchema = new mongoose.Schema({
         CA3: { slotDates: {} }
       },
       studyPlanner: { completedTasks: [] },
-      holidays: []
+      holidays: [],
+      workingSaturdays: []
     }
   }
 }, {

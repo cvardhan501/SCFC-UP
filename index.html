@@ -3174,31 +3174,16 @@
             </div>
           </div>
 
-          <!-- HOLIDAY MANAGER SECTION -->
-          <div class="glass card-pad fade-up" style="margin-bottom:24px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
-              <div>
-                <h3 style="margin:0; font-size:16px;">Holiday Manager</h3>
-                <p style="margin:2px 0 0 0; font-size:12px; color:var(--ink-soft);">Add custom holidays (Sunday, Festival, Study Leave). Holidays highlight on the Calendar and adjust exam gap calculations.</p>
-              </div>
-            </div>
-            <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:14px;">
-              <input type="date" id="holidayDateInput" class="form-input" style="width:160px; padding:6px 10px; font-size:12.5px; min-height:36px; -webkit-appearance:date-field; touch-action:manipulation;" />
-              <input type="text" id="holidayTitleInput" placeholder="Holiday Title (e.g. Independence Day, Study Break)" class="form-input" style="flex:1; min-width:200px; padding:6px 10px; font-size:12.5px;" />
-              <button class="btn btn-primary" onclick="addHolidayFromInput()" style="padding:6px 16px; font-size:12.5px;">+ Add Holiday</button>
-            </div>
-            <div id="holidayChipsContainer" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-              <!-- Holiday chips injected via JS -->
-            </div>
-          </div>
-
           <!-- CALENDAR & TIMELINE ROW -->
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;" class="exam-cal-timeline-grid">
             <!-- EXAM CALENDAR -->
             <div class="glass card-pad fade-up">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
-                <h3 style="margin:0; font-size:16px;">Exam Calendar</h3>
-                <div style="display:flex; align-items:center; gap:8px;">
+                <div>
+                  <h3 style="margin:0; font-size:16px;">Academic & Exam Calendar</h3>
+                  <p style="margin:2px 0 0 0; font-size:11.5px; color:var(--ink-soft);">Click any date below to mark it as a Holiday or Working Day.</p>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                   <button class="btn btn-ghost" onclick="changeExamCalendarMonth(-1)" style="padding:2px 8px; font-size:12px;" title="Previous Month">◄</button>
                   <div style="font-size:13px; font-weight:700; color:var(--indigo);" id="examCalendarMonthYear">September 2026</div>
                   <button class="btn btn-ghost" onclick="changeExamCalendarMonth(1)" style="padding:2px 8px; font-size:12px;" title="Next Month">►</button>
@@ -3764,6 +3749,76 @@
             Already registered? <a href="#" style="color:var(--indigo); font-weight:700;"
               onclick="switchAuthTab('login')">Login here</a>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY ACTION MODAL OVERLAY (CLICK ANY DAY ON CALENDAR) -->
+  <div class="modal-overlay" id="dayActionModalOverlay">
+    <div class="glass modal" style="width:520px; max-width:92vw;">
+      <div class="modal-head" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--glass-border); padding-bottom:12px; margin-bottom:16px;">
+        <div>
+          <h3 style="margin:0; font-size:18px; font-weight:700;">Academic Day Options</h3>
+          <p style="margin:2px 0 0 0; font-size:13px; color:var(--indigo); font-weight:700;" id="dayModalDateTitle">10 October 2026 (Saturday)</p>
+        </div>
+        <button onclick="closeDayActionModal()" style="background:none; border:none; color:var(--ink-soft); font-size:24px; cursor:pointer; padding:0 4px;" title="Close">&times;</button>
+      </div>
+
+      <div style="padding:0 4px 12px 4px; max-height:75vh; overflow-y:auto;">
+        <!-- CURRENT STATUS BANNER -->
+        <div id="dayModalStatusContainer" style="margin-bottom:16px;"></div>
+
+        <!-- SCHEDULED EXAMS LIST -->
+        <div id="dayModalExamsContainer" style="margin-bottom:16px;"></div>
+
+        <!-- OPTIONS GRID -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;" class="day-options-grid">
+          
+          <!-- OPTION 1: MARK HOLIDAY -->
+          <div style="background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+                <span style="font-size:16px;">🌴</span>
+                <strong style="font-size:13.5px; color:var(--ink);">Mark as Holiday</strong>
+              </div>
+              <p style="font-size:11.5px; color:var(--ink-soft); margin-bottom:10px;">Designate this date as a custom holiday or festival.</p>
+              
+              <div class="form-group" style="margin-bottom:10px;">
+                <input type="text" id="dayModalHolidayTitleInput" placeholder="Holiday Title (e.g. Festival)" class="form-input" style="padding:8px 10px; font-size:12px; width:100%;" />
+              </div>
+            </div>
+
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;" id="dayModalHolidayBtnContainer">
+              <button class="btn btn-primary" onclick="saveHolidayFromDayModal()" style="flex:1; padding:6px 12px; font-size:12px; justify-content:center; background:#EC4899; border:none;">Save Holiday</button>
+            </div>
+          </div>
+
+          <!-- OPTION 2: MARK WORKING DAY -->
+          <div style="background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+                <span style="font-size:16px;">💼</span>
+                <strong style="font-size:13.5px; color:var(--ink);">Mark Working Day</strong>
+              </div>
+              <p style="font-size:11.5px; color:var(--ink-soft); margin-bottom:10px;">Make this Saturday a working day following a weekday timetable.</p>
+              
+              <div class="form-group" style="margin-bottom:10px;">
+                <select id="dayModalWorkingDaySelect" class="form-input" style="padding:8px 10px; font-size:12px; width:100%; font-weight:600; cursor:pointer;">
+                  <option value="Monday">Monday Timetable</option>
+                  <option value="Tuesday">Tuesday Timetable</option>
+                  <option value="Wednesday">Wednesday Timetable</option>
+                  <option value="Thursday">Thursday Timetable</option>
+                  <option value="Friday">Friday Timetable</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;" id="dayModalWorkingDayBtnContainer">
+              <button class="btn btn-primary" onclick="saveWorkingDayFromDayModal()" style="flex:1; padding:6px 12px; font-size:12px; justify-content:center; background:#22C55E; border:none;">Save Working Day</button>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -6028,7 +6083,8 @@
           semesters: {},
           schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } },
           studyPlanner: { completedTasks: [] },
-          holidays: []
+          holidays: [],
+          workingSaturdays: []
         };
       }
       if (!state.examConfig.semesters) state.examConfig.semesters = {};
@@ -6041,7 +6097,8 @@
             CA2: { slotDates: {} },
             CA3: { slotDates: {} }
           },
-          holidays: []
+          holidays: [],
+          workingSaturdays: []
         };
 
         // Migration: Copy legacy root schedules into currentSem if available
@@ -6055,6 +6112,9 @@
         if (Array.isArray(state.examConfig.holidays) && state.examConfig.holidays.length > 0) {
           state.examConfig.semesters[currentSem].holidays = [...state.examConfig.holidays];
         }
+        if (Array.isArray(state.examConfig.workingSaturdays) && state.examConfig.workingSaturdays.length > 0) {
+          state.examConfig.semesters[currentSem].workingSaturdays = [...state.examConfig.workingSaturdays];
+        }
       }
     }
 
@@ -6064,7 +6124,8 @@
       if (!state.examConfig.semesters[sem]) {
         state.examConfig.semesters[sem] = {
           schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } },
-          holidays: []
+          holidays: [],
+          workingSaturdays: []
         };
       }
       if (!state.examConfig.semesters[sem].schedules) {
@@ -6097,6 +6158,21 @@
       return state.examConfig.holidays || [];
     }
 
+    function getSemWorkingSaturdays(semNum) {
+      ensureExamConfigStructure();
+      const sem = semNum || state.currentSemester || 1;
+      if (state.examConfig.semesters && state.examConfig.semesters[sem] && Array.isArray(state.examConfig.semesters[sem].workingSaturdays)) {
+        return state.examConfig.semesters[sem].workingSaturdays;
+      }
+      return state.examConfig.workingSaturdays || [];
+    }
+
+    function getWorkingSaturdayForDate(dateStr) {
+      if (!dateStr) return null;
+      const workingSats = getSemWorkingSaturdays(state.currentSemester || 1);
+      return workingSats.find(w => w.date === dateStr) || null;
+    }
+
     function getHolidayInfoForDate(dateStr) {
       if (!dateStr) return null;
       const holidays = getSemHolidays(state.currentSemester || 1);
@@ -6108,8 +6184,16 @@
       if (parts.length === 3) {
         const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
         const day = d.getDay();
-        if (day === 0) return { title: 'Sunday (Weekend)', isWeekend: true };
-        if (day === 6) return { title: 'Saturday (Weekend)', isWeekend: true };
+        if (day === 0) {
+          const workingSun = getWorkingSaturdayForDate(dateStr);
+          if (workingSun) return null;
+          return { title: 'Sunday (Weekend)', isWeekend: true };
+        }
+        if (day === 6) {
+          const workingSat = getWorkingSaturdayForDate(dateStr);
+          if (workingSat) return null;
+          return { title: 'Saturday (Weekend)', isWeekend: true };
+        }
       }
       return null;
     }
@@ -6495,6 +6579,157 @@
       `).join('');
     }
 
+    function removeWorkingSaturday(dateVal) {
+      ensureExamConfigStructure();
+      const currentSem = state.currentSemester || 1;
+      if (state.examConfig && state.examConfig.semesters && state.examConfig.semesters[currentSem] && state.examConfig.semesters[currentSem].workingSaturdays) {
+        state.examConfig.semesters[currentSem].workingSaturdays = state.examConfig.semesters[currentSem].workingSaturdays.filter(w => w.date !== dateVal);
+      }
+      if (state.examConfig && state.examConfig.workingSaturdays) {
+        state.examConfig.workingSaturdays = state.examConfig.workingSaturdays.filter(w => w.date !== dateVal);
+      }
+      logHistory(`Removed Working Saturday for ${formatDateFormatted(dateVal)} in Semester ${currentSem}.`);
+      triggerAutoSave();
+      renderExamDashboard(true);
+    }
+
+    function renderWorkingSaturdayChips() {
+      const container = document.getElementById('workingSaturdayChipsContainer');
+      if (!container) return;
+
+      const workingSats = getSemWorkingSaturdays(state.currentSemester || 1);
+
+      if (workingSats.length === 0) {
+        container.innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = workingSats.sort((a, b) => a.date.localeCompare(b.date)).map(w => `
+        <span class="badge-sm" style="background:rgba(34,197,94,0.18); color:#22C55E; border:1px solid rgba(34,197,94,0.4); font-size:12px; padding:4px 10px; display:inline-flex; align-items:center; gap:6px;">
+          <strong>Working Sat</strong> (${formatDateFormatted(w.date)} → ${w.followsDay} Timetable)
+          <button onclick="removeWorkingSaturday('${w.date}')" style="background:none; border:none; color:#22C55E; cursor:pointer; font-weight:bold; padding:0 2px; font-size:14px;" title="Remove Working Saturday">&times;</button>
+        </span>
+      `).join('');
+    }
+
+    let workingSatModalStep = 1;
+
+    function openWorkingSaturdayModal() {
+      workingSatModalStep = 1;
+      const modal = document.getElementById('workingSaturdayModalOverlay');
+      const dateInput = document.getElementById('workingSatDateInput');
+      const errDiv = document.getElementById('workingSatErrorMsg');
+      if (errDiv) errDiv.style.display = 'none';
+      if (dateInput) dateInput.value = '';
+
+      setWorkingSaturdayStep(1);
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeWorkingSaturdayModal() {
+      const modal = document.getElementById('workingSaturdayModalOverlay');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function setWorkingSaturdayStep(step) {
+      workingSatModalStep = step;
+      const step1El = document.getElementById('workingSatStep1');
+      const step2El = document.getElementById('workingSatStep2');
+      if (step === 1) {
+        if (step1El) step1El.style.display = 'block';
+        if (step2El) step2El.style.display = 'none';
+      } else if (step === 2) {
+        if (step1El) step1El.style.display = 'none';
+        if (step2El) step2El.style.display = 'block';
+      }
+    }
+
+    function validateWorkingSaturdayDateInput(dateVal) {
+      const errDiv = document.getElementById('workingSatErrorMsg');
+      if (!dateVal) {
+        if (errDiv) errDiv.style.display = 'none';
+        return true;
+      }
+      const parts = dateVal.split('-');
+      if (parts.length === 3) {
+        const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        if (d.getDay() !== 6) {
+          if (errDiv) {
+            errDiv.textContent = '⚠️ Only Saturday dates can be selected. The selected date is not a Saturday.';
+            errDiv.style.display = 'block';
+          }
+          return false;
+        }
+      }
+      if (errDiv) errDiv.style.display = 'none';
+      return true;
+    }
+
+    function goToWorkingSaturdayStep2() {
+      const dateInput = document.getElementById('workingSatDateInput');
+      const errDiv = document.getElementById('workingSatErrorMsg');
+      const dateVal = dateInput ? dateInput.value : '';
+
+      if (!dateVal) {
+        if (errDiv) {
+          errDiv.textContent = '⚠️ Please select a Saturday date first.';
+          errDiv.style.display = 'block';
+        }
+        return;
+      }
+
+      if (!validateWorkingSaturdayDateInput(dateVal)) {
+        return;
+      }
+
+      const displayEl = document.getElementById('workingSatSelectedDateDisplay');
+      if (displayEl) {
+        displayEl.textContent = `${formatDateFormatted(dateVal)} (Saturday)`;
+      }
+
+      setWorkingSaturdayStep(2);
+    }
+
+    function saveWorkingSaturday() {
+      const dateInput = document.getElementById('workingSatDateInput');
+      const selectDay = document.getElementById('workingSatFollowsDaySelect');
+      const dateVal = dateInput ? dateInput.value : '';
+      const followsDay = selectDay ? selectDay.value : 'Monday';
+
+      if (!dateVal) return;
+
+      if (!validateWorkingSaturdayDateInput(dateVal)) {
+        return;
+      }
+
+      ensureExamConfigStructure();
+      const currentSem = state.currentSemester || 1;
+      if (!state.examConfig.semesters[currentSem].workingSaturdays) {
+        state.examConfig.semesters[currentSem].workingSaturdays = [];
+      }
+
+      const workingSats = state.examConfig.semesters[currentSem].workingSaturdays;
+      const existingIdx = workingSats.findIndex(w => w.date === dateVal);
+      if (existingIdx >= 0) {
+        workingSats[existingIdx].followsDay = followsDay;
+      } else {
+        workingSats.push({ date: dateVal, followsDay: followsDay });
+      }
+
+      if (!state.examConfig.workingSaturdays) state.examConfig.workingSaturdays = [];
+      const rootIdx = state.examConfig.workingSaturdays.findIndex(w => w.date === dateVal);
+      if (rootIdx >= 0) {
+        state.examConfig.workingSaturdays[rootIdx].followsDay = followsDay;
+      } else {
+        state.examConfig.workingSaturdays.push({ date: dateVal, followsDay: followsDay });
+      }
+
+      logHistory(`Marked ${formatDateFormatted(dateVal)} as Working Saturday (Follows ${followsDay} Timetable) for Semester ${currentSem}.`);
+      triggerAutoSave();
+      closeWorkingSaturdayModal();
+      renderExamDashboard(true);
+    }
+
     function renderExamDashboard(rebuildAdminTable = true) {
       ensureExamConfigStructure();
       const caTab = state.examConfig.activeExamTab || 'CA1';
@@ -6636,8 +6871,9 @@
       const elGap = document.getElementById('statExamAvgGap');
       if (elGap) elGap.textContent = `${avgGapDays} Day${avgGapDays !== 1 ? 's' : ''}`;
 
-      // Render Holiday Chips & Countdown
+      // Render Holiday & Working Saturday Chips & Countdown
       renderHolidayChips();
+      renderWorkingSaturdayChips();
       updateExamHeroContent(mappedExams, caTab);
 
       // Render Calendar, Timeline & Notifications
@@ -6813,29 +7049,49 @@
         const isToday = (day === today.getDate() && month === today.getMonth() && year === today.getFullYear());
         const isGapDay = (firstExamDate && lastExamDate && dateKey > firstExamDate && dateKey < lastExamDate && examItems.length === 0);
 
+        const workingSatItem = getWorkingSaturdayForDate(dateKey);
+
         let bgStyle = '';
         let numColorStyle = '';
 
         if (examItems.length > 0) {
-          // Exam Day Color - overrides weekend/holiday
-          bgStyle = 'background:rgba(108,99,255,0.2); border:1.5px solid var(--indigo);';
-          numColorStyle = 'color:var(--indigo); font-weight:800;';
-        } else if (isWeekend) {
-          // Saturday & Sunday No-Exam Day -> RED
-          bgStyle = 'background:rgba(239,68,68,0.22); border:1.5px solid #EF4444;';
-          numColorStyle = 'color:#EF4444; font-weight:800;';
+          // 📝 Exam Day: Background #20204A | Border #6366F1 | Text #818CF8
+          bgStyle = 'background:#20204A; border:1.5px solid #6366F1;';
+          numColorStyle = 'color:#818CF8; font-weight:800;';
+        } else if (holidayItem && holidayItem.isCustom) {
+          // 🏖️ Holiday (Custom): Background #3A1F2B | Border #FF4D5E | Text #FF6B78
+          bgStyle = 'background:#3A1F2B; border:1.5px solid #FF4D5E;';
+          numColorStyle = 'color:#FF6B78; font-weight:800;';
+        } else if (workingSatItem) {
+          if (dayOfWeek === 0) {
+            // 💼 Working Sunday: Background #0F3843 | Border #0EA5E9 | Text #38BDF8 (Sky Cyan)
+            bgStyle = 'background:#0F3843; border:1.5px solid #0EA5E9;';
+            numColorStyle = 'color:#38BDF8; font-weight:800;';
+          } else if (dayOfWeek === 6) {
+            // 💼 Working Saturday: Background #172D2A | Border #35D0A0 | Text #5EE6BC (Mint Green)
+            bgStyle = 'background:#172D2A; border:1.5px solid #35D0A0;';
+            numColorStyle = 'color:#5EE6BC; font-weight:800;';
+          } else {
+            // 💼 Weekday Working Day: Background #1E293B | Border #64748B | Text #94A3B8 (Slate Blue)
+            bgStyle = 'background:#1E293B; border:1.5px solid #64748B;';
+            numColorStyle = 'color:#94A3B8; font-weight:800;';
+          }
+        } else if (holidayItem && holidayItem.isWeekend) {
+          // 🏖️ Holiday (Weekend): Background #3A1F2B | Border #FF4D5E | Text #FF6B78
+          bgStyle = 'background:#3A1F2B; border:1.5px solid #FF4D5E;';
+          numColorStyle = 'color:#FF6B78; font-weight:800;';
         } else if (isGapDay) {
-          // Weekday Gap Day -> ORANGE
-          bgStyle = 'background:rgba(249,115,22,0.22); border:1.5px solid #F97316;';
-          numColorStyle = 'color:#F97316; font-weight:800;';
+          // ⏳ Gap Day: Background #3A2B20 | Border #F59E0B | Text #FBB24C
+          bgStyle = 'background:#3A2B20; border:1.5px solid #F59E0B;';
+          numColorStyle = 'color:#FBB24C; font-weight:800;';
         } else if (holidayItem) {
-          // Weekday Custom Holiday -> GOLD
-          bgStyle = 'background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.6);';
-          numColorStyle = 'color:#F59E0B; font-weight:800;';
+          // 🏖️ Holiday: Background #3A1F2B | Border #FF4D5E | Text #FF6B78
+          bgStyle = 'background:#3A1F2B; border:1.5px solid #FF4D5E;';
+          numColorStyle = 'color:#FF6B78; font-weight:800;';
         }
 
         const courseSlotBadges = examItems.map(x => `
-          <small style="font-size:7.5px; font-weight:800; display:block; color:var(--indigo); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;" title="${x.course.code} - ${x.course.name} (Slot ${x.slot})">
+          <small style="font-size:7.5px; font-weight:800; display:block; color:#818CF8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;" title="${x.course.code} - ${x.course.name} (Slot ${x.slot})">
             ${x.course.code} (${x.slot})
           </small>
         `).join('');
@@ -6843,17 +7099,23 @@
         let labelHtml = '';
         if (examItems.length > 0) {
           labelHtml = courseSlotBadges;
-        } else if (isWeekend) {
-          const weekendLabel = holidayItem ? holidayItem.title.replace(' (Weekend)', '') : (dayOfWeek === 0 ? 'Sunday' : 'Saturday');
-          labelHtml = `<small style="font-size:7.5px; color:#EF4444; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${weekendLabel}</small>`;
+        } else if (holidayItem && holidayItem.isCustom) {
+          labelHtml = `<small style="font-size:7.5px; color:#FF6B78; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${holidayItem.title}</small>`;
+        } else if (workingSatItem) {
+          const wTag = dayOfWeek === 0 ? 'Working Sun' : (dayOfWeek === 6 ? 'Working Sat' : 'Working Day');
+          const wColor = dayOfWeek === 0 ? '#38BDF8' : (dayOfWeek === 6 ? '#5EE6BC' : '#94A3B8');
+          labelHtml = `<small style="font-size:7.5px; color:${wColor}; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;" title="${wTag} - Follows ${workingSatItem.followsDay} Timetable">${wTag} (${workingSatItem.followsDay.slice(0, 3)})</small>`;
+        } else if (holidayItem && holidayItem.isWeekend) {
+          const weekendLabel = holidayItem.title.replace(' (Weekend)', '');
+          labelHtml = `<small style="font-size:7.5px; color:#FF6B78; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${weekendLabel}</small>`;
         } else if (isGapDay) {
           const gapLabel = holidayItem ? holidayItem.title : 'Gap Day';
-          labelHtml = `<small style="font-size:7.5px; color:#F97316; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${gapLabel}</small>`;
+          labelHtml = `<small style="font-size:7.5px; color:#FBB24C; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${gapLabel}</small>`;
         } else if (holidayItem) {
-          labelHtml = `<small style="font-size:7.5px; color:#F59E0B; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${holidayItem.title}</small>`;
+          labelHtml = `<small style="font-size:7.5px; color:#FF6B78; font-weight:800; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">${holidayItem.title}</small>`;
         }
 
-        calHtml += `<div class="exam-cal-cell ${examItems.length > 0 ? 'has-exam' : ''} ${isWeekend ? 'has-weekend' : ''} ${isGapDay ? 'has-gap' : ''} ${holidayItem ? 'has-holiday' : ''} ${isToday ? 'spot' : ''}" style="${bgStyle}" onclick="showExamCalendarDetail('${dateKey}')">
+        calHtml += `<div class="exam-cal-cell ${examItems.length > 0 ? 'has-exam' : ''} ${workingSatItem ? 'has-working-sat' : ''} ${holidayItem && holidayItem.isWeekend ? 'has-weekend' : ''} ${isGapDay ? 'has-gap' : ''} ${holidayItem ? 'has-holiday' : ''} ${isToday ? 'spot' : ''}" style="${bgStyle}" onclick="showExamCalendarDetail('${dateKey}')">
           <span style="${numColorStyle}">${day}</span>
           ${labelHtml}
         </div>`;
@@ -6863,48 +7125,198 @@
       calContainer.innerHTML = calHtml;
     }
 
+    let activeDayModalDate = null;
+
     function showExamCalendarDetail(dateKey) {
+      openDayActionModal(dateKey);
+    }
+
+    function openDayActionModal(dateKey) {
+      activeDayModalDate = dateKey;
+      const modal = document.getElementById('dayActionModalOverlay');
+      if (!modal) return;
+
+      const dateTitleEl = document.getElementById('dayModalDateTitle');
+      const statusContainer = document.getElementById('dayModalStatusContainer');
+      const examsContainer = document.getElementById('dayModalExamsContainer');
+      const holidayTitleInput = document.getElementById('dayModalHolidayTitleInput');
+      const holidayBtnContainer = document.getElementById('dayModalHolidayBtnContainer');
+      const workingDaySelect = document.getElementById('dayModalWorkingDaySelect');
+      const workingDayBtnContainer = document.getElementById('dayModalWorkingDayBtnContainer');
+
+      const dayName = getDayOfWeek(dateKey);
+      if (dateTitleEl) dateTitleEl.textContent = `${formatDateFormatted(dateKey)} (${dayName})`;
+
       const caTab = (state.examConfig && state.examConfig.activeExamTab) ? state.examConfig.activeExamTab : 'CA1';
       const mappedExams = getMappedExamsForCA(caTab);
       const matches = mappedExams.filter(m => m.dateVal === dateKey);
-      const holiday = getHolidayInfoForDate(dateKey);
+
+      const semHolidays = getSemHolidays(state.currentSemester || 1);
+      const customHoliday = semHolidays.find(h => h.date === dateKey);
+      const workingSat = getWorkingSaturdayForDate(dateKey);
 
       const parts = dateKey.split('-');
-      let isWeekend = false;
       let dayOfWeek = -1;
       if (parts.length === 3) {
         const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
         dayOfWeek = d.getDay();
-        isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
       }
+      const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
 
-      const scheduledExamDates = mappedExams.filter(m => m.dateVal).map(m => m.dateVal).sort();
-      const firstExamDate = scheduledExamDates.length > 0 ? scheduledExamDates[0] : null;
-      const lastExamDate = scheduledExamDates.length > 0 ? scheduledExamDates[scheduledExamDates.length - 1] : null;
-      const isGapDay = (firstExamDate && lastExamDate && dateKey > firstExamDate && dateKey < lastExamDate && matches.length === 0);
-
-      let msg = `Details for ${formatDateFormatted(dateKey)}:\n`;
+      // Render Status Banner
+      let statusHtml = '';
       if (matches.length > 0) {
-        msg += `\nEXAMS SCHEDULED (${matches.length}):\n`;
-        matches.forEach(m => {
-          msg += `• ${m.course.code} - ${m.course.name} | Slot ${m.slot} (${m.session}: ${m.timeStr})\n`;
-        });
-        if (holiday || isWeekend) {
-          msg += `\nNote: Exam scheduled on a ${isWeekend ? (dayOfWeek === 0 ? 'Sunday' : 'Saturday') : 'Holiday'}.`;
-        }
-      } else if (isWeekend) {
-        msg += `\nSTATUS: Weekend (${dayOfWeek === 0 ? 'Sunday' : 'Saturday'}) - No Exam Scheduled.\n`;
-        if (holiday) msg += `Holiday: ${holiday.title}\n`;
-      } else if (isGapDay) {
-        msg += `\nSTATUS: Preparation / Study Gap Day between exams.\n`;
-        if (holiday) msg += `Holiday: ${holiday.title}\n`;
-      } else if (holiday) {
-        msg += `\nHOLIDAY: ${holiday.title}\n`;
-      } else {
-        msg += `\nNo exams or holidays scheduled on this date.`;
+        statusHtml += `<div style="padding:10px 14px; border-radius:12px; background:#20204A; border:1px solid #6366F1; font-size:12.5px; color:#818CF8; font-weight:700;">📝 ${matches.length} Exam${matches.length > 1 ? 's' : ''} Scheduled on this date</div>`;
       }
 
-      alert(msg);
+      if (customHoliday) {
+        statusHtml += `<div style="padding:10px 14px; border-radius:12px; background:#3A1F2B; border:1px solid #FF4D5E; font-size:12.5px; color:#FF6B78; font-weight:700; margin-top:6px;">🏖️ Holiday: ${customHoliday.title}</div>`;
+      }
+
+      if (workingSat) {
+        statusHtml += `<div style="padding:10px 14px; border-radius:12px; background:#172D2A; border:1px solid #35D0A0; font-size:12.5px; color:#5EE6BC; font-weight:700; margin-top:6px;">💼 Working Day (Follows ${workingSat.followsDay} Timetable)</div>`;
+      }
+
+      if (customHoliday && workingSat) {
+        statusHtml += `<div style="padding:8px 12px; border-radius:10px; background:#3A1F2B; border:1px solid #FF4D5E; font-size:11.5px; color:#FF6B78; font-weight:600; margin-top:6px;">⚠️ Holiday (${customHoliday.title}) overrides Working Day.</div>`;
+      } else if (!customHoliday && !workingSat && matches.length === 0) {
+        if (isWeekend) {
+          statusHtml += `<div style="padding:10px 14px; border-radius:12px; background:#3A1F2B; border:1px solid #FF4D5E; font-size:12.5px; color:#FF6B78; font-weight:700;">🏖️ Weekend (Non-working day)</div>`;
+        } else {
+          statusHtml += `<div style="padding:10px 14px; border-radius:12px; background:rgba(56,189,248,0.12); border:1px solid #38BDF8; font-size:12.5px; color:#38BDF8; font-weight:700;">🔵 Regular Academic Day</div>`;
+        }
+      }
+
+      if (statusContainer) statusContainer.innerHTML = statusHtml;
+
+      // Render Scheduled Exams List
+      if (matches.length > 0) {
+        examsContainer.style.display = 'block';
+        examsContainer.innerHTML = `<div style="font-size:12px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; margin-bottom:6px;">Scheduled Papers</div>` + matches.map(m => `
+          <div style="background:#20204A; border:1px solid #6366F1; padding:8px 12px; border-radius:10px; font-size:12px; margin-bottom:4px; color:#818CF8;">
+            <strong>${m.course.code}</strong> - ${m.course.name} <span class="mono" style="color:#818CF8; font-weight:700;">(Slot ${m.slot} • ${m.timeStr})</span>
+          </div>
+        `).join('');
+      } else {
+        examsContainer.style.display = 'none';
+        examsContainer.innerHTML = '';
+      }
+
+      // Populate Holiday Option
+      if (holidayTitleInput) {
+        holidayTitleInput.value = customHoliday ? customHoliday.title : '';
+      }
+      if (holidayBtnContainer) {
+        if (customHoliday) {
+          holidayBtnContainer.innerHTML = `
+            <button class="btn btn-primary" onclick="saveHolidayFromDayModal()" style="flex:1; padding:6px 10px; font-size:11.5px; justify-content:center; background:#FF4D5E; border:none;">Update</button>
+            <button class="btn btn-ghost" onclick="removeHolidayFromDayModal()" style="padding:6px 10px; font-size:11.5px; color:#FF6B78; border-color:rgba(255,77,94,0.3);">Remove</button>
+          `;
+        } else {
+          holidayBtnContainer.innerHTML = `
+            <button class="btn btn-primary" onclick="saveHolidayFromDayModal()" style="flex:1; padding:6px 12px; font-size:12px; justify-content:center; background:#FF4D5E; border:none;">Save Holiday</button>
+          `;
+        }
+      }
+
+      // Populate Working Day Option
+      if (workingDaySelect) {
+        workingDaySelect.value = workingSat ? workingSat.followsDay : 'Monday';
+      }
+      if (workingDayBtnContainer) {
+        if (workingSat) {
+          workingDayBtnContainer.innerHTML = `
+            <button class="btn btn-primary" onclick="saveWorkingDayFromDayModal()" style="flex:1; padding:6px 10px; font-size:11.5px; justify-content:center; background:#35D0A0; color:#172D2A; font-weight:700; border:none;">Update</button>
+            <button class="btn btn-ghost" onclick="removeWorkingDayFromDayModal()" style="padding:6px 10px; font-size:11.5px; color:#FF6B78; border-color:rgba(255,77,94,0.3);">Remove</button>
+          `;
+        } else {
+          workingDayBtnContainer.innerHTML = `
+            <button class="btn btn-primary" onclick="saveWorkingDayFromDayModal()" style="flex:1; padding:6px 12px; font-size:12px; justify-content:center; background:#35D0A0; color:#172D2A; font-weight:700; border:none;">Save Working Day</button>
+          `;
+        }
+      }
+
+      modal.classList.add('open');
+    }
+
+    function closeDayActionModal() {
+      const modal = document.getElementById('dayActionModalOverlay');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function saveHolidayFromDayModal() {
+      if (!activeDayModalDate) return;
+      const titleInput = document.getElementById('dayModalHolidayTitleInput');
+      const titleVal = titleInput ? titleInput.value.trim() || 'Holiday' : 'Holiday';
+
+      ensureExamConfigStructure();
+      const currentSem = state.currentSemester || 1;
+      const holidays = getSemHolidays(currentSem);
+
+      const existingIdx = holidays.findIndex(h => h.date === activeDayModalDate);
+      if (existingIdx >= 0) {
+        holidays[existingIdx].title = titleVal;
+      } else {
+        holidays.push({ date: activeDayModalDate, title: titleVal });
+      }
+
+      if (!state.examConfig.holidays) state.examConfig.holidays = [];
+      const rootIdx = state.examConfig.holidays.findIndex(h => h.date === activeDayModalDate);
+      if (rootIdx >= 0) {
+        state.examConfig.holidays[rootIdx].title = titleVal;
+      } else {
+        state.examConfig.holidays.push({ date: activeDayModalDate, title: titleVal });
+      }
+
+      logHistory(`Set holiday "${titleVal}" for ${formatDateFormatted(activeDayModalDate)} in Semester ${currentSem}.`);
+      triggerAutoSave();
+      openDayActionModal(activeDayModalDate);
+      renderExamDashboard(true);
+    }
+
+    function removeHolidayFromDayModal() {
+      if (!activeDayModalDate) return;
+      removeHoliday(activeDayModalDate);
+      openDayActionModal(activeDayModalDate);
+    }
+
+    function saveWorkingDayFromDayModal() {
+      if (!activeDayModalDate) return;
+      const selectDay = document.getElementById('dayModalWorkingDaySelect');
+      const followsDay = selectDay ? selectDay.value : 'Monday';
+
+      ensureExamConfigStructure();
+      const currentSem = state.currentSemester || 1;
+      if (!state.examConfig.semesters[currentSem].workingSaturdays) {
+        state.examConfig.semesters[currentSem].workingSaturdays = [];
+      }
+
+      const workingSats = state.examConfig.semesters[currentSem].workingSaturdays;
+      const existingIdx = workingSats.findIndex(w => w.date === activeDayModalDate);
+      if (existingIdx >= 0) {
+        workingSats[existingIdx].followsDay = followsDay;
+      } else {
+        workingSats.push({ date: activeDayModalDate, followsDay: followsDay });
+      }
+
+      if (!state.examConfig.workingSaturdays) state.examConfig.workingSaturdays = [];
+      const rootIdx = state.examConfig.workingSaturdays.findIndex(w => w.date === activeDayModalDate);
+      if (rootIdx >= 0) {
+        state.examConfig.workingSaturdays[rootIdx].followsDay = followsDay;
+      } else {
+        state.examConfig.workingSaturdays.push({ date: activeDayModalDate, followsDay: followsDay });
+      }
+
+      logHistory(`Marked ${formatDateFormatted(activeDayModalDate)} as Working Day (Follows ${followsDay} Timetable) for Semester ${currentSem}.`);
+      triggerAutoSave();
+      openDayActionModal(activeDayModalDate);
+      renderExamDashboard(true);
+    }
+
+    function removeWorkingDayFromDayModal() {
+      if (!activeDayModalDate) return;
+      removeWorkingSaturday(activeDayModalDate);
+      openDayActionModal(activeDayModalDate);
     }
 
     function renderExamTimeline(mappedExams, gapMap) {
