@@ -2677,14 +2677,14 @@
                 <h2>Workspace</h2>
                 <div class="ws-controls">
                   <select class="select-glass" id="semesterSelect" title="Select Semester">
-                    <option value="1">Semester 1</option>
-                    <option value="2">Semester 2</option>
-                    <option value="3">Semester 3</option>
-                    <option value="4">Semester 4</option>
-                    <option value="5">Semester 5</option>
-                    <option value="6">Semester 6</option>
-                    <option value="7">Semester 7</option>
-                    <option value="8">Semester 8</option>
+                    <option value="1">Semester 1 (AY 2025-2026)</option>
+                    <option value="2">Semester 2 (AY 2025-2026)</option>
+                    <option value="3">Semester 3 (AY 2026-2027)</option>
+                    <option value="4">Semester 4 (AY 2026-2027)</option>
+                    <option value="5">Semester 5 (AY 2027-2028)</option>
+                    <option value="6">Semester 6 (AY 2027-2028)</option>
+                    <option value="7">Semester 7 (AY 2028-2029)</option>
+                    <option value="8">Semester 8 (AY 2028-2029)</option>
                   </select>
                   <button class="btn btn-primary" id="openModalBtn">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4">
@@ -2938,15 +2938,15 @@
               style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; flex-wrap:wrap;">
               <h3 style="margin:0;">Course Slot Assignments</h3>
               <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <select class="form-input" id="timetableSemSelect" style="width:200px;" onchange="changeTimetableSemester(this.value)">
-                  <option value="1">Semester 1</option>
-                  <option value="2">Semester 2</option>
-                  <option value="3">Semester 3</option>
-                  <option value="4">Semester 4</option>
-                  <option value="5">Semester 5</option>
-                  <option value="6">Semester 6</option>
-                  <option value="7">Semester 7</option>
-                  <option value="8">Semester 8</option>
+                <select class="form-input" id="timetableSemSelect" style="width:240px;" onchange="changeTimetableSemester(this.value)">
+                  <option value="1">Semester 1 (AY 2025-2026)</option>
+                  <option value="2">Semester 2 (AY 2025-2026)</option>
+                  <option value="3">Semester 3 (AY 2026-2027)</option>
+                  <option value="4">Semester 4 (AY 2026-2027)</option>
+                  <option value="5">Semester 5 (AY 2027-2028)</option>
+                  <option value="6">Semester 6 (AY 2027-2028)</option>
+                  <option value="7">Semester 7 (AY 2028-2029)</option>
+                  <option value="8">Semester 8 (AY 2028-2029)</option>
                 </select>
                 <button class="btn btn-ghost" onclick="printTimetableReport()">Print Timetable</button>
               </div>
@@ -3024,19 +3024,19 @@
             <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:center;">
               <div>
                 <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Academic Year</span>
-                <strong style="font-size:14px; color:var(--ink);">2026 - 2027</strong>
+                <strong style="font-size:14px; color:var(--ink);" id="academicYearDisplay">2025 - 2026</strong>
               </div>
               <div>
                 <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Semester</span>
                 <select class="select-glass" id="examSemSelect" style="padding:4px 8px; font-size:13px; font-weight:700; background:var(--glass-bg-2); color:var(--ink); border:1px solid var(--glass-border); border-radius:6px; cursor:pointer;" onchange="changeExamSemester(this.value)" title="Select Semester">
-                  <option value="1">Semester 1</option>
-                  <option value="2">Semester 2</option>
-                  <option value="3">Semester 3</option>
-                  <option value="4">Semester 4</option>
-                  <option value="5">Semester 5</option>
-                  <option value="6">Semester 6</option>
-                  <option value="7">Semester 7</option>
-                  <option value="8">Semester 8</option>
+                  <option value="1">Semester 1 (AY 2025-2026)</option>
+                  <option value="2">Semester 2 (AY 2025-2026)</option>
+                  <option value="3">Semester 3 (AY 2026-2027)</option>
+                  <option value="4">Semester 4 (AY 2026-2027)</option>
+                  <option value="5">Semester 5 (AY 2027-2028)</option>
+                  <option value="6">Semester 6 (AY 2027-2028)</option>
+                  <option value="7">Semester 7 (AY 2028-2029)</option>
+                  <option value="8">Semester 8 (AY 2028-2029)</option>
                 </select>
               </div>
               <div>
@@ -3275,14 +3275,14 @@
               <label for="trackerSemesterFilter">Semester</label>
               <select class="form-input" id="trackerSemesterFilter">
                 <option value="all">All Semesters</option>
-                <option value="1">Semester 1</option>
-                <option value="2">Semester 2</option>
-                <option value="3">Semester 3</option>
-                <option value="4">Semester 4</option>
-                <option value="5">Semester 5</option>
-                <option value="6">Semester 6</option>
-                <option value="7">Semester 7</option>
-                <option value="8">Semester 8</option>
+                <option value="1">Semester 1 (AY 2025-2026)</option>
+                <option value="2">Semester 2 (AY 2025-2026)</option>
+                <option value="3">Semester 3 (AY 2026-2027)</option>
+                <option value="4">Semester 4 (AY 2026-2027)</option>
+                <option value="5">Semester 5 (AY 2027-2028)</option>
+                <option value="6">Semester 6 (AY 2027-2028)</option>
+                <option value="7">Semester 7 (AY 2028-2029)</option>
+                <option value="8">Semester 8 (AY 2028-2029)</option>
               </select>
             </div>
             <div class="tracker-filter-group">
@@ -3401,14 +3401,14 @@
             <div style="display:flex; align-items:center; gap:12px;">
               <label style="font-size:13px; font-weight:600;">Select Report Semester:</label>
               <select class="select-glass" id="reportSemSelect" onchange="renderReportPreview()">
-                <option value="1">Semester 1</option>
-                <option value="2">Semester 2</option>
-                <option value="3">Semester 3</option>
-                <option value="4">Semester 4</option>
-                <option value="5">Semester 5</option>
-                <option value="6">Semester 6</option>
-                <option value="7">Semester 7</option>
-                <option value="8">Semester 8</option>
+                <option value="1">Semester 1 (AY 2025-2026)</option>
+                <option value="2">Semester 2 (AY 2025-2026)</option>
+                <option value="3">Semester 3 (AY 2026-2027)</option>
+                <option value="4">Semester 4 (AY 2026-2027)</option>
+                <option value="5">Semester 5 (AY 2027-2028)</option>
+                <option value="6">Semester 6 (AY 2027-2028)</option>
+                <option value="7">Semester 7 (AY 2028-2029)</option>
+                <option value="8">Semester 8 (AY 2028-2029)</option>
               </select>
             </div>
             <button class="btn btn-primary" onclick="triggerPrintSelectedReport()">
@@ -4405,6 +4405,12 @@
       if (el) el.textContent = val;
     }
 
+    function getAcademicYear(sem) {
+      const s = parseInt(sem) || 1;
+      const startYear = 2025 + Math.floor((s - 1) / 2);
+      return `${startYear} - ${startYear + 1}`;
+    }
+
     function setElementHtml(id, val) {
       const el = document.getElementById(id);
       if (el) el.innerHTML = val;
@@ -4908,11 +4914,16 @@
     const semesterSelect = document.getElementById('semesterSelect');
 
     function syncSemesterDropdowns() {
-      const semStr = String(state.currentSemester || 1);
+      const semNum = state.currentSemester || 1;
+      const semStr = String(semNum);
       ['semesterSelect', 'timetableSemSelect', 'examSemSelect', 'reportSemSelect'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = semStr;
       });
+      const ayDisplay = document.getElementById('academicYearDisplay');
+      if (ayDisplay) {
+        ayDisplay.textContent = getAcademicYear(semNum);
+      }
     }
 
     semesterSelect.addEventListener('change', (e) => {
@@ -5551,7 +5562,10 @@
         html += `
       <div class="glass spot sem-card">
         <div class="sem-card-head">
-          <h3>Semester ${s}</h3>
+          <div>
+            <h3 style="margin:0;">Semester ${s}</h3>
+            <span style="font-size:11.5px; font-weight:600; color:var(--ink-soft); display:block; margin-top:2px;">AY ${getAcademicYear(s)}</span>
+          </div>
           <span class="sem-badge ${badgeClass}">${badgeText}</span>
         </div>
         <div class="sem-stats-row">
@@ -5618,7 +5632,7 @@
         const currentCgpa = cumulativeCount > 0 ? (cumulativeSum / cumulativeCount) : 0;
 
         rowsHtml += `<tr>
-      <td><strong>Semester ${s}</strong> ${s === state.currentSemester ? '<span class="badge-sm b-basket">Active</span>' : ''}</td>
+      <td><strong>Semester ${s}</strong> <span style="font-size:12px; color:var(--ink-soft); font-weight:600; margin-left:4px;">(${getAcademicYear(s)})</span> ${s === state.currentSemester ? '<span class="badge-sm b-basket">Active</span>' : ''}</td>
       <td class="mono">${courses.length}</td>
       <td class="mono">${stat.credits}</td>
       <td class="mono" style="font-weight:700; color:var(--indigo);">${stat.sgpa !== null ? stat.sgpa.toFixed(2) : 'N/A'}</td>
@@ -5675,7 +5689,7 @@
       </div>
     </div>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:16px; margin-bottom:24px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px; background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:16px; margin-bottom:24px;">
       <div>
         <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Student Name</span>
         <strong style="font-size:16px;" class="student-name-display">${state.studentName || 'Student'}</strong>
@@ -5683,6 +5697,10 @@
       <div>
         <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">USN</span>
         <strong style="font-size:16px;" class="student-usn-display">${state.usn || 'N/A'}</strong>
+      </div>
+      <div>
+        <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Academic Year</span>
+        <strong style="font-size:16px;">${getAcademicYear(semToPrint)}</strong>
       </div>
       <div>
         <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Semester</span>
@@ -5770,7 +5788,7 @@
         </div>
       </div>
 
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:8px; padding:16px; margin-bottom:24px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:8px; padding:16px; margin-bottom:24px;">
         <div>
           <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Student Name</span>
           <strong style="font-size:16px; color:#111;">${state.studentName || 'N/A'}</strong>
@@ -5778,6 +5796,10 @@
         <div>
           <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">USN</span>
           <strong style="font-size:16px; color:#111;">${state.usn || 'N/A'}</strong>
+        </div>
+        <div>
+          <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Academic Year</span>
+          <strong style="font-size:16px; color:#111;">${getAcademicYear(semNum)}</strong>
         </div>
         <div>
           <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Semester</span>
@@ -6021,7 +6043,7 @@
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:8px; padding:10px 14px; margin-bottom:16px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:8px; padding:10px 14px; margin-bottom:16px;">
             <div>
               <span style="font-size:10px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Student Name</span>
               <strong style="font-size:14px; color:#111;">${state.studentName || 'N/A'}</strong>
@@ -6029,6 +6051,10 @@
             <div>
               <span style="font-size:10px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">USN</span>
               <strong style="font-size:14px; color:#111;">${state.usn || 'N/A'}</strong>
+            </div>
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Academic Year</span>
+              <strong style="font-size:14px; color:#111;">${getAcademicYear(semNum)}</strong>
             </div>
             <div>
               <span style="font-size:10px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Semester</span>
@@ -6056,7 +6082,7 @@
           </table>
 
           <div style="border-top:1px solid #eee; padding-top:6px; font-size:10px; color:#888; text-align:center;">
-            Official Academic Timetable • Semester ${semNum} • SCFC Grade Calculator
+            Official Academic Timetable • Semester ${semNum} (${getAcademicYear(semNum)}) • SCFC Grade Calculator
           </div>
         </div>
       `;
