@@ -2302,6 +2302,7 @@
         opacity: 0;
         transform: translateY(22px) scale(0.985);
       }
+
       100% {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -2313,6 +2314,7 @@
         opacity: 0;
         transform: translateY(18px);
       }
+
       100% {
         opacity: 1;
         transform: translateY(0);
@@ -2323,18 +2325,23 @@
       0% {
         transform: scale(0.85);
       }
+
       50% {
         transform: scale(1.18);
       }
+
       100% {
         transform: scale(1);
       }
     }
 
     @keyframes fabPulse {
-      0%, 100% {
+
+      0%,
+      100% {
         box-shadow: 0 12px 28px -6px rgba(108, 99, 255, .6);
       }
+
       50% {
         box-shadow: 0 16px 36px -4px rgba(108, 99, 255, .85);
       }
@@ -2345,6 +2352,7 @@
         opacity: 0;
         transform: translateY(40px) scale(0.94);
       }
+
       100% {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -2677,14 +2685,14 @@
                 <h2>Workspace</h2>
                 <div class="ws-controls">
                   <select class="select-glass" id="semesterSelect" title="Select Semester">
-                    <option value="1">Semester 1 (AY 2025-2026)</option>
-                    <option value="2">Semester 2 (AY 2025-2026)</option>
-                    <option value="3">Semester 3 (AY 2026-2027)</option>
-                    <option value="4">Semester 4 (AY 2026-2027)</option>
-                    <option value="5">Semester 5 (AY 2027-2028)</option>
-                    <option value="6">Semester 6 (AY 2027-2028)</option>
-                    <option value="7">Semester 7 (AY 2028-2029)</option>
-                    <option value="8">Semester 8 (AY 2028-2029)</option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option>
+                    <option value="8">Semester 8</option>
                   </select>
                   <button class="btn btn-primary" id="openModalBtn">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4">
@@ -2938,15 +2946,16 @@
               style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; flex-wrap:wrap;">
               <h3 style="margin:0;">Course Slot Assignments</h3>
               <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <select class="form-input" id="timetableSemSelect" style="width:240px;" onchange="changeTimetableSemester(this.value)">
-                  <option value="1">Semester 1 (AY 2025-2026)</option>
-                  <option value="2">Semester 2 (AY 2025-2026)</option>
-                  <option value="3">Semester 3 (AY 2026-2027)</option>
-                  <option value="4">Semester 4 (AY 2026-2027)</option>
-                  <option value="5">Semester 5 (AY 2027-2028)</option>
-                  <option value="6">Semester 6 (AY 2027-2028)</option>
-                  <option value="7">Semester 7 (AY 2028-2029)</option>
-                  <option value="8">Semester 8 (AY 2028-2029)</option>
+                <select class="form-input" id="timetableSemSelect" style="width:200px;"
+                  onchange="changeTimetableSemester(this.value)">
+                  <option value="1">Semester 1</option>
+                  <option value="2">Semester 2</option>
+                  <option value="3">Semester 3</option>
+                  <option value="4">Semester 4</option>
+                  <option value="5">Semester 5</option>
+                  <option value="6">Semester 6</option>
+                  <option value="7">Semester 7</option>
+                  <option value="8">Semester 8</option>
                 </select>
                 <button class="btn btn-ghost" onclick="printTimetableReport()">Print Timetable</button>
               </div>
@@ -2998,7 +3007,8 @@
             style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
             <div>
               <h1>Enterprise <span class="grad">Exam Management</span> System</h1>
-              <p>Automated slot-mapped CA examination timetable, live countdown timer, AI study planner & readiness statistics.</p>
+              <p>Automated slot-mapped CA examination timetable, live countdown timer, AI study planner & readiness
+                statistics.</p>
             </div>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
               <button class="btn btn-ghost" onclick="printExamScheduleReport()"><svg width="16" height="16"
@@ -3007,8 +3017,8 @@
                   <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                   <rect x="6" y="14" width="12" height="8"></rect>
                 </svg> Print Schedule</button>
-              <button class="btn btn-primary" onclick="shareExamSchedule()"><svg width="16" height="16" viewBox="0 0 24 24"
-                  fill="none" stroke="currentColor" stroke-width="1.8">
+              <button class="btn btn-primary" onclick="shareExamSchedule()"><svg width="16" height="16"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                   <circle cx="18" cy="5" r="3"></circle>
                   <circle cx="6" cy="12" r="3"></circle>
                   <circle cx="18" cy="19" r="3"></circle>
@@ -3023,33 +3033,42 @@
             style="padding:16px 20px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; border-left:4px solid var(--indigo);">
             <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:center;">
               <div>
-                <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Academic Year</span>
+                <span
+                  style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Academic
+                  Year</span>
                 <strong style="font-size:14px; color:var(--ink);" id="academicYearDisplay">2025 - 2026</strong>
               </div>
               <div>
-                <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Semester</span>
-                <select class="select-glass" id="examSemSelect" style="padding:4px 8px; font-size:13px; font-weight:700; background:var(--glass-bg-2); color:var(--ink); border:1px solid var(--glass-border); border-radius:6px; cursor:pointer;" onchange="changeExamSemester(this.value)" title="Select Semester">
-                  <option value="1">Semester 1 (AY 2025-2026)</option>
-                  <option value="2">Semester 2 (AY 2025-2026)</option>
-                  <option value="3">Semester 3 (AY 2026-2027)</option>
-                  <option value="4">Semester 4 (AY 2026-2027)</option>
-                  <option value="5">Semester 5 (AY 2027-2028)</option>
-                  <option value="6">Semester 6 (AY 2027-2028)</option>
-                  <option value="7">Semester 7 (AY 2028-2029)</option>
-                  <option value="8">Semester 8 (AY 2028-2029)</option>
+                <span
+                  style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Semester</span>
+                <select class="select-glass" id="examSemSelect"
+                  style="padding:4px 8px; font-size:13px; font-weight:700; background:var(--glass-bg-2); color:var(--ink); border:1px solid var(--glass-border); border-radius:6px; cursor:pointer;"
+                  onchange="changeExamSemester(this.value)" title="Select Semester">
+                  <option value="1">Semester 1</option>
+                  <option value="2">Semester 2</option>
+                  <option value="3">Semester 3</option>
+                  <option value="4">Semester 4</option>
+                  <option value="5">Semester 5</option>
+                  <option value="6">Semester 6</option>
+                  <option value="7">Semester 7</option>
+                  <option value="8">Semester 8</option>
                 </select>
               </div>
               <div>
-                <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Department</span>
+                <span
+                  style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Department</span>
                 <strong style="font-size:14px; color:var(--ink);">School of CSE</strong>
               </div>
               <div>
-                <span style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Student USN</span>
+                <span
+                  style="font-size:11px; text-transform:uppercase; color:var(--ink-soft); font-weight:700; display:block;">Student
+                  USN</span>
                 <strong style="font-size:14px; color:var(--indigo);" class="student-usn-display">N/A</strong>
               </div>
             </div>
             <!-- CA TAB SWITCHER -->
-            <div style="display:flex; gap:6px; background:rgba(0,0,0,0.12); padding:4px; border-radius:12px; border:1px solid var(--glass-border);">
+            <div
+              style="display:flex; gap:6px; background:rgba(0,0,0,0.12); padding:4px; border-radius:12px; border:1px solid var(--glass-border);">
               <button class="exam-tab-btn active" id="tabCA1" onclick="switchExamTab('CA1')">CA1 Exam</button>
               <button class="exam-tab-btn" id="tabCA2" onclick="switchExamTab('CA2')">CA2 Exam</button>
               <button class="exam-tab-btn" id="tabCA3" onclick="switchExamTab('CA3')">CA3 Exam</button>
@@ -3060,13 +3079,17 @@
           <div id="examNotificationContainer"></div>
 
           <!-- HERO STATS & NEXT EXAM COUNTDOWN -->
-          <div style="display:grid; grid-template-columns: 2fr 1fr; gap:20px; margin-bottom:24px;" class="exam-hero-grid">
+          <div style="display:grid; grid-template-columns: 2fr 1fr; gap:20px; margin-bottom:24px;"
+            class="exam-hero-grid">
             <!-- NEXT EXAM COUNTDOWN HERO CARD -->
             <div class="glass spot card-pad fade-up"
               style="background: linear-gradient(135deg, rgba(108,99,255,0.18), rgba(168,85,247,0.12)); border:1px solid rgba(140,130,255,0.3);">
               <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
-                <span style="background:var(--indigo); color:#fff; font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.05em;">NEXT UPCOMING EXAM</span>
-                <span id="nextExamSeriesBadge" style="font-size:12px; font-weight:700; color:var(--ink-soft);">CA1 Examination</span>
+                <span
+                  style="background:var(--indigo); color:#fff; font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.05em;">NEXT
+                  UPCOMING EXAM</span>
+                <span id="nextExamSeriesBadge" style="font-size:12px; font-weight:700; color:var(--ink-soft);">CA1
+                  Examination</span>
               </div>
               <div id="nextExamHeroContent">
                 <!-- Dynamically injected via JS -->
@@ -3080,16 +3103,18 @@
               <div style="position:relative; width:120px; height:120px; display:grid; place-items:center;">
                 <svg width="120" height="120" viewBox="0 0 120 120">
                   <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10" />
-                  <circle id="readinessCircle" cx="60" cy="60" r="50" fill="none" stroke="var(--indigo)" stroke-width="10"
-                    stroke-dasharray="314" stroke-dashoffset="60" stroke-linecap="round" transform="rotate(-90 60 60)"
-                    style="transition: stroke-dashoffset 1s ease;" />
+                  <circle id="readinessCircle" cx="60" cy="60" r="50" fill="none" stroke="var(--indigo)"
+                    stroke-width="10" stroke-dasharray="314" stroke-dashoffset="60" stroke-linecap="round"
+                    transform="rotate(-90 60 60)" style="transition: stroke-dashoffset 1s ease;" />
                 </svg>
                 <div style="position:absolute; text-align:center;">
                   <span id="readinessScoreVal" style="font-size:26px; font-weight:800; color:var(--ink);">85%</span>
                 </div>
               </div>
-              <div id="readinessBadge" style="margin-top:10px; font-weight:700; font-size:13px; color:var(--green);">Ready</div>
-              <p style="font-size:11px; color:var(--ink-soft); margin-top:4px; margin-bottom:0;">Based on remaining days & revision progress</p>
+              <div id="readinessBadge" style="margin-top:10px; font-weight:700; font-size:13px; color:var(--green);">
+                Ready</div>
+              <p style="font-size:11px; color:var(--ink-soft); margin-top:4px; margin-bottom:0;">Based on remaining days
+                & revision progress</p>
             </div>
           </div>
 
@@ -3097,7 +3122,8 @@
           <div class="dash-grid fade-up" style="margin-bottom:24px;">
             <div class="glass p-6">
               <h3>Total Subjects</h3>
-              <div class="val" id="statExamTotalSubjects" style="font-size:32px; margin: 8px 0; color:var(--indigo);">0</div>
+              <div class="val" id="statExamTotalSubjects" style="font-size:32px; margin: 8px 0; color:var(--indigo);">0
+              </div>
               <p style="color:var(--ink-soft); font-size:12px;">Mapped from active workspace</p>
             </div>
             <div class="glass p-6">
@@ -3107,7 +3133,8 @@
             </div>
             <div class="glass p-6">
               <h3>Completed Exams</h3>
-              <div class="val" id="statExamCompletedCount" style="font-size:32px; margin: 8px 0; color:var(--green);">0</div>
+              <div class="val" id="statExamCompletedCount" style="font-size:32px; margin: 8px 0; color:var(--green);">0
+              </div>
               <p style="color:var(--ink-soft); font-size:12px;">Finished exams</p>
             </div>
             <div class="glass p-6">
@@ -3118,29 +3145,39 @@
           </div>
 
           <!-- ADMIN EXAM DATE CONFIGURATION & STUDENT EXAM TIMETABLE -->
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;" class="exam-tables-grid">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;"
+            class="exam-tables-grid">
             <!-- ADMIN SLOT CONFIGURATION TABLE -->
             <div class="glass card-pad fade-up">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
                 <div>
                   <h3 style="margin:0; font-size:16px;">Admin Exam Date Entry</h3>
-                  <p style="margin:2px 0 0 0; font-size:12px; color:var(--ink-soft);">Configure exam date per slot. Session times are fixed automatically.</p>
+                  <p style="margin:2px 0 0 0; font-size:12px; color:var(--ink-soft);">Configure exam date per slot.
+                    Session times are fixed automatically.</p>
                 </div>
                 <span class="announce-badge" id="adminTabBadge">CA1</span>
               </div>
-              <div id="adminExamDateToast" style="display:none; padding:8px 12px; margin-bottom:12px; border-radius:10px; background:rgba(239,68,68,0.18); border:1px solid #EF4444; color:#ffffff; font-size:12px; font-weight:600; text-align:left;"></div>
+              <div id="adminExamDateToast"
+                style="display:none; padding:8px 12px; margin-bottom:12px; border-radius:10px; background:rgba(239,68,68,0.18); border:1px solid #EF4444; color:#ffffff; font-size:12px; font-weight:600; text-align:left;">
+              </div>
               <div style="overflow-x:auto;">
                 <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:center;">
                   <thead>
                     <tr style="background:rgba(108,99,255,0.12); border-bottom:1px solid var(--glass-border);">
-                      <th colspan="3" style="padding:8px; border-right:2px solid var(--glass-border); font-size:13.5px; font-weight:800; color:var(--indigo);">Forenoon</th>
-                      <th colspan="3" style="padding:8px; font-size:13.5px; font-weight:800; color:var(--purple);">Afternoon</th>
+                      <th colspan="3"
+                        style="padding:8px; border-right:2px solid var(--glass-border); font-size:13.5px; font-weight:800; color:var(--indigo);">
+                        Forenoon</th>
+                      <th colspan="3" style="padding:8px; font-size:13.5px; font-weight:800; color:var(--purple);">
+                        Afternoon</th>
                     </tr>
-                    <tr style="background:rgba(0,0,0,0.06); border-bottom:1px solid var(--glass-border); font-size:11px; color:var(--ink-soft);">
-                      <th colspan="3" style="padding:6px; border-right:2px solid var(--glass-border); font-weight:600;">10:00 am to 11:30 am</th>
+                    <tr
+                      style="background:rgba(0,0,0,0.06); border-bottom:1px solid var(--glass-border); font-size:11px; color:var(--ink-soft);">
+                      <th colspan="3" style="padding:6px; border-right:2px solid var(--glass-border); font-weight:600;">
+                        10:00 am to 11:30 am</th>
                       <th colspan="3" style="padding:6px; font-weight:600;">02:00 pm to 03:30 pm</th>
                     </tr>
-                    <tr style="border-bottom:2px solid var(--glass-border); font-size:11px; text-transform:uppercase; color:var(--ink-soft);">
+                    <tr
+                      style="border-bottom:2px solid var(--glass-border); font-size:11px; text-transform:uppercase; color:var(--ink-soft);">
                       <th style="padding:6px; width:50px;">Slot</th>
                       <th style="padding:6px;">Exam Date</th>
                       <th style="padding:6px; border-right:2px solid var(--glass-border); width:85px;">Day</th>
@@ -3161,7 +3198,8 @@
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
                 <div>
                   <h3 style="margin:0; font-size:16px;">Student Exam Timetable</h3>
-                  <p style="margin:2px 0 0 0; font-size:12px; color:var(--ink-soft);">Auto-generated by matching Workspace course slots to exam dates.</p>
+                  <p style="margin:2px 0 0 0; font-size:12px; color:var(--ink-soft);">Auto-generated by matching
+                    Workspace course slots to exam dates.</p>
                 </div>
                 <span style="font-size:11px; color:var(--green); font-weight:700;">● Auto-synced from Workspace</span>
               </div>
@@ -3169,10 +3207,14 @@
                 <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:center;">
                   <thead>
                     <tr style="background:rgba(108,99,255,0.12); border-bottom:1px solid var(--glass-border);">
-                      <th colspan="3" style="padding:8px; border-right:2px solid var(--glass-border); font-size:13.5px; font-weight:800; color:var(--indigo);">Forenoon (10:00 am - 11:30 am)</th>
-                      <th colspan="3" style="padding:8px; font-size:13.5px; font-weight:800; color:var(--purple);">Afternoon (02:00 pm - 03:30 pm)</th>
+                      <th colspan="3"
+                        style="padding:8px; border-right:2px solid var(--glass-border); font-size:13.5px; font-weight:800; color:var(--indigo);">
+                        Forenoon (10:00 am - 11:30 am)</th>
+                      <th colspan="3" style="padding:8px; font-size:13.5px; font-weight:800; color:var(--purple);">
+                        Afternoon (02:00 pm - 03:30 pm)</th>
                     </tr>
-                    <tr style="border-bottom:2px solid var(--glass-border); font-size:11px; text-transform:uppercase; color:var(--ink-soft);">
+                    <tr
+                      style="border-bottom:2px solid var(--glass-border); font-size:11px; text-transform:uppercase; color:var(--ink-soft);">
                       <th style="padding:6px; width:45px;">Slot</th>
                       <th style="padding:6px;">Course Title & Code</th>
                       <th style="padding:6px; border-right:2px solid var(--glass-border);">Exam Date & Day</th>
@@ -3190,19 +3232,26 @@
           </div>
 
           <!-- CALENDAR & TIMELINE ROW -->
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;" class="exam-cal-timeline-grid">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;"
+            class="exam-cal-timeline-grid">
             <!-- EXAM CALENDAR -->
             <div class="glass card-pad fade-up">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+              <div
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
                 <div>
                   <h3 style="margin:0; font-size:16px;">Academic & Exam Calendar</h3>
-                  <p style="margin:2px 0 0 0; font-size:11.5px; color:var(--ink-soft);">Click any date below to mark it as a Holiday or Working Day.</p>
+                  <p style="margin:2px 0 0 0; font-size:11.5px; color:var(--ink-soft);">Click any date below to mark it
+                    as a Holiday or Working Day.</p>
                 </div>
                 <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                  <button class="btn btn-ghost" onclick="changeExamCalendarMonth(-1)" style="padding:2px 8px; font-size:12px;" title="Previous Month">◄</button>
-                  <div style="font-size:13px; font-weight:700; color:var(--indigo);" id="examCalendarMonthYear">September 2026</div>
-                  <button class="btn btn-ghost" onclick="changeExamCalendarMonth(1)" style="padding:2px 8px; font-size:12px;" title="Next Month">►</button>
-                  <button class="btn btn-ghost" onclick="jumpExamCalendarToday()" style="padding:2px 8px; font-size:11px;" title="Current Month">Today</button>
+                  <button class="btn btn-ghost" onclick="changeExamCalendarMonth(-1)"
+                    style="padding:2px 8px; font-size:12px;" title="Previous Month">◄</button>
+                  <div style="font-size:13px; font-weight:700; color:var(--indigo);" id="examCalendarMonthYear">
+                    September 2026</div>
+                  <button class="btn btn-ghost" onclick="changeExamCalendarMonth(1)"
+                    style="padding:2px 8px; font-size:12px;" title="Next Month">►</button>
+                  <button class="btn btn-ghost" onclick="jumpExamCalendarToday()"
+                    style="padding:2px 8px; font-size:11px;" title="Current Month">Today</button>
                 </div>
               </div>
               <div id="examCalendarGridContainer"></div>
@@ -3212,7 +3261,8 @@
             <div class="glass card-pad fade-up">
               <h3 style="margin-top:0; margin-bottom:14px; font-size:16px;">Exam Timeline</h3>
               <div id="examTimelineContainer"
-                style="display:flex; flex-direction:column; gap:12px; max-height:360px; overflow-y:auto; padding-right:6px;"></div>
+                style="display:flex; flex-direction:column; gap:12px; max-height:360px; overflow-y:auto; padding-right:6px;">
+              </div>
             </div>
           </div>
 
@@ -3275,14 +3325,14 @@
               <label for="trackerSemesterFilter">Semester</label>
               <select class="form-input" id="trackerSemesterFilter">
                 <option value="all">All Semesters</option>
-                <option value="1">Semester 1 (AY 2025-2026)</option>
-                <option value="2">Semester 2 (AY 2025-2026)</option>
-                <option value="3">Semester 3 (AY 2026-2027)</option>
-                <option value="4">Semester 4 (AY 2026-2027)</option>
-                <option value="5">Semester 5 (AY 2027-2028)</option>
-                <option value="6">Semester 6 (AY 2027-2028)</option>
-                <option value="7">Semester 7 (AY 2028-2029)</option>
-                <option value="8">Semester 8 (AY 2028-2029)</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
               </select>
             </div>
             <div class="tracker-filter-group">
@@ -3401,14 +3451,14 @@
             <div style="display:flex; align-items:center; gap:12px;">
               <label style="font-size:13px; font-weight:600;">Select Report Semester:</label>
               <select class="select-glass" id="reportSemSelect" onchange="renderReportPreview()">
-                <option value="1">Semester 1 (AY 2025-2026)</option>
-                <option value="2">Semester 2 (AY 2025-2026)</option>
-                <option value="3">Semester 3 (AY 2026-2027)</option>
-                <option value="4">Semester 4 (AY 2026-2027)</option>
-                <option value="5">Semester 5 (AY 2027-2028)</option>
-                <option value="6">Semester 6 (AY 2027-2028)</option>
-                <option value="7">Semester 7 (AY 2028-2029)</option>
-                <option value="8">Semester 8 (AY 2028-2029)</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
               </select>
             </div>
             <button class="btn btn-primary" onclick="triggerPrintSelectedReport()">
@@ -3681,7 +3731,8 @@
           <div class="form-group">
             <label>USN (University Serial Number)</label>
             <input type="text" id="loginUsnInput" class="form-input" placeholder="e.g. 1SC21CS001"
-              style="text-transform:uppercase;" autofocus onkeydown="if(event.key==='Enter' && !event.repeat) handleLoginSubmit()">
+              style="text-transform:uppercase;" autofocus
+              onkeydown="if(event.key==='Enter' && !event.repeat) handleLoginSubmit()">
           </div>
           <div class="form-group">
             <label>Password</label>
@@ -3746,7 +3797,8 @@
           <div class="form-group">
             <label>USN (University Serial Number)</label>
             <input type="text" id="registerUsnInput" class="form-input" placeholder="e.g. 1SC21CS001"
-              style="text-transform:uppercase;" onkeydown="if(event.key==='Enter' && !event.repeat) handleRegisterSubmit()">
+              style="text-transform:uppercase;"
+              onkeydown="if(event.key==='Enter' && !event.repeat) handleRegisterSubmit()">
           </div>
           <div class="form-group">
             <label>Password</label>
@@ -3758,8 +3810,9 @@
             <input type="password" id="registerConfirmPasswordInput" class="form-input" placeholder="Confirm password"
               onkeydown="if(event.key==='Enter' && !event.repeat) handleRegisterSubmit()">
           </div>
-          <button class="btn btn-primary" id="registerSubmitBtn" style="width:100%; justify-content:center; padding:12px;"
-            onclick="handleRegisterSubmit()">Create Student Account</button>
+          <button class="btn btn-primary" id="registerSubmitBtn"
+            style="width:100%; justify-content:center; padding:12px;" onclick="handleRegisterSubmit()">Create Student
+            Account</button>
           <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
             Already registered? <a href="#" style="color:var(--indigo); font-weight:700;"
               onclick="switchAuthTab('login')">Login here</a>
@@ -3772,12 +3825,16 @@
   <!-- DAY ACTION MODAL OVERLAY (CLICK ANY DAY ON CALENDAR) -->
   <div class="modal-overlay" id="dayActionModalOverlay">
     <div class="glass modal" style="width:520px; max-width:92vw;">
-      <div class="modal-head" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--glass-border); padding-bottom:12px; margin-bottom:16px;">
+      <div class="modal-head"
+        style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--glass-border); padding-bottom:12px; margin-bottom:16px;">
         <div>
           <h3 style="margin:0; font-size:18px; font-weight:700;">Academic Day Options</h3>
-          <p style="margin:2px 0 0 0; font-size:13px; color:var(--indigo); font-weight:700;" id="dayModalDateTitle">10 October 2026 (Saturday)</p>
+          <p style="margin:2px 0 0 0; font-size:13px; color:var(--indigo); font-weight:700;" id="dayModalDateTitle">10
+            October 2026 (Saturday)</p>
         </div>
-        <button onclick="closeDayActionModal()" style="background:none; border:none; color:var(--ink-soft); font-size:24px; cursor:pointer; padding:0 4px;" title="Close">&times;</button>
+        <button onclick="closeDayActionModal()"
+          style="background:none; border:none; color:var(--ink-soft); font-size:24px; cursor:pointer; padding:0 4px;"
+          title="Close">&times;</button>
       </div>
 
       <div style="padding:0 4px 12px 4px; max-height:75vh; overflow-y:auto;">
@@ -3789,37 +3846,45 @@
 
         <!-- OPTIONS GRID -->
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;" class="day-options-grid">
-          
+
           <!-- OPTION 1: MARK HOLIDAY -->
-          <div style="background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div
+            style="background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
             <div>
               <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
                 <span style="font-size:16px;">🌴</span>
                 <strong style="font-size:13.5px; color:var(--ink);">Mark as Holiday</strong>
               </div>
-              <p style="font-size:11.5px; color:var(--ink-soft); margin-bottom:10px;">Designate this date as a custom holiday or festival.</p>
-              
+              <p style="font-size:11.5px; color:var(--ink-soft); margin-bottom:10px;">Designate this date as a custom
+                holiday or festival.</p>
+
               <div class="form-group" style="margin-bottom:10px;">
-                <input type="text" id="dayModalHolidayTitleInput" placeholder="Holiday Title (e.g. Festival)" class="form-input" style="padding:8px 10px; font-size:12px; width:100%;" />
+                <input type="text" id="dayModalHolidayTitleInput" placeholder="Holiday Title (e.g. Festival)"
+                  class="form-input" style="padding:8px 10px; font-size:12px; width:100%;" />
               </div>
             </div>
 
             <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;" id="dayModalHolidayBtnContainer">
-              <button class="btn btn-primary" onclick="saveHolidayFromDayModal()" style="flex:1; padding:6px 12px; font-size:12px; justify-content:center; background:#EC4899; border:none;">Save Holiday</button>
+              <button class="btn btn-primary" onclick="saveHolidayFromDayModal()"
+                style="flex:1; padding:6px 12px; font-size:12px; justify-content:center; background:#EC4899; border:none;">Save
+                Holiday</button>
             </div>
           </div>
 
           <!-- OPTION 2: MARK WORKING DAY -->
-          <div style="background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div
+            style="background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
             <div>
               <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
                 <span style="font-size:16px;">💼</span>
                 <strong style="font-size:13.5px; color:var(--ink);">Mark Working Day</strong>
               </div>
-              <p style="font-size:11.5px; color:var(--ink-soft); margin-bottom:10px;">Make this Saturday a working day following a weekday timetable.</p>
-              
+              <p style="font-size:11.5px; color:var(--ink-soft); margin-bottom:10px;">Make this Saturday a working day
+                following a weekday timetable.</p>
+
               <div class="form-group" style="margin-bottom:10px;">
-                <select id="dayModalWorkingDaySelect" class="form-input" style="padding:8px 10px; font-size:12px; width:100%; font-weight:600; cursor:pointer;">
+                <select id="dayModalWorkingDaySelect" class="form-input"
+                  style="padding:8px 10px; font-size:12px; width:100%; font-weight:600; cursor:pointer;">
                   <option value="Monday">Monday Timetable</option>
                   <option value="Tuesday">Tuesday Timetable</option>
                   <option value="Wednesday">Wednesday Timetable</option>
@@ -3830,7 +3895,9 @@
             </div>
 
             <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;" id="dayModalWorkingDayBtnContainer">
-              <button class="btn btn-primary" onclick="saveWorkingDayFromDayModal()" style="flex:1; padding:6px 12px; font-size:12px; justify-content:center; background:#22C55E; border:none;">Save Working Day</button>
+              <button class="btn btn-primary" onclick="saveWorkingDayFromDayModal()"
+                style="flex:1; padding:6px 12px; font-size:12px; justify-content:center; background:#22C55E; border:none;">Save
+                Working Day</button>
             </div>
           </div>
 
@@ -4811,7 +4878,7 @@
           state.examConfig = JSON.parse(localExamConfig);
           // Sync existing local exam schedule up to MongoDB Atlas
           triggerAutoSave();
-        } catch (e) {}
+        } catch (e) { }
       }
 
       if (!state.examConfig) {
@@ -6500,7 +6567,7 @@
       }
       logHistory(`Updated ${caTab} exam date for Slot ${slotName} to ${dateValue || 'Cleared'} in Semester ${currentSem}.`);
       triggerAutoSave();
-      
+
       // Update sub-views without re-building admin table HTML (preserves mobile focus)
       renderExamDashboard(false);
     }
@@ -7239,15 +7306,15 @@
           </small>
         `).join('');
 
-    function getShortTitle(title) {
-      if (!title) return '';
-      if (title.includes('Deepavali') || title.includes('Balipadyami')) return 'Deepavali';
-      if (title.includes('Mahanavami') || title.includes('Ayudhapooja')) return 'Mahanavami';
-      if (title.includes('Commencement')) return 'Commencement';
-      if (title.includes('Guru Nanak')) return 'Guru Nanak';
-      if (title.includes('Additional Holiday')) return 'Holiday';
-      return title.length > 14 ? title.slice(0, 12) + '…' : title;
-    }
+        function getShortTitle(title) {
+          if (!title) return '';
+          if (title.includes('Deepavali') || title.includes('Balipadyami')) return 'Deepavali';
+          if (title.includes('Mahanavami') || title.includes('Ayudhapooja')) return 'Mahanavami';
+          if (title.includes('Commencement')) return 'Commencement';
+          if (title.includes('Guru Nanak')) return 'Guru Nanak';
+          if (title.includes('Additional Holiday')) return 'Holiday';
+          return title.length > 14 ? title.slice(0, 12) + '…' : title;
+        }
 
         let labelHtml = '';
         if (examItems.length > 0) {
@@ -7568,7 +7635,7 @@
         const fnMatch = mappedExams.find(m => m.slot === pair.fn);
         const anMatch = mappedExams.find(m => m.slot === pair.an);
 
-          rowsHtml += `<tr style="border-bottom:1px solid #ddd; font-size:12px;">
+        rowsHtml += `<tr style="border-bottom:1px solid #ddd; font-size:12px;">
             <!-- Forenoon -->
             <td style="padding:8px; font-weight:800; text-align:center; background:#f8f9fa; border-right:1px solid #eee;">${pair.fn}</td>
             <td style="padding:8px; ${!fnMatch ? 'background:#fff5f5;' : ''}">
