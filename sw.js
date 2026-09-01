@@ -1,9 +1,9 @@
 /* =========================================================
    SCFC StudentOS - PWA Service Worker (App Shell & Offline Support)
-   Version: 4.0.0
+   Version: 4.1.0
    ========================================================= */
 
-const CACHE_NAME = 'scfc-app-shell-v4';
+const CACHE_NAME = 'scfc-app-shell-v4.1';
 
 const STATIC_ASSETS = [
   '/',
@@ -19,16 +19,22 @@ const STATIC_ASSETS = [
   '/lib/scfc-offline.js'
 ];
 
-// Helper: Safely cache GET requests for http/https URLs only
+// Helper: Safely cache GET requests for http/https URLs only (expects caller to supply a cloned response)
 async function safeCachePut(request, response) {
   if (!request || request.method !== 'GET') return;
+  if (!response) return;
+
+  // Allow standard 200 OK responses or valid opaque CORS responses (e.g. Google Fonts)
+  const isCacheable = response.status === 200 || response.type === 'opaque' || response.type === 'cors';
+  if (!isCacheable) return;
+
   try {
     const url = new URL(request.url);
     if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
-    if (!response || response.status !== 200) return;
 
     const cache = await caches.open(CACHE_NAME);
-    await cache.put(request, response.clone());
+    // Put response directly (caller has already cloned it prior to returning/using the original)
+    await cache.put(request, response);
   } catch (error) {
     console.warn('[SW] Cache skipped:', request.url, error);
   }
@@ -105,18 +111,23 @@ self.addEventListener('fetch', event => {
       try {
         const cachedResponse = await caches.match(request);
         if (cachedResponse) {
-          // Fetch background update for cache freshness safely
-          fetch(request).then(networkResponse => {
-            if (networkResponse && networkResponse.status === 200) {
-              safeCachePut(request, networkResponse);
-            }
-          }).catch(() => {/* Ignore network error offline */ });
+          // Asynchronously update cache in background without blocking response to browser
+          event.waitUntil(
+            fetch(request).then(networkResponse => {
+              if (networkResponse && (networkResponse.status === 200 || networkResponse.type === 'opaque')) {
+                const responseToCache = networkResponse.clone();
+                return safeCachePut(request, responseToCache);
+              }
+            }).catch(() => {/* Ignore network error offline */ })
+          );
           return cachedResponse;
         }
 
         const networkResponse = await fetch(request);
-        if (networkResponse && networkResponse.status === 200) {
-          safeCachePut(request, networkResponse);
+        if (networkResponse && (networkResponse.status === 200 || networkResponse.type === 'opaque')) {
+          // Clone BEFORE returning networkResponse to browser
+          const responseToCache = networkResponse.clone();
+          event.waitUntil(safeCachePut(request, responseToCache));
         }
         return networkResponse;
       } catch (err) {
