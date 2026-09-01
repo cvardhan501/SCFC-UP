@@ -110,7 +110,7 @@ self.addEventListener('fetch', event => {
             if (networkResponse && networkResponse.status === 200) {
               safeCachePut(request, networkResponse);
             }
-          }).catch(() => {/* Ignore network error offline */});
+          }).catch(() => {/* Ignore network error offline */ });
           return cachedResponse;
         }
 

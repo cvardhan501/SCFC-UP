@@ -1,6 +1,9 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    {
+      "source": "/((?!api/|sw\\.js$|site\\.webmanifest$|lib/|icons/|favicon\\.svg$|favicon\\.png$|apple-touch-icon\\.png$).*)",
+      "destination": "/index.html"
+    }
   ]
 }
