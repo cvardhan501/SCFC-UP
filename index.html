@@ -2529,11 +2529,12 @@
       }
     }
 
-    /* Mobile (< 768px) Full-Screen App Shell */
+    /* Mobile (< 768px) Proportional Scale App Shell */
     @media (max-width:767px) {
       html, body {
         height: 100% !important;
         height: 100dvh !important;
+        width: 100% !important;
         max-width: 100vw !important;
         overflow: hidden !important;
         margin: 0 !important;
@@ -2542,26 +2543,22 @@
 
       .app {
         height: 100dvh !important;
-        max-height: 100dvh !important;
-        display: flex !important;
-        flex-direction: column !important;
-        padding: 0 !important;
-        overflow: hidden !important;
         width: 100vw !important;
         max-width: 100vw !important;
+        overflow: hidden !important;
+        padding: 0 !important;
         box-sizing: border-box !important;
       }
 
       .shell {
+        transform: scale(var(--mobile-app-scale, 1)) !important;
+        transform-origin: top center !important;
+        width: calc(100% / var(--mobile-app-scale, 1)) !important;
+        height: calc(100% / var(--mobile-app-scale, 1)) !important;
         display: flex !important;
         flex-direction: column !important;
-        flex: 1 !important;
-        height: 100% !important;
-        min-height: 0 !important;
-        width: 100% !important;
-        max-width: 100vw !important;
-        gap: 0 !important;
         overflow: hidden !important;
+        box-sizing: border-box !important;
       }
 
       .dock {
@@ -2576,7 +2573,7 @@
         height: 100% !important;
         min-height: 0 !important;
         overflow: hidden !important;
-        padding: 8px 10px 0 10px !important;
+        padding: 8px 12px 0 12px !important;
         box-sizing: border-box !important;
       }
 
@@ -2605,28 +2602,27 @@
         padding: 6px;
       }
 
-      /* Internal Scrollable Content Container for Page Views */
+      /* Internal Content Container for Page Views */
       .page-view {
         flex: 1 !important;
         min-height: 0 !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        padding-bottom: 85px !important;
+        overflow: hidden !important;
+        padding-bottom: 75px !important;
         box-sizing: border-box !important;
       }
 
       .hero {
-        padding: 4px 6px 16px 6px !important;
+        padding: 4px 6px 14px 6px !important;
       }
 
       .hero h1 {
-        font-size: clamp(20px, 5.5vw, 30px) !important;
+        font-size: clamp(20px, 5.5vw, 28px) !important;
         line-height: 1.2 !important;
         word-break: break-word !important;
       }
 
       .hero p {
-        font-size: 12.5px !important;
+        font-size: 12px !important;
         word-break: break-word !important;
       }
 
@@ -2719,6 +2715,17 @@
         font-size: 14px !important;
       }
 
+      /* Timetable Grid View */
+      .timetable-grid {
+        width: 100% !important;
+        font-size: 10px !important;
+      }
+
+      .timetable-grid th, .timetable-grid td {
+        padding: 4px 2px !important;
+        font-size: 9.5px !important;
+      }
+
       /* Report View Mobile Layout */
       .report-paper {
         padding: 14px 10px !important;
@@ -2751,7 +2758,7 @@
         box-sizing: border-box !important;
       }
 
-      /* Fixed Mobile Bottom Navigation - Fits 320px to 430px Viewports */
+      /* Fixed Mobile Bottom Navigation - Matching Reference Screens */
       .mobile-bottomnav {
         display: flex !important;
         position: fixed !important;
@@ -2774,12 +2781,6 @@
         border-top: 1px solid var(--glass-border) !important;
         box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25) !important;
         overflow: hidden !important;
-      }
-
-      .mobile-bottomnav::-webkit-scrollbar {
-        display: none !important;
-        width: 0 !important;
-        height: 0 !important;
       }
 
       .mnav-item {
@@ -10378,6 +10379,27 @@
   </script>
   <script>
     // Ensure mobile bottom nav contains all primary dock views (fixes missing Timetable/Tracker on small screens)
+    /* =========================================================
+       DYNAMIC MOBILE PROPORTIONAL SCALING ENGINE
+    ========================================================= */
+    function updateMobileAppScale() {
+      if (window.innerWidth < 768) {
+        const baseW = 390;
+        const baseH = 844;
+        const scaleX = window.innerWidth / baseW;
+        const scaleY = (window.innerHeight - 4) / baseH;
+        const scale = Math.min(scaleX, scaleY, 1);
+        document.documentElement.style.setProperty('--mobile-app-scale', scale.toFixed(3));
+      } else {
+        document.documentElement.style.setProperty('--mobile-app-scale', '1');
+      }
+    }
+
+    window.addEventListener('resize', updateMobileAppScale);
+    window.addEventListener('orientationchange', updateMobileAppScale);
+    document.addEventListener('DOMContentLoaded', updateMobileAppScale);
+    updateMobileAppScale();
+
     (function rebuildMobileNav() {
       const bottom = document.querySelector('.mobile-bottomnav');
       if (!bottom) return;
@@ -10386,9 +10408,7 @@
         { id: 'semester', label: 'Semester' },
         { id: 'timetable', label: 'Timetable' },
         { id: 'exams', label: 'Exam Schedule' },
-        { id: 'tracker', label: 'Credit Tracker' },
-        { id: 'analytics', label: 'Analytics' },
-        { id: 'reports', label: 'Reports' }
+        { id: 'more', label: 'More' }
       ];
       bottom.innerHTML = '';
       views.forEach(item => {
@@ -10403,13 +10423,17 @@
           if (svg) div.appendChild(svg.cloneNode(true));
         } else {
           const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('width', '20');
-          svg.setAttribute('height', '20');
+          svg.setAttribute('width', '18');
+          svg.setAttribute('height', '18');
           svg.setAttribute('viewBox', '0 0 24 24');
           svg.setAttribute('fill', 'none');
           svg.setAttribute('stroke', 'currentColor');
           svg.setAttribute('stroke-width', '1.8');
-          svg.innerHTML = '<circle cx="12" cy="12" r="8"/>';
+          if (item.id === 'more') {
+            svg.innerHTML = '<circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="12" r="1.5"/>';
+          } else {
+            svg.innerHTML = '<circle cx="12" cy="12" r="8"/>';
+          }
           div.appendChild(svg);
         }
 
