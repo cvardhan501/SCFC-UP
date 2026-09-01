@@ -2529,7 +2529,7 @@
       }
     }
 
-    /* Mobile (< 768px) Real Scale-to-Fit Canvas Engine */
+    /* Mobile (< 768px) Compact Layout with Vertical Scrolling */
     @media (max-width:767px) {
       html, body {
         height: 100% !important;
@@ -2542,34 +2542,11 @@
         background: #0B0E17 !important;
       }
 
-      .mobile-app-viewport {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: 100vw !important;
-        height: 100dvh !important;
-        overflow: hidden !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background: transparent !important;
-        box-sizing: border-box !important;
-      }
-
-      .mobile-app-canvas {
-        width: 390px !important;
-        height: 844px !important;
-        position: relative !important;
-        box-sizing: border-box !important;
-        overflow: hidden !important;
-        flex-shrink: 0 !important;
-      }
-
       .app {
-        width: 100% !important;
-        height: 100% !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
         display: flex !important;
         flex-direction: column !important;
         padding: 0 !important;
@@ -2581,8 +2558,11 @@
       .shell {
         display: flex !important;
         flex-direction: column !important;
-        width: 100% !important;
+        flex: 1 !important;
         height: 100% !important;
+        min-height: 0 !important;
+        width: 100% !important;
+        max-width: 100vw !important;
         gap: 0 !important;
         overflow: hidden !important;
         box-sizing: border-box !important;
@@ -2592,7 +2572,7 @@
         display: none !important;
       }
 
-      /* Content column holding topbar + page views */
+      /* Main content column holding topbar + page views */
       .shell > div:last-child {
         display: flex !important;
         flex-direction: column !important;
@@ -2629,33 +2609,33 @@
         padding: 6px;
       }
 
-      /* Internal Page View Container */
+      /* Internal Vertical Scrollable Content Area for Page Views */
       .page-view {
         flex: 1 !important;
         min-height: 0 !important;
-        overflow: hidden !important;
-        padding-bottom: 70px !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 95px !important;
         box-sizing: border-box !important;
       }
 
       .hero {
-        padding: 2px 4px 10px 4px !important;
+        padding: 4px 6px 14px 6px !important;
       }
 
       .hero h1 {
-        font-size: 24px !important;
+        font-size: clamp(20px, 5.5vw, 28px) !important;
         line-height: 1.2 !important;
         word-break: break-word !important;
-        margin-bottom: 2px !important;
       }
 
       .hero p {
-        font-size: 11.5px !important;
+        font-size: 12px !important;
         word-break: break-word !important;
-        margin-top: 0 !important;
       }
 
-      /* Dashboard Stat Cards: 2x2 compact grid matching reference */
+      /* 2x2 Compact Stat Cards Grid */
       .stats-row {
         grid-template-columns: 1fr 1fr !important;
         gap: 8px !important;
@@ -2668,7 +2648,7 @@
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
-        padding: 10px 12px !important;
+        padding: 12px 14px !important;
       }
 
       .stat-card h4 {
@@ -2680,7 +2660,7 @@
       }
 
       .workspace {
-        padding: 12px 10px !important;
+        padding: 14px 12px !important;
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
@@ -2703,9 +2683,10 @@
       .table-wrap {
         display: block !important;
         overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
         width: 100% !important;
         max-width: 100% !important;
-        border-radius: 12px !important;
+        border-radius: 14px !important;
       }
 
       .table-wrap table {
@@ -2730,10 +2711,10 @@
         gap: 10px !important;
       }
 
-      /* Semester Grid Table */
+      /* Semester Grid */
       .sem-grid {
         grid-template-columns: 1fr !important;
-        gap: 10px !important;
+        gap: 12px !important;
         width: 100% !important;
         box-sizing: border-box !important;
       }
@@ -2742,38 +2723,38 @@
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
-        padding: 10px 12px !important;
+        padding: 14px 12px !important;
       }
 
       .sem-stats-row {
         display: grid !important;
         grid-template-columns: repeat(4, 1fr) !important;
-        gap: 4px !important;
+        gap: 6px !important;
         text-align: center !important;
       }
 
       .sem-stat-item label {
-        font-size: 9.5px !important;
+        font-size: 10px !important;
       }
 
       .sem-stat-item val {
-        font-size: 13px !important;
+        font-size: 14px !important;
       }
 
       /* Timetable Grid View */
       .timetable-grid {
         width: 100% !important;
-        font-size: 9.5px !important;
+        font-size: 10px !important;
       }
 
       .timetable-grid th, .timetable-grid td {
-        padding: 3px 1px !important;
-        font-size: 9px !important;
+        padding: 4px 2px !important;
+        font-size: 9.5px !important;
       }
 
       /* Report View Mobile Layout */
       .report-paper {
-        padding: 12px 10px !important;
+        padding: 14px 10px !important;
         width: 100% !important;
         box-sizing: border-box !important;
         overflow-x: hidden !important;
@@ -2781,8 +2762,8 @@
 
       .report-info-grid {
         grid-template-columns: 1fr 1fr !important;
-        gap: 8px !important;
-        padding: 10px !important;
+        gap: 10px !important;
+        padding: 12px !important;
       }
 
       .report-header-row, .report-foot-row {
@@ -2804,19 +2785,20 @@
         box-sizing: border-box !important;
       }
 
-      /* Fixed Mobile Bottom Navigation Inside Canvas */
+      /* Fixed Mobile Bottom Navigation - 7 Direct Navigation Items */
       .mobile-bottomnav {
         display: flex !important;
-        position: absolute !important;
+        position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
         right: 0 !important;
         width: 100% !important;
+        max-width: 100vw !important;
         box-sizing: border-box !important;
         z-index: 99 !important;
         padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px)) 4px !important;
         border-radius: 18px 18px 0 0 !important;
-        gap: 2px !important;
+        gap: 1px !important;
         align-items: center !important;
         justify-content: space-between !important;
         flex-wrap: nowrap !important;
@@ -2872,9 +2854,9 @@
 
       .fab {
         display: flex !important;
-        position: absolute !important;
-        bottom: 68px !important;
-        right: 14px !important;
+        position: fixed !important;
+        bottom: calc(75px + env(safe-area-inset-bottom, 0px)) !important;
+        right: 16px !important;
         z-index: 90 !important;
         width: 48px !important;
         height: 48px !important;
@@ -3460,9 +3442,7 @@
     <div id="particles"></div>
   </div>
 
-  <div class="mobile-app-viewport" id="mobileAppViewport">
-    <div class="mobile-app-canvas" id="mobileAppCanvas">
-      <div class="app" id="mainAppShell" style="display:none;">
+  <div class="app" id="mainAppShell" style="display:none;">
     <div class="shell">
 
       <!-- DOCK NAV -->
@@ -3947,6 +3927,18 @@
               </div>
             </div>
           </div>
+
+          <footer class="app-footer">
+            <div class="footer-divider"></div>
+            <div class="footer-content">
+              <div class="footer-brand-title">SCFC StudentOS</div>
+              <div class="footer-legal-row">
+                <span class="footer-copyright">© 2026 SCFC StudentOS</span>
+                <span class="footer-sep">·</span>
+                <span class="footer-credit">Designed &amp; Developed by <strong>C VISHNU VARDHAN</strong></span>
+              </div>
+            </div>
+          </footer>
         </div>
 
         <!-- VIEW: TIMETABLE DASHBOARD -->
@@ -4753,8 +4745,6 @@
       <path d="M12 5v14M5 12h14" />
     </svg>
   </button>
-    </div>
-  </div>
 
   <!-- ADD SUBJECTS MODAL -->
   <div class="modal-overlay" id="modalOverlay">
@@ -10428,48 +10418,6 @@
   </script>
   <script>
     // Ensure mobile bottom nav contains all primary dock views (fixes missing Timetable/Tracker on small screens)
-    /* =========================================================
-       DYNAMIC REAL MOBILE ZOOM-OUT SCALE ENGINE
-    ========================================================= */
-    function fitMobileCanvas() {
-      const viewport = document.getElementById('mobileAppViewport');
-      const canvas = document.getElementById('mobileAppCanvas');
-      if (!canvas) return;
-
-      if (window.innerWidth < 768) {
-        const designWidth = 390;
-        const designHeight = 844;
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-
-        const scaleX = viewportWidth / designWidth;
-        const scaleY = viewportHeight / designHeight;
-        const scale = Math.min(scaleX, scaleY);
-
-        canvas.style.width = designWidth + 'px';
-        canvas.style.height = designHeight + 'px';
-        canvas.style.transform = `scale(${scale.toFixed(4)})`;
-        canvas.style.transformOrigin = 'top left';
-
-        const offsetX = Math.max(0, (viewportWidth - designWidth * scale) / 2);
-        const offsetY = Math.max(0, (viewportHeight - designHeight * scale) / 2);
-        canvas.style.marginLeft = offsetX.toFixed(1) + 'px';
-        canvas.style.marginTop = offsetY.toFixed(1) + 'px';
-      } else {
-        canvas.style.width = '';
-        canvas.style.height = '';
-        canvas.style.transform = '';
-        canvas.style.transformOrigin = '';
-        canvas.style.marginLeft = '';
-        canvas.style.marginTop = '';
-      }
-    }
-
-    window.addEventListener('resize', fitMobileCanvas);
-    window.addEventListener('orientationchange', fitMobileCanvas);
-    document.addEventListener('DOMContentLoaded', fitMobileCanvas);
-    fitMobileCanvas();
-
     (function rebuildMobileNav() {
       const bottom = document.querySelector('.mobile-bottomnav');
       if (!bottom) return;
@@ -10477,8 +10425,10 @@
         { id: 'dashboard', label: 'Dashboard' },
         { id: 'semester', label: 'Semester' },
         { id: 'timetable', label: 'Timetable' },
-        { id: 'exams', label: 'Exam Schedule' },
-        { id: 'more', label: 'More' }
+        { id: 'exams', label: 'Exam' },
+        { id: 'tracker', label: 'Credits' },
+        { id: 'analytics', label: 'Analytics' },
+        { id: 'reports', label: 'Reports' }
       ];
       bottom.innerHTML = '';
       views.forEach(item => {
@@ -10499,11 +10449,7 @@
           svg.setAttribute('fill', 'none');
           svg.setAttribute('stroke', 'currentColor');
           svg.setAttribute('stroke-width', '1.8');
-          if (item.id === 'more') {
-            svg.innerHTML = '<circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="12" r="1.5"/>';
-          } else {
-            svg.innerHTML = '<circle cx="12" cy="12" r="8"/>';
-          }
+          svg.innerHTML = '<circle cx="12" cy="12" r="8"/>';
           div.appendChild(svg);
         }
 
