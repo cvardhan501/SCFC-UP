@@ -14,6 +14,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
     :root {
+      --ui-scale: 1;
       --bg-1: #EEF4FF;
       --bg-2: #E8ECFF;
       --bg-3: #F8FAFF;
@@ -402,11 +403,23 @@
     }
 
     /* ---------------- LAYOUT ---------------- */
+    html, body {
+      max-width: 100vw;
+      overflow-x: clip;
+      font-size: calc(100% * var(--ui-scale, 1));
+    }
+
     .app {
       position: relative;
       z-index: 2;
       min-height: 100vh;
       padding: 20px 24px 100px 24px;
+      max-width: 100vw;
+      box-sizing: border-box;
+    }
+
+    .ws-mobile-cards {
+      display: none;
     }
 
     .shell {
@@ -2484,13 +2497,15 @@
       background: rgba(108, 99, 255, 0.12);
     }
 
-    /* ---------------- MOBILE ---------------- */
+    /* ---------------- MOBILE & RESPONSIVE BREAKPOINTS ---------------- */
     .mobile-bottomnav,
-    .fab {
+    .fab,
+    .ws-mobile-cards {
       display: none;
     }
 
-    @media (max-width:1180px) {
+    /* Tablet (768px - 1199px) */
+    @media (max-width:1199px) {
       .main-grid {
         grid-template-columns: 1fr;
       }
@@ -2498,10 +2513,15 @@
       .rsidebar {
         display: grid;
         grid-template-columns: 1fr 1fr;
+        gap: 16px;
       }
 
       .analytics-hero {
         grid-template-columns: 1fr 1fr;
+      }
+
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
       }
 
       :root {
@@ -2509,33 +2529,43 @@
       }
     }
 
-    @media (max-width:860px) {
+    /* Mobile (< 768px) */
+    @media (max-width:767px) {
+      html, body {
+        overflow-x: clip;
+        max-width: 100vw;
+      }
+
       .app {
-        padding: 14px 14px 90px 14px;
+        padding: 12px 12px 90px 12px;
+        width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
       }
 
       .shell {
         grid-template-columns: 1fr;
+        width: 100%;
+        max-width: 100%;
+        gap: 14px;
       }
 
       .dock {
-        display: none;
-      }
-
-      .stats-row {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .rsidebar {
-        grid-template-columns: 1fr;
-      }
-
-      .bottom-grid {
-        grid-template-columns: 1fr;
+        display: none !important;
       }
 
       .topbar {
         padding: 10px 12px;
+        flex-wrap: wrap;
+        gap: 8px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .search-pill {
+        width: 100%;
+        flex: 1 1 100%;
+        order: 2;
       }
 
       .search-pill span,
@@ -2552,59 +2582,150 @@
         padding: 6px;
       }
 
+      .hero h1 {
+        font-size: clamp(20px, 6vw, 32px);
+        line-height: 1.2;
+        word-break: break-word;
+      }
+
+      .hero p {
+        font-size: 13px;
+        word-break: break-word;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .stat-card {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .workspace {
+        padding: 16px 14px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .ws-head {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .ws-controls {
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      .table-wrap {
+        display: none !important;
+      }
+
+      .ws-mobile-cards {
+        display: flex !important;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .ws-foot {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .rsidebar {
+        grid-template-columns: 1fr;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .bottom-grid {
+        grid-template-columns: 1fr;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
       .mobile-bottomnav {
         display: flex;
         position: fixed;
-        bottom: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 60;
-        padding: 8px 12px;
-        border-radius: 22px;
-        gap: 10px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
+        z-index: 99;
+        padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px)) 8px;
+        border-radius: 20px 20px 0 0;
+        gap: 4px;
         align-items: center;
-        flex-wrap: nowrap;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        justify-content: center;
-        max-width: calc(100vw - 24px);
+        justify-content: space-around;
+        background: var(--glass-bg-3, rgba(23, 26, 48, 0.88));
+        backdrop-filter: blur(20px) saturate(140%);
+        -webkit-backdrop-filter: blur(20px) saturate(140%);
+        border-top: 1px solid var(--glass-border);
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25);
+        scrollbar-width: none;
+      }
+
+      .mobile-bottomnav::-webkit-scrollbar {
+        display: none;
       }
 
       .mnav-item {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         gap: 3px;
         color: var(--ink-soft);
         font-size: 10px;
+        font-weight: 600;
         cursor: pointer;
-        min-width: 56px;
-        padding: 4px 6px;
+        min-width: 44px;
+        min-height: 44px;
+        padding: 4px;
         white-space: nowrap;
+        flex: 1;
+        border-radius: 12px;
+        transition: color 0.2s ease, background 0.2s ease;
       }
 
       .mnav-item.active {
         color: var(--indigo);
+        background: rgba(108, 99, 255, 0.12);
       }
 
       .fab {
         display: flex;
         position: fixed;
-        bottom: 88px;
-        right: 20px;
+        bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+        right: 16px;
         z-index: 60;
-        width: 56px;
-        height: 56px;
-        border-radius: 18px;
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
         align-items: center;
         justify-content: center;
         background: linear-gradient(140deg, var(--indigo), var(--purple));
-        box-shadow: 0 14px 30px -8px rgba(108, 99, 255, .65);
+        box-shadow: 0 10px 24px -6px rgba(108, 99, 255, .65);
         color: #fff;
       }
 
       table {
-        min-width: 520px;
+        min-width: 0;
       }
 
       .modal-search-row {
@@ -2616,48 +2737,34 @@
       }
     }
 
-    @media (max-width:520px) {
-      html, body {
-        overflow-x: hidden;
-        width: 100%;
-      }
-
+    /* Small Mobile (< 480px) */
+    @media (max-width:479px) {
       .app {
-        padding: 10px 10px 95px 10px;
-      }
-
-      .stats-row {
-        grid-template-columns: 1fr;
-      }
-
-      .analytics-hero {
-        grid-template-columns: 1fr;
+        padding: 8px 8px 85px 8px;
       }
 
       .hero h1 {
-        font-size: 22px;
-        line-height: 1.25;
-      }
-
-      .hero p {
-        font-size: 12px;
+        font-size: 20px;
       }
 
       .dash-grid {
         grid-template-columns: 1fr !important;
-        gap: 12px;
+        gap: 10px;
       }
 
       .exam-hero-grid,
       .exam-cal-timeline-grid,
       .exam-tables-grid {
         grid-template-columns: 1fr !important;
-        gap: 12px;
+        gap: 10px;
       }
 
       .modal {
-        width: 92vw !important;
-        max-width: 440px !important;
+        width: 95vw !important;
+        max-width: 100% !important;
+        padding: 16px !important;
+      }
+    }
         margin: 0 auto;
         padding: 16px !important;
         border-radius: 20px !important;
@@ -3425,6 +3532,10 @@
                     </tbody>
                   </table>
                 </div>
+              </div>
+
+              <div class="ws-mobile-cards" id="mobileCards">
+                <!-- mobile cards injected by JS -->
               </div>
 
               <div class="ws-foot">
@@ -4213,7 +4324,25 @@
               <h3 style="margin-bottom:16px; font-size:16px; font-weight:700;">Appearance & Theme</h3>
               <p style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">Switch between high-contrast dark
                 mode and vibrant light mode.</p>
-              <button class="btn btn-ghost" onclick="toggleTheme()">Toggle Dark / Light Mode</button>
+              <button class="btn btn-ghost" onclick="toggleTheme()" style="margin-bottom:20px;">Toggle Dark / Light Mode</button>
+
+              <h4 style="margin-bottom:8px; font-size:14px; font-weight:700; display:flex; align-items:center; gap:8px; border-top:1px solid var(--glass-border); padding-top:16px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  <line x1="11" y1="8" x2="11" y2="14"></line>
+                  <line x1="8" y1="11" x2="14" y2="11"></line>
+                </svg>
+                Interface Scale (UI Zoom)
+              </h4>
+              <p style="font-size:13px; color:var(--ink-soft); margin-bottom:14px;">Adjust the overall display scaling for your mobile or desktop device without altering browser zoom.</p>
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;" id="uiScaleControls">
+                <button class="scale-btn btn btn-ghost" data-scale="0.90" onclick="setInterfaceScale(0.90)">90%</button>
+                <button class="scale-btn btn btn-ghost" data-scale="0.95" onclick="setInterfaceScale(0.95)">95%</button>
+                <button class="scale-btn btn btn-ghost" data-scale="1.00" onclick="setInterfaceScale(1.00)">100%</button>
+                <button class="scale-btn btn btn-ghost" data-scale="1.05" onclick="setInterfaceScale(1.05)">105%</button>
+                <button class="scale-btn btn btn-ghost" data-scale="1.10" onclick="setInterfaceScale(1.10)">110%</button>
+              </div>
             </div>
 
             <div class="glass spot card-pad">
@@ -6668,10 +6797,16 @@
 
     function renderTable() {
       const currentRows = state.semesters[state.currentSemester] || [];
+      const mobileCardsEl = document.getElementById('mobileCards');
+
       if (currentRows.length === 0) {
         tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No subjects added for Semester ${state.currentSemester} yet — tap "Add Subjects" to pick courses.</td></tr>`;
+        if (mobileCardsEl) {
+          mobileCardsEl.innerHTML = `<div class="glass card-pad" style="text-align:center; padding: 28px 16px; color: var(--ink-soft); font-size:13px;">No subjects added for Semester ${state.currentSemester} yet — tap "Add Subjects" to pick courses.</div>`;
+        }
         return;
       }
+
       tbody.innerHTML = currentRows.map((r, i) => {
         const gp = gpFor(r.grade);
         const cp = r.credits * gp;
@@ -6687,25 +6822,68 @@
     </tr>`;
       }).join('');
 
-      tbody.querySelectorAll('.grade-select').forEach(sel => {
-        sel.addEventListener('change', e => {
-          const idx = +e.target.dataset.i;
-          const oldGrade = currentRows[idx].grade;
-          const newGrade = e.target.value;
-          currentRows[idx].grade = newGrade;
-          logHistory(`Updated ${currentRows[idx].code} grade from ${oldGrade} to ${newGrade} in Semester ${state.currentSemester}.`);
-          triggerAutoSave();
-          renderAll();
-        });
-      });
+      if (mobileCardsEl) {
+        mobileCardsEl.innerHTML = currentRows.map((r, i) => {
+          const gp = gpFor(r.grade);
+          const cp = r.credits * gp;
+          const options = GRADES.map(g => `<option value="${g.g}" ${g.g === r.grade ? 'selected' : ''}>${g.g}</option>`).join('');
+          return `
+          <div class="glass spot card-pad ws-card" style="padding: 14px 16px; border-radius: 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px;">
+              <div>
+                <div style="font-size: 11px; font-weight: 700; color: var(--indigo); font-family: 'IBM Plex Mono', monospace;">#${i + 1} • ${r.code}</div>
+                <div style="font-size: 14.5px; font-weight: 700; color: var(--ink); margin-top: 2px; line-height: 1.3;">${r.name}</div>
+              </div>
+              <button class="del-btn" data-del="${i}" title="Remove subject" style="min-width: 36px; min-height: 36px; flex-shrink: 0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2m2 0v13a2 2 0 01-2 2H8a2 2 0 01-2-2V7h12z"/></svg>
+              </button>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--glass-bg-2); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--glass-border); align-items: center;">
+              <div>
+                <span style="font-size: 10.5px; color: var(--ink-soft); display: block;">Credits</span>
+                <b style="font-size: 14px; font-family: 'Outfit', sans-serif;">${r.credits}</b>
+              </div>
+              <div>
+                <span style="font-size: 10.5px; color: var(--ink-soft); display: block; margin-bottom: 2px;">Grade</span>
+                <select class="grade-select" data-i="${i}" style="border-color:${colorFor(r.grade)}66; color:${colorFor(r.grade)}; padding: 4px 8px; font-size: 12px; width: 100%; box-sizing: border-box;">${options}</select>
+              </div>
+              <div>
+                <span style="font-size: 10.5px; color: var(--ink-soft); display: block;">Grade Points (GP)</span>
+                <b style="font-size: 14px; font-family: 'Outfit', sans-serif;">${gp}</b>
+              </div>
+              <div>
+                <span style="font-size: 10.5px; color: var(--ink-soft); display: block;">Credit Points (CP)</span>
+                <b style="font-size: 14px; font-family: 'Outfit', sans-serif;">${cp}</b>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+      }
 
-      tbody.querySelectorAll('[data-del]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const idx = +btn.dataset.del;
-          const removed = currentRows.splice(idx, 1)[0];
-          logHistory(`Removed ${removed.code} (${removed.name}) from Semester ${state.currentSemester}.`);
-          triggerAutoSave();
-          renderAll();
+      const containers = [tbody];
+      if (mobileCardsEl) containers.push(mobileCardsEl);
+
+      containers.forEach(container => {
+        container.querySelectorAll('.grade-select').forEach(sel => {
+          sel.addEventListener('change', e => {
+            const idx = +e.target.dataset.i;
+            const oldGrade = currentRows[idx].grade;
+            const newGrade = e.target.value;
+            currentRows[idx].grade = newGrade;
+            logHistory(`Updated ${currentRows[idx].code} grade from ${oldGrade} to ${newGrade} in Semester ${state.currentSemester}.`);
+            triggerAutoSave();
+            renderAll();
+          });
+        });
+
+        container.querySelectorAll('[data-del]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = +btn.dataset.del;
+            const removed = currentRows.splice(idx, 1)[0];
+            logHistory(`Removed ${removed.code} (${removed.name}) from Semester ${state.currentSemester}.`);
+            triggerAutoSave();
+            renderAll();
+          });
         });
       });
     }
@@ -9434,7 +9612,50 @@
     function renderSettingsView() {
       document.getElementById('settingsNameInput').value = state.studentName || '';
       document.getElementById('settingsUsnInput').value = state.usn || '';
+      if (typeof updateInterfaceScaleButtons === 'function') updateInterfaceScaleButtons();
     }
+
+    /* =========================================================
+       INTERFACE SCALE (UI ZOOM CONTROL) SYSTEM
+    ========================================================= */
+    function setInterfaceScale(scaleVal) {
+      const val = parseFloat(scaleVal) || 1.0;
+      document.documentElement.style.setProperty('--ui-scale', val);
+      document.documentElement.style.fontSize = (val * 100) + '%';
+      localStorage.setItem('scfc_interface_scale', val.toFixed(2));
+      updateInterfaceScaleButtons(val);
+    }
+
+    function updateInterfaceScaleButtons(currentVal) {
+      const val = currentVal || parseFloat(localStorage.getItem('scfc_interface_scale')) || 1.0;
+      document.querySelectorAll('#uiScaleControls .scale-btn').forEach(btn => {
+        const btnVal = parseFloat(btn.dataset.scale);
+        if (Math.abs(btnVal - val) < 0.01) {
+          btn.classList.add('active');
+          btn.style.background = 'linear-gradient(135deg, var(--indigo), var(--purple))';
+          btn.style.color = '#ffffff';
+          btn.style.borderColor = 'transparent';
+          btn.style.boxShadow = '0 4px 12px rgba(108, 99, 255, 0.4)';
+        } else {
+          btn.classList.remove('active');
+          btn.style.background = 'var(--glass-bg-2)';
+          btn.style.color = 'var(--ink)';
+          btn.style.borderColor = 'var(--glass-border)';
+          btn.style.boxShadow = 'none';
+        }
+      });
+    }
+
+    function initInterfaceScale() {
+      const saved = localStorage.getItem('scfc_interface_scale');
+      if (saved) {
+        setInterfaceScale(parseFloat(saved));
+      } else {
+        setInterfaceScale(1.00);
+      }
+    }
+
+    initInterfaceScale();
 
     function saveStudentNameSettings() {
       const input = document.getElementById('settingsNameInput');

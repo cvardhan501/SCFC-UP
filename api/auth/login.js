@@ -41,13 +41,23 @@ module.exports = async function handler(req, res) {
 
     const match = await bcrypt.compare(password, student.password || '');
     if (!match) {
-      return res.status(400).json({ success: false, message: 'Invalid USN or Password.' });
+      return res.status(400).json({ success: false, incorrectPassword: true, message: 'The password you entered is incorrect.' });
     }
 
     const studentObj = student.toObject();
     delete studentObj.password;
 
-    return res.json({ success: true, message: 'Login successful.', student: studentObj });
+    const responsePayload = {
+      success: true,
+      message: 'Login successful.',
+      student: studentObj
+    };
+
+    if (!student.email) {
+      responsePayload.emailRequired = true;
+    }
+
+    return res.json(responsePayload);
 
   } catch (error) {
     console.error('Login error:', error);
