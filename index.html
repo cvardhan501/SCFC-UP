@@ -2929,17 +2929,17 @@
 
     .page-view.active {
       display: block;
-      animation: mobileZoomIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation: mobileZoomOut 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
-    @keyframes mobileZoomIn {
+    @keyframes mobileZoomOut {
       0% {
         opacity: 0;
-        transform: scale(0.90);
+        transform: scale(1.08);
       }
       60% {
         opacity: 0.95;
-        transform: scale(1.02);
+        transform: scale(0.98);
       }
       100% {
         opacity: 1;
@@ -2947,29 +2947,29 @@
       }
     }
 
-    @keyframes mobileZoomPulse {
+    @keyframes mobileZoomOutPulse {
       0% {
         transform: scale(1);
       }
       50% {
-        transform: scale(1.05);
+        transform: scale(0.95);
       }
       100% {
         transform: scale(1);
       }
     }
 
-    .mobile-zoom-in,
-    .zoom-in,
+    .mobile-zoom-out,
+    .zoom-out,
     .page-view.active,
     .hero,
     .modal-overlay.open .modal,
     #authScreenOverlay.open .glass {
-      animation: mobileZoomIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation: mobileZoomOut 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
-    .zoom-pulse {
-      animation: mobileZoomPulse 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    .zoom-out-pulse {
+      animation: mobileZoomOutPulse 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     @keyframes mobileSectionEnter {
