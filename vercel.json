@@ -26,7 +26,7 @@
   ],
   "rewrites": [
     {
-      "source": "/:path((?!api|lib|icons|sw\\.js|site\\.webmanifest|favicon|apple-touch).*)",
+      "source": "/((?!api/|lib/|icons/|sw\\.js$|site\\.webmanifest$|favicon|apple-touch).*)",
       "destination": "/index.html"
     }
   ]
