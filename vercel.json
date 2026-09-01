@@ -24,9 +24,10 @@
       ]
     }
   ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    {
+      "source": "/:path((?!api|lib|icons|sw\\.js|site\\.webmanifest|favicon|apple-touch).*)",
+      "destination": "/index.html"
+    }
   ]
 }
