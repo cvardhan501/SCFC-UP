@@ -2960,7 +2960,11 @@
     }
 
     .mobile-zoom-in,
-    .zoom-in {
+    .zoom-in,
+    .page-view.active,
+    .hero,
+    .modal-overlay.open .modal,
+    #authScreenOverlay.open .glass {
       animation: mobileZoomIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
