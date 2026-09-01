@@ -2741,15 +2741,52 @@
         font-size: 14px !important;
       }
 
-      /* Timetable Grid View */
+      /* Compact Mobile Timetable View - Zero Internal Scrollbars */
+      #view-timetable .glass {
+        padding: 12px 10px !important;
+        margin-bottom: 14px !important;
+        overflow-x: hidden !important;
+        overflow-y: hidden !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
       .timetable-grid {
         width: 100% !important;
-        font-size: 10px !important;
+        table-layout: fixed !important;
+        font-size: 8.5px !important;
+        border-collapse: collapse !important;
       }
 
       .timetable-grid th, .timetable-grid td {
-        padding: 4px 2px !important;
-        font-size: 9.5px !important;
+        padding: 3px 1px !important;
+        font-size: 8px !important;
+        line-height: 1.1 !important;
+        word-break: break-all !important;
+        overflow: hidden !important;
+      }
+
+      /* Compact Course Assignment Cards for Mobile */
+      #timetableCourseAssignmentBody tr {
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 10px 8px !important;
+        gap: 6px !important;
+        border-bottom: 1px solid rgba(140, 130, 255, .15) !important;
+      }
+
+      #timetableCourseAssignmentBody td {
+        padding: 2px 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      #timetableCourseAssignmentBody select,
+      #timetableCourseAssignmentBody input {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 11px !important;
       }
 
       /* Report View Mobile Layout */
@@ -3927,18 +3964,6 @@
               </div>
             </div>
           </div>
-
-          <footer class="app-footer">
-            <div class="footer-divider"></div>
-            <div class="footer-content">
-              <div class="footer-brand-title">SCFC StudentOS</div>
-              <div class="footer-legal-row">
-                <span class="footer-copyright">© 2026 SCFC StudentOS</span>
-                <span class="footer-sep">·</span>
-                <span class="footer-credit">Designed &amp; Developed by <strong>C VISHNU VARDHAN</strong></span>
-              </div>
-            </div>
-          </footer>
         </div>
 
         <!-- VIEW: TIMETABLE DASHBOARD -->
