@@ -5,11 +5,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>SCFC StudentOS</title>
-  <meta name="description" content="Your Academic Operating System">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
-  <link rel="alternate icon" type="image/png" href="/favicon.svg?v=2">
-  <link rel="apple-touch-icon" href="/favicon.svg?v=2">
-  <link rel="manifest" href="/site.webmanifest?v=2">
+  <!-- PWA & Favicon Meta Configuration -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3">
+  <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png?v=3">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=3">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
+  <link rel="manifest" href="/site.webmanifest?v=3">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SCFC StudentOS">
+  <meta name="theme-color" content="#0B0E17">
+  <!-- Offline-First Storage & Sync Engine -->
+  <script src="/lib/scfc-offline.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
@@ -795,6 +804,11 @@
       height: 34px;
       border-radius: 12px;
       background: linear-gradient(140deg, var(--purple), var(--pink));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      flex-shrink: 0;
     }
 
     .profile-pill b {
@@ -2586,17 +2600,19 @@
 
       .topbar {
         flex-shrink: 0 !important;
-        padding: 8px 12px !important;
-        margin-bottom: 8px !important;
+        padding: 6px 12px !important;
+        margin-bottom: 10px !important;
         flex-wrap: nowrap !important;
-        gap: 8px !important;
+        gap: 6px !important;
         width: 100% !important;
         box-sizing: border-box !important;
+        display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
       }
 
-      .search-pill {
+      .search-pill,
+      .sync-status-pill {
         display: none !important;
       }
 
@@ -2609,6 +2625,22 @@
         padding: 6px;
       }
 
+      .profile-pill .av {
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: linear-gradient(140deg, var(--indigo), var(--purple)) !important;
+      }
+
+      .profile-pill .av svg {
+        display: block !important;
+        width: 18px !important;
+        height: 18px !important;
+      }
+
       /* Internal Vertical Scrollable Content Area for Page Views */
       .page-view {
         flex: 1 !important;
@@ -2618,6 +2650,19 @@
         -webkit-overflow-scrolling: touch !important;
         padding-bottom: 95px !important;
         box-sizing: border-box !important;
+      }
+
+      /* Footer inside page content - Non-Fixed, appears naturally at end of scrollable content */
+      footer.app-footer {
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        right: auto !important;
+        margin-top: 30px !important;
+        margin-bottom: 15px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        flex-shrink: 0 !important;
       }
 
       .hero {
@@ -2741,51 +2786,104 @@
         font-size: 14px !important;
       }
 
-      /* Compact Mobile Timetable View - Zero Internal Scrollbars */
+      /* Compact Mobile Timetable Box Sizes Matching Official Reference Keyframe */
       #view-timetable .glass {
-        padding: 12px 10px !important;
-        margin-bottom: 14px !important;
-        overflow-x: hidden !important;
-        overflow-y: hidden !important;
+        padding: 10px 6px !important;
+        margin-bottom: 12px !important;
         width: 100% !important;
         box-sizing: border-box !important;
       }
 
+      #view-timetable .table-wrap {
+        display: block !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 10px !important;
+      }
+
+      /* Rigid Uniform Time-Slot Column Widths & Overflow Truncation for Weekly Schedule */
       .timetable-grid {
         width: 100% !important;
+        min-width: 1230px !important;
         table-layout: fixed !important;
+        border-collapse: collapse !important;
         font-size: 8.5px !important;
+      }
+
+      .timetable-grid th,
+      .timetable-grid td {
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+
+      .col-day {
+        width: 65px !important;
+        min-width: 65px !important;
+        max-width: 65px !important;
+      }
+
+      .col-slot {
+        width: 140px !important;
+        min-width: 140px !important;
+        max-width: 140px !important;
+      }
+
+      .col-lunch {
+        width: 45px !important;
+        min-width: 45px !important;
+        max-width: 45px !important;
+      }
+
+      .tt-card-box {
+        padding: 5px 6px !important;
+        border-radius: 6px !important;
+        border-left-width: 3.5px !important;
+        min-height: 52px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+      }
+
+      .tt-card-box * {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+
+      /* Single Horizontal Line Course Assignment Table for Mobile */
+      #view-timetable .table-wrap table {
+        width: 100% !important;
+        min-width: 650px !important;
+        white-space: nowrap !important;
         border-collapse: collapse !important;
       }
 
-      .timetable-grid th, .timetable-grid td {
-        padding: 3px 1px !important;
-        font-size: 8px !important;
-        line-height: 1.1 !important;
-        word-break: break-all !important;
-        overflow: hidden !important;
-      }
-
-      /* Compact Course Assignment Cards for Mobile */
       #timetableCourseAssignmentBody tr {
-        display: flex !important;
-        flex-direction: column !important;
-        padding: 10px 8px !important;
-        gap: 6px !important;
+        display: table-row !important;
+        background: transparent !important;
         border-bottom: 1px solid rgba(140, 130, 255, .15) !important;
       }
 
       #timetableCourseAssignmentBody td {
-        padding: 2px 0 !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
+        display: table-cell !important;
+        padding: 6px 8px !important;
+        vertical-align: middle !important;
+        white-space: nowrap !important;
+        width: auto !important;
       }
 
       #timetableCourseAssignmentBody select,
       #timetableCourseAssignmentBody input {
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
+        display: inline-block !important;
+        width: auto !important;
+        min-width: 90px !important;
+        padding: 5px 8px !important;
         font-size: 11px !important;
       }
 
@@ -3414,12 +3512,40 @@
       margin: 0;
     }
 
-    .login-quote-pill .quote-author {
-      font-size: 12px;
+    /* UI Sync Status Indicator Pill */
+    .sync-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
       font-weight: 600;
-      color: #A7F3D0;
-      letter-spacing: 0.02em;
-      opacity: 0.95;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--ink-soft);
+      transition: all 0.3s ease;
+      user-select: none;
+      margin-right: 6px;
+    }
+    .sync-status-pill .sync-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22C55E;
+      box-shadow: 0 0 8px #22C55E;
+    }
+    .sync-status-pill.synced .sync-dot { background: #22C55E; box-shadow: 0 0 8px #22C55E; }
+    .sync-status-pill.offline .sync-dot { background: #F59E0B; box-shadow: 0 0 8px #F59E0B; }
+    .sync-status-pill.pending .sync-dot { background: #A855F7; box-shadow: 0 0 8px #A855F7; }
+    .sync-status-pill.syncing .sync-dot {
+      background: #38BDF8;
+      box-shadow: 0 0 8px #38BDF8;
+      animation: syncPulse 1s infinite alternate;
+    }
+    @keyframes syncPulse {
+      0% { opacity: 0.4; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.2); }
     }
 
     .quote-refresh-btn {
@@ -3599,14 +3725,6 @@
       <div>
         <!-- TOP BAR -->
         <div class="glass topbar">
-          <div class="search-pill">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="7" />
-              <path d="M21 21l-4.3-4.3" />
-            </svg>
-            <input type="text" placeholder="Search subjects, semesters, reports..." id="topSearchInput">
-            <span class="kbd"></span>
-          </div>
           <button class="icon-btn" id="themeToggle" title="Toggle theme">
             <svg class="theme-icon-moon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="1.8">
@@ -3634,9 +3752,30 @@
               <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
           </button>
-          <div class="profile-pill" onclick="switchView('settings')">
-            <div class="av"></div>
-            <div><b class="student-name-display">Student</b><span class="student-usn-display">USN: N/A</span></div>
+
+          <div class="search-pill">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M21 21l-4.3-4.3" />
+            </svg>
+            <input type="text" placeholder="Search subjects, semesters, reports..." id="topSearchInput">
+            <span class="kbd"></span>
+          </div>
+
+          <!-- UI SYNC STATUS INDICATOR PILL -->
+          <div id="syncStatusPill" class="sync-status-pill synced" title="Network & Database Sync Status">
+            <span class="sync-dot"></span>
+            <span id="syncStatusText" class="sync-label">Synced</span>
+          </div>
+
+          <div class="profile-pill" onclick="switchView('settings')" title="User Profile">
+            <div class="av">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <div class="info"><b class="student-name-display">Student</b><span class="student-usn-display">USN: N/A</span></div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M6 9l6 6 6-6" />
             </svg>
@@ -3964,21 +4103,33 @@
               </div>
             </div>
           </div>
+
+          <footer class="app-footer">
+            <div class="footer-divider"></div>
+            <div class="footer-content">
+              <div class="footer-brand-title">SCFC StudentOS</div>
+              <div class="footer-legal-row">
+                <span class="footer-copyright">© 2026 SCFC StudentOS</span>
+                <span class="footer-sep">·</span>
+                <span class="footer-credit">Designed &amp; Developed by <strong>C VISHNU VARDHAN</strong></span>
+              </div>
+            </div>
+          </footer>
         </div>
 
         <!-- VIEW: TIMETABLE DASHBOARD -->
         <div id="view-timetable" class="page-view">
           <div class="hero fade-up">
             <h1>Semester <span class="grad">Timetable</span></h1>
-            <p>Official course timetable with theory and lab slot mappings. Auto-generates based on selected slots.</p>
+            <p>Official course timetable with theory and lab slot mapping for this semester.</p>
           </div>
-          <div class="glass fade-up" style="padding: 24px; margin-bottom:24px; overflow-x: auto;">
-            <div
-              style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; flex-wrap:wrap;">
+
+          <!-- 1. COURSE SLOT ASSIGNMENTS (FIRST) -->
+          <div class="glass fade-up" style="padding: 24px; margin-bottom:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; flex-wrap:wrap;">
               <h3 style="margin:0;">Course Slot Assignments</h3>
               <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <select class="form-input" id="timetableSemSelect" style="width:200px;"
-                  onchange="changeTimetableSemester(this.value)">
+                <select class="form-input" id="timetableSemSelect" style="width:160px;" onchange="changeTimetableSemester(this.value)">
                   <option value="1">Semester 1</option>
                   <option value="2">Semester 2</option>
                   <option value="3">Semester 3</option>
@@ -3991,44 +4142,78 @@
                 <button class="btn btn-ghost" onclick="printTimetableReport()">Print Timetable</button>
               </div>
             </div>
-            <table style="width:100%; text-align:left;">
-              <thead>
-                <tr>
-                  <th style="padding:8px;">Course</th>
-                  <th style="padding:8px;">Theory Instructor</th>
-                  <th style="padding:8px;">Lab Instructor</th>
-                  <th style="padding:8px;">Course Type</th>
-                  <th style="padding:8px;">Theory Slot</th>
-                  <th style="padding:8px;">Lab Slot</th>
-                </tr>
-              </thead>
-              <tbody id="timetableCourseAssignmentBody">
-                <!-- Injected via JS -->
-              </tbody>
-            </table>
+            <div class="table-wrap" style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+              <table style="width:100%; min-width:650px; text-align:left; border-collapse:collapse;">
+                <thead>
+                  <tr style="border-bottom:1px solid rgba(140, 130, 255, .2);">
+                    <th style="padding:8px 10px; font-size:12px;">Course</th>
+                    <th style="padding:8px 10px; font-size:12px;">Theory Instructor</th>
+                    <th style="padding:8px 10px; font-size:12px;">Lab Instructor</th>
+                    <th style="padding:8px 10px; font-size:12px;">Course Type</th>
+                    <th style="padding:8px 10px; font-size:12px;">Theory Slot</th>
+                    <th style="padding:8px 10px; font-size:12px;">Lab Slot</th>
+                  </tr>
+                </thead>
+                <tbody id="timetableCourseAssignmentBody">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="glass fade-up" style="padding: 24px; overflow-x: auto;">
+
+          <!-- 2. WEEKLY SCHEDULE (SECOND) -->
+          <div class="glass fade-up" style="padding: 24px; margin-bottom:24px;">
             <h3 style="margin-top:0; margin-bottom:16px;">Weekly Schedule</h3>
-            <table class="timetable-grid" style="width:100%; border-collapse:collapse; text-align:center;">
-              <thead>
-                <tr>
-                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">Day / Time</th>
-                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">9:00 - 9:50</th>
-                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">9:55 - 10:45</th>
-                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">10:50 - 11:40</th>
-                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">11:45 - 12:35</th>
-                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">12:35 - 1:15</th>
-                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">1:15 - 2:05</th>
-                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">2:10 - 3:00</th>
-                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">3:05 - 3:55</th>
-                  <th style="padding:10px; border:1px solid rgba(140, 130, 255, .2);">4:00 - 4:50</th>
-                </tr>
-              </thead>
-              <tbody id="timetableBody">
-                <!-- Injected via JS -->
-              </tbody>
-            </table>
+            <div class="table-wrap" style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+              <table class="timetable-grid" style="width:100%; min-width:1230px; table-layout:fixed; border-collapse:collapse; text-align:center;">
+                <colgroup>
+                  <col class="col-day" style="width:65px; min-width:65px; max-width:65px;">
+                  <col class="col-slot" style="width:140px; min-width:140px; max-width:140px;">
+                  <col class="col-slot" style="width:140px; min-width:140px; max-width:140px;">
+                  <col class="col-slot" style="width:140px; min-width:140px; max-width:140px;">
+                  <col class="col-slot" style="width:140px; min-width:140px; max-width:140px;">
+                  <col class="col-lunch" style="width:45px; min-width:45px; max-width:45px;">
+                  <col class="col-slot" style="width:140px; min-width:140px; max-width:140px;">
+                  <col class="col-slot" style="width:140px; min-width:140px; max-width:140px;">
+                  <col class="col-slot" style="width:140px; min-width:140px; max-width:140px;">
+                  <col class="col-slot" style="width:140px; min-width:140px; max-width:140px;">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th rowspan="2" class="col-day" style="padding:6px; border:1px solid rgba(140, 130, 255, .2); font-size:11px; font-weight:700; background:rgba(108, 99, 255, 0.1); width:65px;">Day</th>
+                    <th colspan="4" style="padding:6px; border:1px solid rgba(140, 130, 255, .2); font-size:11px; font-weight:700; background:rgba(108, 99, 255, 0.2); color:#A855F7;">Morning</th>
+                    <th rowspan="2" class="col-lunch" style="padding:6px; border:1px solid rgba(140, 130, 255, .2); font-size:11px; font-weight:700; background:rgba(0, 0, 0, 0.25); color:var(--ink-soft); width:45px;">Lunch</th>
+                    <th colspan="4" style="padding:6px; border:1px solid rgba(140, 130, 255, .2); font-size:11px; font-weight:700; background:rgba(139, 92, 246, 0.2); color:#38BDF8;">Afternoon</th>
+                  </tr>
+                  <tr>
+                    <th class="col-slot" style="padding:6px 4px; border:1px solid rgba(140, 130, 255, .2); font-size:10px; width:140px;">9:00 - 9:50</th>
+                    <th class="col-slot" style="padding:6px 4px; border:1px solid rgba(140, 130, 255, .2); font-size:10px; width:140px;">9:55 - 10:45</th>
+                    <th class="col-slot" style="padding:6px 4px; border:1px solid rgba(140, 130, 255, .2); font-size:10px; width:140px;">10:50 - 11:40</th>
+                    <th class="col-slot" style="padding:6px 4px; border:1px solid rgba(140, 130, 255, .2); font-size:10px; width:140px;">11:45 - 12:35</th>
+                    <th class="col-slot" style="padding:6px 4px; border:1px solid rgba(140, 130, 255, .2); font-size:10px; width:140px;">1:15 - 2:05</th>
+                    <th class="col-slot" style="padding:6px 4px; border:1px solid rgba(140, 130, 255, .2); font-size:10px; width:140px;">2:10 - 3:00</th>
+                    <th class="col-slot" style="padding:6px 4px; border:1px solid rgba(140, 130, 255, .2); font-size:10px; width:140px;">3:05 - 3:55</th>
+                    <th class="col-slot" style="padding:6px 4px; border:1px solid rgba(140, 130, 255, .2); font-size:10px; width:140px;">4:00 - 4:50</th>
+                  </tr>
+                </thead>
+                <tbody id="timetableBody">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
           </div>
+
+          <footer class="app-footer">
+            <div class="footer-divider"></div>
+            <div class="footer-content">
+              <div class="footer-brand-title">SCFC StudentOS</div>
+              <div class="footer-legal-row">
+                <span class="footer-copyright">© 2026 SCFC StudentOS</span>
+                <span class="footer-sep">·</span>
+                <span class="footer-credit">Designed &amp; Developed by <strong>C VISHNU VARDHAN</strong></span>
+              </div>
+            </div>
+          </footer>
         </div>
 
         <!-- VIEW: EXAM DASHBOARD -->
@@ -4713,18 +4898,6 @@
             </div>
           </div>
         </div>
-
-        <footer class="app-footer">
-          <div class="footer-divider"></div>
-          <div class="footer-content">
-            <div class="footer-brand-title">SCFC StudentOS</div>
-            <div class="footer-legal-row">
-              <span class="footer-copyright">© 2026 SCFC StudentOS</span>
-              <span class="footer-sep">·</span>
-              <span class="footer-credit">Designed &amp; Developed by <strong>C VISHNU VARDHAN</strong></span>
-            </div>
-          </div>
-        </footer>
       </div>
     </div>
   </div>
@@ -5911,25 +6084,27 @@
       if (!state.usn) return;
       clearTimeout(autoSaveTimer);
       autoSaveTimer = setTimeout(async () => {
-        try {
-          const { ok, data } = await safeFetchJson(`/api/student/${encodeURIComponent(state.usn)}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: state.studentName,
-              theme: state.theme,
-              currentSemester: state.currentSemester,
-              semesters: state.semesters,
-              history: state.history,
-              tasks: state.tasks,
-              examConfig: state.examConfig
-            })
-          });
-          if (!ok && data) {
-            console.warn('Auto-save warning:', data.message);
-          }
-        } catch (e) {
-          console.error('MongoDB Auto-save error:', e);
+        const payloadData = {
+          name: state.studentName,
+          usn: state.usn,
+          theme: state.theme,
+          currentSemester: state.currentSemester,
+          semesters: state.semesters,
+          history: state.history,
+          tasks: state.tasks,
+          examConfig: state.examConfig,
+          timetable: state.timetable || [],
+          trackerConfig: state.trackerConfig || {}
+        };
+
+        // 1. Immediately Save to Local IndexedDB Master!
+        if (window.scfcDB) {
+          await window.scfcDB.saveUserData(state.usn, payloadData);
+        }
+
+        // 2. Enqueue Offline Change & Trigger Sync Engine!
+        if (window.scfcSyncEngine) {
+          await window.scfcSyncEngine.enqueueChange('student', state.usn, 'UPDATE', payloadData);
         }
       }, 350);
     }
@@ -6858,9 +7033,25 @@
 
       const activeUsn = localStorage.getItem('scfc_active_usn');
       if (activeUsn) {
+        // 1. OFFLINE-FIRST: Read from IndexedDB FIRST!
+        let studentData = null;
+        if (window.scfcDB) {
+          studentData = await window.scfcDB.getUserData(activeUsn);
+        }
+
+        if (studentData) {
+          applyStudentData(studentData);
+          document.getElementById('authScreenOverlay').classList.remove('open');
+          document.getElementById('mainAppShell').style.display = 'block';
+        }
+
+        // 2. Background / Network fetch to sync with database
         const { ok, data } = await safeFetchJson(`/api/student/${encodeURIComponent(activeUsn)}`);
         if (ok && data && data.success && data.student) {
           applyStudentData(data.student);
+          if (window.scfcDB) {
+            await window.scfcDB.saveUserData(activeUsn, data.student);
+          }
           document.getElementById('authScreenOverlay').classList.remove('open');
           document.getElementById('mainAppShell').style.display = 'block';
 
@@ -6870,6 +7061,11 @@
               if (recoveryModal) recoveryModal.classList.add('open');
             }, 600);
           }
+          return;
+        } else if (studentData) {
+          // Keep UI active with offline IndexedDB data if network request fails
+          document.getElementById('authScreenOverlay').classList.remove('open');
+          document.getElementById('mainAppShell').style.display = 'block';
           return;
         }
       }
@@ -7312,7 +7508,7 @@
         }
       }
 
-      // Render Weekly Schedule Grid
+      // Render Weekly Schedule Grid (Day rows, Time columns, full slot cards)
       const days = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
       const grid = { MON: Array(9).fill(null), TUE: Array(9).fill(null), WED: Array(9).fill(null), THU: Array(9).fill(null), FRI: Array(9).fill(null) };
 
@@ -7324,12 +7520,12 @@
           const instName = isLab ? (r.labInstructor || r.instructor || 'Faculty Name') : (r.instructor || 'Faculty Name');
           mapping.forEach(m => {
             if (grid[m.d]) {
-              const cellHtml = `<div style="padding:6px; background:${typeColor}; border-left:3px solid ${borderColor}; border-radius:4px; font-size:11px; height:100%; display:flex; flex-direction:column; justify-content:center;">
-                         <b style="color:var(--ink); font-size:12px;">${r.code}</b>
-                         <span style="color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${r.name}">${r.name}</span>
-                         <div style="margin-top:4px; font-weight:600; color:${borderColor};">${slotName}</div>
-                         <div style="font-size:10px; color:var(--ink-soft); margin-top:2px;">${instName}</div>
-                     </div>`;
+              const cellHtml = `<div class="tt-card-box" style="padding:5px 6px; background:${typeColor}; border-left:3.5px solid ${borderColor}; border-radius:6px; font-size:11px; height:100%; display:flex; flex-direction:column; justify-content:center; text-align:center; box-sizing:border-box; width:100%; min-width:0; max-width:100%; overflow:hidden;">
+                         <b style="color:#ffffff; font-size:10.5px; font-weight:700; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; min-width:0; max-width:100%;">${r.code}</b>
+                         <span class="tt-course-name" style="color:var(--ink-soft); font-size:9px; line-height:1.15; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; text-overflow:ellipsis; margin-top:2px; word-break:break-word; min-width:0; max-width:100%;" title="${r.name}">${r.name}</span>
+                         <div style="margin-top:2px; font-weight:700; font-size:9px; color:${borderColor}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; max-width:100%;">${slotName}</div>
+                         <div style="font-size:8.5px; color:var(--ink-soft); margin-top:1px; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; max-width:100%;" title="${instName}">${instName}</div>
+                      </div>`;
 
               if (m.span === 2) {
                 grid[m.d][m.c] = { html: cellHtml, span: 2 };
@@ -7375,12 +7571,13 @@
             const cell = grid[d][c];
             if (cell === 'skip') continue;
             if (cell) {
-              tr += `<td colspan="${cell.span}" style="padding:4px; border:1px solid rgba(140, 130, 255, .2); min-width:100px; max-width:140px; vertical-align:top; height:80px;">${cell.html}</td>`;
+              tr += `<td colspan="${cell.span}" style="padding:4px; border:1px solid rgba(140, 130, 255, .2); vertical-align:top;">${cell.html}</td>`;
             } else {
-              tr += `<td style="border:1px solid rgba(140, 130, 255, .2); padding:10px; color:var(--ink-soft); font-size:11px; height:80px;">Free</td>`;
+              tr += `<td style="border:1px solid rgba(140, 130, 255, .2); padding:6px; color:var(--ink-soft); font-size:10px; text-align:center;">Free</td>`;
             }
           }
-          return tr + '</tr>';
+          tr += `</tr>`;
+          return tr;
         }).join('');
       }
     }
@@ -10484,6 +10681,26 @@
         bottom.appendChild(div);
       });
     })();
+
+    // PWA Service Worker Registration & Sync Status Listener
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('[SW] Service Worker registered:', reg.scope))
+          .catch(err => console.warn('[SW] Registration error:', err));
+      });
+    }
+
+    if (window.scfcSyncEngine) {
+      window.scfcSyncEngine.onStatusChange(({ status, text }) => {
+        const pill = document.getElementById('syncStatusPill');
+        const label = document.getElementById('syncStatusText');
+        if (pill && label) {
+          pill.className = `sync-status-pill ${status}`;
+          label.textContent = text || status;
+        }
+      });
+    }
   </script>
 </body>
 

@@ -113,6 +113,14 @@ const StudentSchema = new mongoose.Schema({
       holidays: [],
       workingSaturdays: []
     }
+  },
+  timetable: {
+    type: mongoose.Schema.Types.Mixed,
+    default: []
+  },
+  trackerConfig: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {}
   }
 }, {
   timestamps: true,

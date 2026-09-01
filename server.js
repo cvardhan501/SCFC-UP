@@ -667,7 +667,7 @@ app.get('/api/student/:usn', async (req, res) => {
 app.put('/api/student/:usn', async (req, res) => {
   try {
     const cleanUsn = req.params.usn.trim().toUpperCase();
-    const { name, theme, currentSemester, semesters, history, tasks, examConfig } = req.body;
+    const { name, theme, currentSemester, semesters, history, tasks, examConfig, timetable, trackerConfig } = req.body;
 
     const student = await Student.findOne({ usn: cleanUsn });
     if (!student) {
@@ -689,6 +689,16 @@ app.put('/api/student/:usn', async (req, res) => {
     if (examConfig !== undefined) {
       student.examConfig = examConfig;
       student.markModified('examConfig');
+    }
+
+    if (timetable !== undefined) {
+      student.timetable = timetable;
+      student.markModified('timetable');
+    }
+
+    if (trackerConfig !== undefined) {
+      student.trackerConfig = trackerConfig;
+      student.markModified('trackerConfig');
     }
 
     await student.save();
