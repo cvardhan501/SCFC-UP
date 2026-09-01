@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- SCFC Blue-to-Purple Hexagon Gradient -->
+    <linearGradient id="scfcHexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0052FF"/>
+      <stop offset="45%" stop-color="#6C63FF"/>
+      <stop offset="80%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#A855F7"/>
+    </linearGradient>
+
+    <!-- Book Inner Gradient -->
+    <linearGradient id="scfcBookGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0052FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- BACKGROUND GLOW SHAPE -->
+  <path d="M 256 32 L 416 124 L 416 308 L 256 400 L 96 308 L 96 124 Z"
+        fill="none"
+        stroke="url(#scfcHexGrad)"
+        stroke-width="52"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- INNER GRADUATION MORTARBOARD CAP -->
+  <polygon points="256,128 356,176 256,224 156,176" fill="#0F172A"/>
+  <polygon points="256,134 346,176 256,218 166,176" fill="url(#scfcHexGrad)"/>
+
+  <!-- Cap Base Skullcap -->
+  <path d="M 196 198 L 196 236 C 196 254 316 254 316 236 L 316 198 Z" fill="#0F172A"/>
+
+  <!-- Cap Tassel & Button -->
+  <circle cx="256" cy="176" r="6" fill="#FFFFFF"/>
+  <path d="M 256 176 L 340 200 L 340 236" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="340" cy="240" r="5" fill="#FFFFFF"/>
+
+  <!-- INNER OPEN ACADEMIC BOOK -->
+  <path d="M 256 330 C 220 300 160 304 126 318 L 126 270 C 160 256 220 252 256 280 Z" fill="url(#scfcBookGrad)"/>
+  <path d="M 256 330 C 292 300 352 304 386 318 L 386 270 C 352 256 292 252 256 280 Z" fill="url(#scfcHexGrad)"/>
+  <path d="M 256 280 L 256 334" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- TOP-RIGHT DIGITAL PIXEL ACCENT GRID -->
+  <rect x="424" y="64" width="22" height="22" rx="4" fill="#0052FF"/>
+  <rect x="454" y="64" width="18" height="18" rx="4" fill="#38BDF8"/>
+  <rect x="424" y="94" width="18" height="18" rx="4" fill="#6C63FF"/>
+  <rect x="454" y="94" width="22" height="22" rx="4" fill="#8B5CF6"/>
+  <rect x="484" y="94" width="14" height="14" rx="3" fill="#A855F7"/>
+  <rect x="454" y="124" width="16" height="16" rx="3" fill="#00D2FF"/>
+</svg>

@@ -3,8 +3,13 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SCFC Grade Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SCFC StudentOS</title>
+  <meta name="description" content="Your Academic Operating System">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="alternate icon" type="image/png" href="/favicon.svg?v=2">
+  <link rel="apple-touch-icon" href="/favicon.svg?v=2">
+  <link rel="manifest" href="/site.webmanifest?v=2">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
@@ -17,12 +22,14 @@
       --cyan: #38BDF8;
       --teal: #22D3EE;
       --pink: #EC4899;
-      --ink: #111827;
-      --ink-soft: #6B7280;
-      --glass-bg: rgba(255, 255, 255, 0.55);
-      --glass-bg-2: rgba(255, 255, 255, 0.38);
-      --glass-border: rgba(255, 255, 255, 0.65);
-      --glass-shadow: 0 20px 60px -20px rgba(76, 60, 180, 0.28), 0 2px 10px rgba(76, 60, 180, 0.08);
+      --ink: #0F172A;
+      --ink-soft: #334155;
+      /* Light Mode True Clear Glass (3-Tier Hierarchy) */
+      --glass-bg: rgba(255, 255, 255, 0.05);   /* Level 1: 5% opacity */
+      --glass-bg-2: rgba(255, 255, 255, 0.08); /* Level 2: 8% opacity */
+      --glass-bg-3: rgba(255, 255, 255, 0.12); /* Level 3: 12% opacity */
+      --glass-border: rgba(255, 255, 255, 0.22);
+      --glass-shadow: 0 15px 45px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.30);
       --radius-lg: 28px;
       --radius-md: 20px;
       --radius-sm: 14px;
@@ -31,6 +38,13 @@
       --sidebar-right: 352px;
     }
 
+    @keyframes tickPop {
+      0% { transform: scale(0.3) rotate(-20deg); opacity: 0; }
+      70% { transform: scale(1.25) rotate(5deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    /* Original Pristine Dark Mode - Unchanged */
     html[data-theme="dark"] {
       --bg-1: #080B18;
       --bg-2: #0C1024;
@@ -43,10 +57,119 @@
       --glass-shadow: 0 20px 60px -18px rgba(0, 0, 0, 0.6), 0 2px 14px rgba(0, 0, 0, 0.35);
     }
 
+    /* Background-Adaptive Glass & Typography Tuning (Light Mode Only) */
+    html[data-bg="classic"]:not([data-theme="dark"]) {
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.30);
+      --ink: #0F172A;
+      --ink-soft: #334155;
+    }
+
+    html[data-bg="mountain-sunset"]:not([data-theme="dark"]) {
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.32);
+      --ink: #0F172A;
+      --ink-soft: #1E293B;
+      --glass-shadow: 0 15px 45px rgba(40, 15, 15, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    html[data-bg="night-mountains"]:not([data-theme="dark"]) {
+      --glass-bg: rgba(255, 255, 255, 0.06);
+      --glass-border: rgba(255, 255, 255, 0.30);
+      --ink: #0F172A;
+      --ink-soft: #334155;
+      --glass-shadow: 0 15px 45px rgba(10, 15, 30, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.30);
+    }
+
+    html[data-bg="forest"]:not([data-theme="dark"]) {
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.35);
+      --ink: #0F172A;
+      --ink-soft: #1E293B;
+      --glass-shadow: 0 15px 45px rgba(10, 25, 15, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    html[data-bg="ocean"]:not([data-theme="dark"]) {
+      --glass-bg: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.32);
+      --ink: #0F172A;
+      --ink-soft: #1E293B;
+      --glass-shadow: 0 15px 45px rgba(10, 20, 30, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    html[data-bg="aurora"]:not([data-theme="dark"]) {
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.32);
+      --ink: #0F172A;
+      --ink-soft: #334155;
+      --glass-shadow: 0 15px 45px rgba(5, 25, 30, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.32);
+    }
+
+    html[data-bg="space"]:not([data-theme="dark"]) {
+      --glass-bg: rgba(255, 255, 255, 0.06);
+      --glass-border: rgba(255, 255, 255, 0.35);
+      --ink: #0F172A;
+      --ink-soft: #1E293B;
+      --glass-shadow: 0 15px 45px rgba(5, 5, 20, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    /* High-Legibility Light Mode Form & Modal Typography */
+    html:not([data-theme="dark"]) .modal {
+      background: rgba(255, 255, 255, 0.28) !important;
+      backdrop-filter: blur(20px) saturate(130%) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(130%) !important;
+      border: 1.5px solid rgba(255, 255, 255, 0.55) !important;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.70) !important;
+    }
+
+    html:not([data-theme="dark"]) .modal-head h3,
+    html:not([data-theme="dark"]) .form-group label,
+    html:not([data-theme="dark"]) .modal-head label {
+      color: #0F172A !important;
+      font-weight: 700 !important;
+    }
+
+    html:not([data-theme="dark"]) .modal-head p {
+      color: #334155 !important;
+      font-weight: 600 !important;
+    }
+
+    html:not([data-theme="dark"]) .form-input {
+      background: rgba(255, 255, 255, 0.55) !important;
+      border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+      color: #0F172A !important;
+      font-weight: 700 !important;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    html:not([data-theme="dark"]) .form-input::placeholder {
+      color: #475569 !important;
+      font-weight: 500 !important;
+      opacity: 0.95 !important;
+    }
+
+    html:not([data-theme="dark"]) .password-input-wrap .eye-toggle-btn {
+      color: #475569 !important;
+    }
+
+    html:not([data-theme="dark"]) .password-input-wrap .eye-toggle-btn:hover {
+      color: #4F46E5 !important;
+      background: rgba(79, 70, 229, 0.12) !important;
+    }
+
+    html:not([data-theme="dark"]) a {
+      color: #4F46E5 !important;
+      font-weight: 700 !important;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    html {
+      background: var(--bg-1);
     }
 
     html,
@@ -57,7 +180,7 @@
     body {
       font-family: 'Inter', sans-serif;
       color: var(--ink);
-      background: var(--bg-1);
+      background: transparent;
       overflow-x: hidden;
       transition: background .5s ease, color .5s ease;
       -webkit-font-smoothing: antialiased;
@@ -102,9 +225,10 @@
     .aurora-wrap {
       position: fixed;
       inset: 0;
-      z-index: 0;
+      z-index: 1;
       overflow: hidden;
-      background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+      background: transparent;
+      pointer-events: none;
     }
 
     .blob {
@@ -211,13 +335,7 @@
     }
 
     .grain {
-      position: absolute;
-      inset: 0;
-      opacity: .4;
-      mix-blend-mode: overlay;
-      pointer-events: none;
-      background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-      background-size: 3px 3px;
+      display: none !important;
     }
 
     .lightray {
@@ -286,7 +404,7 @@
     /* ---------------- LAYOUT ---------------- */
     .app {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       min-height: 100vh;
       padding: 20px 24px 100px 24px;
     }
@@ -303,41 +421,59 @@
     /* ---------------- GLASS BASE ---------------- */
     .glass {
       background: var(--glass-bg);
-      backdrop-filter: blur(40px) saturate(160%);
-      -webkit-backdrop-filter: blur(40px) saturate(160%);
+      backdrop-filter: blur(12px) saturate(115%);
+      -webkit-backdrop-filter: blur(12px) saturate(115%);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius-lg);
       box-shadow: var(--glass-shadow);
       position: relative;
+      overflow: hidden;
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease;
     }
 
-    .glass::before {
+    /* Light Mode Specular Edge Line & Diagonal Reflection */
+    html:not([data-theme="dark"]) .glass::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.50) 0%, rgba(255, 255, 255, 0.15) 60%, transparent 100%);
+      pointer-events: none;
+      border-top-left-radius: inherit;
+      border-top-right-radius: inherit;
+      z-index: 2;
+    }
+
+    html:not([data-theme="dark"]) .glass::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Original Dark Mode Pseudo-Elements */
+    html[data-theme="dark"] .glass::before {
       content: '';
       position: absolute;
       inset: 0;
       border-radius: inherit;
       pointer-events: none;
-      background: linear-gradient(135deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 40%);
-      opacity: .6;
-    }
-
-    html[data-theme="dark"] .glass::before {
       background: linear-gradient(135deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, 0) 45%);
     }
 
-    .glass.spot::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      pointer-events: none;
-      background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(140, 130, 255, .16), transparent 60%);
-      opacity: 0;
-      transition: opacity .3s ease;
+    html[data-theme="dark"] .glass::after {
+      display: none;
     }
 
-    .glass.spot:hover::after {
-      opacity: 1;
+    .glass.spot:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      border-color: rgba(255, 255, 255, 0.55);
     }
 
     .tint-lavender {
@@ -572,6 +708,17 @@
       padding: 11px 16px;
       border-radius: 16px;
       color: var(--ink-soft);
+      background: var(--glass-bg-2);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .search-pill:focus-within {
+      border-color: var(--indigo);
+      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     .search-pill input {
@@ -806,21 +953,38 @@
       background: linear-gradient(120deg, var(--indigo), var(--purple));
       color: #fff;
       box-shadow: 0 10px 24px -8px rgba(108, 99, 255, .6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), transparent);
+      pointer-events: none;
     }
 
     .btn-primary:hover {
       box-shadow: 0 14px 30px -8px rgba(108, 99, 255, .75);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
 
     .btn-ghost {
       background: var(--glass-bg-2);
       border: 1px solid var(--glass-border);
       color: var(--ink);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
 
     .btn-ghost:hover {
-      background: rgba(140, 130, 255, .1);
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.45);
+      transform: translateY(-1px);
     }
 
     .table-wrap {
@@ -1282,11 +1446,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: rgba(0, 0, 0, 0.18);
+      background: var(--glass-bg-2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--glass-border);
       border-radius: 12px;
       padding: 8px 14px;
       min-width: 64px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.40);
     }
 
     .countdown-num {
@@ -1322,7 +1489,9 @@
     .exam-cal-cell {
       aspect-ratio: 1 / 1;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--glass-bg-2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1px solid var(--glass-border);
       display: flex;
       flex-direction: column;
@@ -1355,10 +1524,19 @@
     }
 
     .exam-cal-cell.has-exam {
-      background: linear-gradient(135deg, rgba(108, 99, 255, 0.25), rgba(168, 85, 247, 0.2));
-      border-color: var(--indigo);
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.28), rgba(168, 85, 247, 0.22));
+      backdrop-filter: blur(14px) saturate(125%);
+      -webkit-backdrop-filter: blur(14px) saturate(125%);
+      border: 1.5px solid var(--indigo);
       color: var(--indigo);
       font-weight: 800;
+      box-shadow: 0 4px 14px rgba(108, 99, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.50);
+    }
+
+    html:not([data-theme="dark"]) .exam-cal-cell.has-exam {
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.22), rgba(139, 92, 246, 0.18));
+      border-color: rgba(108, 99, 255, 0.55);
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
     }
 
     .exam-cal-cell.has-exam::after {
@@ -1369,6 +1547,7 @@
       background: var(--indigo);
       position: absolute;
       bottom: 4px;
+      box-shadow: 0 0 8px rgba(108, 99, 255, 0.8);
     }
 
     @media (max-width: 900px) {
@@ -1887,18 +2066,131 @@
       line-height: 1.6;
     }
 
-    footer.foot {
+    /* ---------------- PREMIUM PRODUCTION FOOTER ---------------- */
+    footer.app-footer {
+      margin-top: 40px;
+      padding: 24px 16px 36px 16px;
+      position: relative;
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
       text-align: center;
-      padding: 30px 0 6px 0;
-      font-size: 11.5px;
+    }
+
+    .footer-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0) 0%, 
+        var(--glass-border) 25%, 
+        var(--glass-border) 75%, 
+        rgba(255, 255, 255, 0) 100%
+      );
+      margin-bottom: 6px;
+      opacity: 0.7;
+    }
+
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-brand-title {
+      font-family: 'Outfit', 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      opacity: 0.9;
+    }
+
+    .footer-legal-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12.5px;
+      line-height: 1.5;
       color: var(--ink-soft);
+      font-weight: 450;
+    }
+
+    .footer-copyright {
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+
+    .footer-sep {
+      color: var(--ink-soft);
+      opacity: 0.5;
+      font-weight: 400;
+    }
+
+    .footer-credit {
+      color: var(--ink-soft);
+      opacity: 0.85;
+      font-size: 12px;
+      font-weight: 450;
+    }
+
+    .footer-credit strong {
+      font-weight: 600;
+      color: var(--ink);
+      opacity: 0.95;
+    }
+
+    /* Light mode clear glass enhancement */
+    html:not([data-theme="dark"]) footer.app-footer {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 20px 20px 0 0;
+    }
+
+    /* Dark mode subtle contrast */
+    html[data-theme="dark"] footer.app-footer {
+      background: transparent;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    @media (max-width: 640px) {
+      footer.app-footer {
+        padding: 20px 12px 90px 12px;
+        margin-top: 28px;
+      }
+
+      .footer-legal-row {
+        flex-direction: column;
+        gap: 4px;
+        font-size: 12px;
+      }
+
+      .footer-sep {
+        display: none;
+      }
+
+      .footer-brand-title {
+        font-size: 14px;
+      }
+
+      .footer-credit {
+        font-size: 11.5px;
+      }
     }
 
     /* ---------------- MODALS & AUTH ---------------- */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      z-index: 100;
+      z-index: 1000;
       background: rgba(10, 10, 25, .55);
       backdrop-filter: blur(10px);
       display: flex;
@@ -1906,13 +2198,27 @@
       justify-content: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .3s ease;
+      visibility: hidden;
+      transition: opacity .3s ease, visibility .3s ease;
       padding: 20px;
     }
 
     .modal-overlay.open {
       opacity: 1;
       pointer-events: auto;
+      visibility: visible;
+    }
+
+    /* Modals opened over auth screen or higher stack */
+    #scfcBgSelectorModal.open,
+    #wrongPasswordModal.open,
+    #forgotPasswordModal.open,
+    #resetPasswordModal.open,
+    #changeEmailModal.open,
+    #addRecoveryEmailModal.open,
+    #dayActionModalOverlay.open,
+    #modalOverlay.open {
+      z-index: 2000;
     }
 
     .modal {
@@ -1925,10 +2231,12 @@
       overflow: hidden;
       transform: translateY(24px) scale(.97);
       transition: transform .35s cubic-bezier(.22, 1, .36, 1);
+      position: relative;
     }
 
     .modal-overlay.open .modal {
       transform: translateY(0) scale(1);
+      pointer-events: auto;
     }
 
     .modal-head {
@@ -2120,11 +2428,60 @@
       display: block;
     }
 
-    .auth-banner.success {
-      background: rgba(34, 197, 94, .15);
-      color: #16A34A;
-      border: 1px solid rgba(34, 197, 94, .3);
-      display: block;
+    /* Form Inputs & Select Inset Glass Material */
+    .form-input,
+    .select-glass {
+      background: var(--glass-bg-2);
+      border: 1px solid var(--glass-border);
+      color: var(--ink);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13.5px;
+      outline: none;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-input:focus,
+    .select-glass:focus {
+      border-color: var(--indigo);
+      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Password Eye Toggle Container & Button */
+    .password-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .password-input-wrap .form-input {
+      padding-right: 44px !important;
+      width: 100%;
+    }
+
+    .eye-toggle-btn {
+      position: absolute;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: var(--ink-soft);
+      cursor: pointer;
+      padding: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: color 0.2s ease, background-color 0.2s ease;
+      z-index: 2;
+    }
+
+    .eye-toggle-btn:hover {
+      color: var(--indigo);
+      background: rgba(108, 99, 255, 0.12);
     }
 
     /* ---------------- MOBILE ---------------- */
@@ -2260,6 +2617,15 @@
     }
 
     @media (max-width:520px) {
+      html, body {
+        overflow-x: hidden;
+        width: 100%;
+      }
+
+      .app {
+        padding: 10px 10px 95px 10px;
+      }
+
       .stats-row {
         grid-template-columns: 1fr;
       }
@@ -2269,7 +2635,57 @@
       }
 
       .hero h1 {
-        font-size: 26px;
+        font-size: 22px;
+        line-height: 1.25;
+      }
+
+      .hero p {
+        font-size: 12px;
+      }
+
+      .dash-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+      }
+
+      .exam-hero-grid,
+      .exam-cal-timeline-grid,
+      .exam-tables-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+      }
+
+      .modal {
+        width: 92vw !important;
+        max-width: 440px !important;
+        margin: 0 auto;
+        padding: 16px !important;
+        border-radius: 20px !important;
+      }
+
+      .login-quote-pill {
+        bottom: 12px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(100vw - 24px) !important;
+        max-width: 440px !important;
+        padding: 10px 14px !important;
+        border-radius: 18px !important;
+        gap: 8px !important;
+      }
+
+      .login-quote-pill .quote-text {
+        font-size: 12px !important;
+        line-height: 1.35 !important;
+      }
+
+      .login-quote-pill .quote-author {
+        font-size: 10.5px !important;
+      }
+
+      .bg-selector-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
       }
     }
 
@@ -2443,10 +2859,289 @@
         display: none !important;
       }
     }
+
+    /* =========================================================
+       DYNAMIC BACKGROUND & MOTIVATION SYSTEM STYLES
+    ========================================================= */
+    .scfc-bg-container {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .scfc-bg-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity;
+    }
+
+    .scfc-bg-layer.active {
+      opacity: 1;
+    }
+
+    .scfc-bg-overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, rgba(15, 23, 42, 0.16) 100%),
+                  linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(15, 23, 42, 0.12) 100%);
+      pointer-events: none;
+      transition: background 0.5s ease;
+    }
+
+    html[data-theme="dark"] .scfc-bg-overlay {
+      background: radial-gradient(circle at center, rgba(8, 11, 24, 0.35) 0%, rgba(4, 6, 14, 0.65) 100%),
+                  linear-gradient(180deg, rgba(4, 6, 14, 0.2) 0%, rgba(4, 6, 14, 0.55) 100%);
+    }
+
+    /* Background Selector Modal & Options */
+    .bg-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .bg-selector-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .bg-selector-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .bg-option-card {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      background: var(--glass-bg);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .bg-option-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--indigo);
+      box-shadow: 0 8px 24px rgba(108, 99, 255, 0.3);
+    }
+
+    .bg-option-card.selected {
+      border-color: #6C63FF;
+      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.4), 0 10px 25px rgba(108, 99, 255, 0.35);
+    }
+
+    .bg-option-thumb {
+      height: 110px;
+      width: 100%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      transition: transform 0.4s ease;
+    }
+
+    .bg-option-card:hover .bg-option-thumb {
+      transform: scale(1.04);
+    }
+
+    .bg-option-info {
+      padding: 10px 12px;
+      background: rgba(10, 14, 28, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .bg-option-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bg-option-check {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #6C63FF;
+      color: #ffffff;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .bg-option-card.selected .bg-option-check {
+      display: flex;
+    }
+
+    /* Login Screen Background Button */
+    .bg-selector-login-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 250 !important;
+      pointer-events: auto !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .bg-selector-login-btn:hover {
+      background: rgba(108, 99, 255, 0.85);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+    }
+
+    @media (max-width: 640px) {
+      .bg-selector-login-btn {
+        top: 14px;
+        right: 14px;
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+    }
+
+    /* Login Motivational Quote System */
+    .login-quote-pill {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 580px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 22px;
+      border-radius: 22px;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      z-index: 50 !important;
+      animation: quoteFadeIn 0.6s ease-out;
+      color: #ffffff;
+      pointer-events: auto;
+    }
+
+    @keyframes quoteFadeIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, 14px);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    .login-quote-pill .quote-icon {
+      color: #8B5CF6;
+      flex-shrink: 0;
+      margin-top: 2px;
+      opacity: 0.95;
+    }
+
+    .login-quote-pill .quote-content {
+      flex: 1;
+    }
+
+    .login-quote-pill .quote-text {
+      font-size: 14.5px;
+      font-weight: 500;
+      line-height: 1.45;
+      color: #F8FAFC;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+      font-family: 'Outfit', 'Inter', sans-serif;
+      margin: 0;
+    }
+
+    .login-quote-pill .quote-author {
+      font-size: 12px;
+      font-weight: 600;
+      color: #A7F3D0;
+      letter-spacing: 0.02em;
+      opacity: 0.95;
+    }
+
+    .quote-refresh-btn {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.65);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .quote-refresh-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.15);
+      transform: rotate(180deg);
+    }
+
+    @media (max-width: 640px) {
+      .login-quote-pill {
+        bottom: 14px;
+        padding: 10px 14px;
+        gap: 10px;
+        max-width: 92vw;
+      }
+      .login-quote-pill .quote-text {
+        font-size: 12.5px;
+      }
+      .login-quote-pill .quote-author {
+        font-size: 11px;
+      }
+    }
   </style>
 </head>
 
 <body>
+
+  <!-- DYNAMIC BACKGROUND LAYERS -->
+  <div id="scfcBgContainer" class="scfc-bg-container">
+    <div id="scfcBgLayer1" class="scfc-bg-layer active"></div>
+    <div id="scfcBgLayer2" class="scfc-bg-layer"></div>
+    <div id="scfcBgOverlay" class="scfc-bg-overlay"></div>
+  </div>
 
   <div class="aurora-wrap" id="auroraWrap">
     <div class="blob blob-1"></div>
@@ -2598,6 +3293,14 @@
               <circle cx="12" cy="12" r="4.5" />
               <path
                 d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" />
+            </svg>
+          </button>
+          <button class="icon-btn" id="topbarBgToggleBtn" title="Change Dynamic Background" onclick="SCFCBackgroundManager.openModal()">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M12 21a9 9 0 1 1 0-18c4.97 0 9 3.58 9 8a4.5 4.5 0 0 1-4.5 4.5H14a2 2 0 0 0-2 2c0 1.1-.9 2-2 2h0z"/>
+              <circle cx="7.5" cy="10.5" r="1.5" fill="currentColor"/>
+              <circle cx="10.5" cy="6.5" r="1.5" fill="currentColor"/>
+              <circle cx="13.5" cy="10.5" r="1.5" fill="currentColor"/>
             </svg>
           </button>
           <button class="icon-btn" title="Logout" onclick="logoutStudent()">
@@ -3484,14 +4187,24 @@
 
           <div class="settings-grid">
             <div class="glass spot card-pad">
-              <h3 style="margin-bottom:16px; font-size:16px; font-weight:700;">Student Profile</h3>
+              <h3 style="margin-bottom:16px; font-size:16px; font-weight:700;">Student Account Information</h3>
               <div class="form-group">
                 <label>Student Full Name</label>
                 <input type="text" id="settingsNameInput" class="form-input" placeholder="Enter student name...">
               </div>
               <div class="form-group">
                 <label>University Serial Number (USN)</label>
-                <input type="text" id="settingsUsnInput" class="form-input" disabled style="opacity:0.7;">
+                <input type="text" id="settingsUsnInput" class="form-input" disabled style="opacity:0.75;">
+              </div>
+              <div class="form-group">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">
+                  <label style="margin-bottom:0;">Registered Recovery Email</label>
+                  <span id="settingsEmailBadge" style="font-size:11px; font-weight:700; color:var(--green); background:rgba(34,197,94,0.12); padding:2px 8px; border-radius:12px; border:1px solid rgba(34,197,94,0.3);">✓ Email Verified</span>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <input type="text" id="settingsEmailInput" class="form-input" disabled style="opacity:0.85; flex:1; min-width:200px; word-break:break-all;" placeholder="No email linked">
+                  <button class="btn btn-ghost" onclick="openChangeEmailModal()" style="white-space:nowrap; border-color:var(--indigo); color:var(--indigo);">Change Email</button>
+                </div>
               </div>
               <button class="btn btn-primary" onclick="saveStudentNameSettings()">Save Name</button>
             </div>
@@ -3501,6 +4214,23 @@
               <p style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">Switch between high-contrast dark
                 mode and vibrant light mode.</p>
               <button class="btn btn-ghost" onclick="toggleTheme()">Toggle Dark / Light Mode</button>
+            </div>
+
+            <div class="glass spot card-pad">
+              <h3 style="margin-bottom:8px; font-size:16px; font-weight:700; display:flex; align-items:center; gap:8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2">
+                  <path d="M12 21a9 9 0 1 1 0-18c4.97 0 9 3.58 9 8a4.5 4.5 0 0 1-4.5 4.5H14a2 2 0 0 0-2 2c0 1.1-.9 2-2 2h0z"/>
+                  <circle cx="7.5" cy="10.5" r="1.5" fill="currentColor"/>
+                  <circle cx="10.5" cy="6.5" r="1.5" fill="currentColor"/>
+                  <circle cx="13.5" cy="10.5" r="1.5" fill="currentColor"/>
+                </svg>
+                Dynamic Dashboard Background
+              </h3>
+              <p style="font-size:13px; color:var(--ink-soft); margin-bottom:14px;">Select from 6 premium atmospheric background themes for your SCFC workspace.</p>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn btn-primary" onclick="SCFCBackgroundManager.openModal()">Select Background Theme</button>
+                <button class="btn btn-ghost" onclick="SCFCBackgroundManager.resetBackground()">Reset to Default</button>
+              </div>
             </div>
 
             <div class="glass spot card-pad">
@@ -3638,7 +4368,17 @@
           </div>
         </div>
 
-        <footer class="foot">SCFC Grade Calculator &nbsp;•&nbsp; Built for Students, Designed for Success</footer>
+        <footer class="app-footer">
+          <div class="footer-divider"></div>
+          <div class="footer-content">
+            <div class="footer-brand-title">SCFC StudentOS</div>
+            <div class="footer-legal-row">
+              <span class="footer-copyright">© 2026 SCFC StudentOS</span>
+              <span class="footer-sep">·</span>
+              <span class="footer-credit">Designed &amp; Developed by <strong>C VISHNU VARDHAN</strong></span>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   </div>
@@ -3718,6 +4458,16 @@
 
   <!-- STUDENT AUTH MODAL OVERLAY (LOGIN / REGISTER) -->
   <div class="modal-overlay open" id="authScreenOverlay">
+    <button class="bg-selector-login-btn" id="loginBgSelectorBtn" onclick="SCFCBackgroundManager.openModal()" title="Change Dashboard Background">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 21a9 9 0 1 1 0-18c4.97 0 9 3.58 9 8a4.5 4.5 0 0 1-4.5 4.5H14a2 2 0 0 0-2 2c0 1.1-.9 2-2 2h0z"/>
+        <circle cx="7.5" cy="10.5" r="1.5" fill="currentColor"/>
+        <circle cx="10.5" cy="6.5" r="1.5" fill="currentColor"/>
+        <circle cx="13.5" cy="10.5" r="1.5" fill="currentColor"/>
+      </svg>
+      <span>Background</span>
+    </button>
+
     <div class="glass modal" style="width:480px;">
       <!-- LOGIN TAB -->
       <div id="authLoginBox">
@@ -3735,15 +4485,26 @@
               onkeydown="if(event.key==='Enter' && !event.repeat) handleLoginSubmit()">
           </div>
           <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="loginPasswordInput" class="form-input" placeholder="Enter your password"
-              onkeydown="if(event.key==='Enter' && !event.repeat) handleLoginSubmit()">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <label style="margin:0;">Password</label>
+              <a href="#" style="font-size:12.5px; color:var(--indigo); font-weight:600;" onclick="openForgotPasswordModal(event)">Forgot Password?</a>
+            </div>
+            <div class="password-input-wrap">
+              <input type="password" id="loginPasswordInput" class="form-input" placeholder="Enter your password"
+                onkeydown="if(event.key==='Enter' && !event.repeat) handleLoginSubmit()">
+              <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('loginPasswordInput', this)" aria-label="Show password" title="Show password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
           </div>
           <button class="btn btn-primary" id="loginSubmitBtn" style="width:100%; justify-content:center; padding:12px;"
             onclick="handleLoginSubmit()">Login to Dashboard</button>
           <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
             Student not found? <a href="#" style="color:var(--indigo); font-weight:700;"
-              onclick="switchAuthTab('register')">Please Register here</a>
+              onclick="switchAuthTab('register', event)">Please Register here</a>
           </div>
         </div>
       </div>
@@ -3763,19 +4524,35 @@
           </div>
           <div class="form-group">
             <label>New Password</label>
-            <input type="password" id="setupPasswordInput" class="form-input" placeholder="Enter a new password"
-              onkeydown="if(event.key==='Enter' && !event.repeat) handleSetupPasswordSubmit()">
+            <div class="password-input-wrap">
+              <input type="password" id="setupPasswordInput" class="form-input" placeholder="Enter a new password"
+                onkeydown="if(event.key==='Enter' && !event.repeat) handleSetupPasswordSubmit()">
+              <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('setupPasswordInput', this)" aria-label="Show password" title="Show password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
           </div>
           <div class="form-group">
             <label>Confirm Password</label>
-            <input type="password" id="setupConfirmPasswordInput" class="form-input" placeholder="Confirm password"
-              onkeydown="if(event.key==='Enter' && !event.repeat) handleSetupPasswordSubmit()">
+            <div class="password-input-wrap">
+              <input type="password" id="setupConfirmPasswordInput" class="form-input" placeholder="Confirm password"
+                onkeydown="if(event.key==='Enter' && !event.repeat) handleSetupPasswordSubmit()">
+              <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('setupConfirmPasswordInput', this)" aria-label="Show password" title="Show password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
           </div>
           <button class="btn btn-primary" id="setupSubmitBtn" style="width:100%; justify-content:center; padding:12px;"
             onclick="handleSetupPasswordSubmit()">Create Password</button>
           <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
             Already secured? <a href="#" style="color:var(--indigo); font-weight:700;"
-              onclick="switchAuthTab('login')">Login here</a>
+              onclick="switchAuthTab('login', event)">Login here</a>
           </div>
         </div>
       </div>
@@ -3801,22 +4578,294 @@
               onkeydown="if(event.key==='Enter' && !event.repeat) handleRegisterSubmit()">
           </div>
           <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="registerPasswordInput" class="form-input" placeholder="Enter a password"
+            <label>Registered Email Address</label>
+            <input type="email" id="registerEmailInput" class="form-input" placeholder="e.g. student@example.com"
               onkeydown="if(event.key==='Enter' && !event.repeat) handleRegisterSubmit()">
           </div>
           <div class="form-group">
+            <label>Password</label>
+            <div class="password-input-wrap">
+              <input type="password" id="registerPasswordInput" class="form-input" placeholder="Enter a password"
+                onkeydown="if(event.key==='Enter' && !event.repeat) handleRegisterSubmit()">
+              <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('registerPasswordInput', this)" aria-label="Show password" title="Show password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
             <label>Confirm Password</label>
-            <input type="password" id="registerConfirmPasswordInput" class="form-input" placeholder="Confirm password"
-              onkeydown="if(event.key==='Enter' && !event.repeat) handleRegisterSubmit()">
+            <div class="password-input-wrap">
+              <input type="password" id="registerConfirmPasswordInput" class="form-input" placeholder="Confirm password"
+                onkeydown="if(event.key==='Enter' && !event.repeat) handleRegisterSubmit()">
+              <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('registerConfirmPasswordInput', this)" aria-label="Show password" title="Show password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
           </div>
           <button class="btn btn-primary" id="registerSubmitBtn"
             style="width:100%; justify-content:center; padding:12px;" onclick="handleRegisterSubmit()">Create Student
             Account</button>
           <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
             Already registered? <a href="#" style="color:var(--indigo); font-weight:700;"
-              onclick="switchAuthTab('login')">Login here</a>
+              onclick="switchAuthTab('login', event)">Login here</a>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGIN MOTIVATIONAL QUOTE CONTAINER -->
+    <div id="loginQuotePill" class="login-quote-pill">
+      <div class="quote-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+        </svg>
+      </div>
+      <div class="quote-content">
+        <p id="loginQuoteText" class="quote-text">"Consistency today creates confidence tomorrow."</p>
+        <div style="display:flex; align-items:center; justify-content:space-between; width:100%; margin-top:4px;">
+          <span id="loginQuoteAuthor" class="quote-author">— SCFC Motivation</span>
+          <button class="quote-refresh-btn" onclick="SCFCBackgroundManager.displayRandomQuote()" title="New Quote">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DYNAMIC BACKGROUND SELECTOR MODAL -->
+  <div class="modal-overlay" id="scfcBgSelectorModal">
+    <div class="glass modal" style="width: 620px; max-width: 94vw;">
+      <div class="modal-head" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--glass-border); padding-bottom:14px; margin-bottom:18px;">
+        <div>
+          <h3 style="margin:0; font-size:20px; font-weight:700; display:flex; align-items:center; gap:8px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2">
+              <path d="M12 21a9 9 0 1 1 0-18c4.97 0 9 3.58 9 8a4.5 4.5 0 0 1-4.5 4.5H14a2 2 0 0 0-2 2c0 1.1-.9 2-2 2h0z"/>
+              <circle cx="7.5" cy="10.5" r="1.5" fill="currentColor"/>
+              <circle cx="10.5" cy="6.5" r="1.5" fill="currentColor"/>
+              <circle cx="13.5" cy="10.5" r="1.5" fill="currentColor"/>
+            </svg>
+            Dynamic Background
+          </h3>
+          <p style="margin:4px 0 0 0; font-size:13px; color:var(--ink-soft);">Select a premium atmospheric background theme for your SCFC workspace</p>
+        </div>
+        <button onclick="SCFCBackgroundManager.closeModal()" style="background:none; border:none; color:var(--ink-soft); font-size:24px; cursor:pointer; padding:0 4px;" title="Close">&times;</button>
+      </div>
+
+      <div style="padding: 0 4px 12px 4px; max-height: 72vh; overflow-y: auto;">
+        <div id="bgSelectorGrid" class="bg-selector-grid">
+          <!-- Options rendered dynamically -->
+        </div>
+      </div>
+
+      <div class="modal-foot" style="display:flex; justify-content:space-between; align-items:center; padding-top:14px; border-top:1px solid var(--glass-border); margin-top:12px;">
+        <button class="btn btn-ghost" onclick="SCFCBackgroundManager.resetBackground()" style="font-size:13px; color:var(--ink-soft);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+          Reset Background
+        </button>
+        <button class="btn btn-primary" id="applyBgBtn" onclick="SCFCBackgroundManager.applyAndClose()" style="padding:8px 24px;">Apply Background</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WRONG PASSWORD POPUP MODAL -->
+  <div class="modal-overlay" id="wrongPasswordModal">
+    <div class="glass modal" style="width:420px; text-align:center;">
+      <div style="padding:28px 24px;">
+        <div style="width:54px; height:54px; border-radius:50%; background:rgba(239, 68, 68, 0.15); border:1px solid rgba(239, 68, 68, 0.3); color:#EF4444; display:inline-flex; align-items:center; justify-content:center; margin-bottom:16px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h3 style="font-size:20px; font-weight:700; margin-bottom:8px;">Incorrect Password</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:20px;">
+          The password you entered is incorrect.<br>Forgot your password? You can reset it using your registered email.
+        </p>
+        <div style="display:flex; gap:12px; flex-direction:column;">
+          <button class="btn btn-primary" onclick="closeWrongPasswordModal(); openForgotPasswordModal();" style="width:100%; justify-content:center; padding:11px;">Reset Password</button>
+          <button class="btn btn-ghost" onclick="closeWrongPasswordModal();" style="width:100%; justify-content:center; padding:11px;">Try Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORGOT PASSWORD MODAL -->
+  <div class="modal-overlay" id="forgotPasswordModal">
+    <div class="glass modal" style="width:460px;">
+      <div class="modal-head" style="text-align:center; padding-bottom:10px;">
+        <h3 style="font-size:22px; font-weight:700; margin-bottom:6px;">Reset Your Password</h3>
+        <p style="font-size:13px; color:var(--ink-soft);">Enter your enrollment number and registered email address.</p>
+      </div>
+      <div style="padding:24px;">
+        <div class="auth-banner" id="forgotPasswordBanner"></div>
+        <div class="form-group">
+          <label>Enrollment Number (USN)</label>
+          <input type="text" id="forgotUsnInput" class="form-input" placeholder="e.g. 1SC21CS001" style="text-transform:uppercase;"
+            onkeydown="if(event.key==='Enter' && !event.repeat) handleForgotPasswordSubmit()">
+        </div>
+        <div class="form-group">
+          <label>Registered Email Address</label>
+          <input type="email" id="forgotEmailInput" class="form-input" placeholder="e.g. student@example.com"
+            onkeydown="if(event.key==='Enter' && !event.repeat) handleForgotPasswordSubmit()">
+        </div>
+        <button class="btn btn-primary" id="forgotSubmitBtn" style="width:100%; justify-content:center; padding:12px; margin-top:8px;"
+          onclick="handleForgotPasswordSubmit()">Send Reset Link</button>
+        <div style="text-align:center; margin-top:16px; font-size:13px; color:var(--ink-soft);">
+          Remembered your password? <a href="#" style="color:var(--indigo); font-weight:700;" onclick="closeForgotPasswordModal()">Back to Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESET PASSWORD MODAL (LOADED VIA RESET TOKEN LINK) -->
+  <div class="modal-overlay" id="resetPasswordModal">
+    <div class="glass modal" style="width:460px;">
+      <div id="resetFormContent">
+        <div class="modal-head" style="text-align:center;">
+          <h3 style="font-size:22px; font-weight:700; margin-bottom:6px;">Create New Password</h3>
+          <p style="font-size:13px; color:var(--ink-soft);">Enter a new password for your SCFC account.</p>
+        </div>
+        <div style="padding:24px;">
+          <div class="auth-banner" id="resetPasswordBanner"></div>
+          <div class="form-group">
+            <label>New Password</label>
+            <div class="password-input-wrap">
+              <input type="password" id="resetNewPasswordInput" class="form-input" placeholder="At least 8 characters"
+                oninput="updatePasswordStrength(this.value)"
+                onkeydown="if(event.key==='Enter' && !event.repeat) handleResetPasswordSubmit()">
+              <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('resetNewPasswordInput', this)" aria-label="Show password" title="Show password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <!-- Password Strength Bar -->
+            <div style="margin-top:8px;">
+              <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--ink-soft); margin-bottom:4px;">
+                <span>Password Strength:</span>
+                <span id="strengthLabel" style="font-weight:700;">-</span>
+              </div>
+              <div style="height:4px; width:100%; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;">
+                <div id="strengthBar" style="height:100%; width:0%; transition:all 0.3s ease; background:#EF4444;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <div class="password-input-wrap">
+              <input type="password" id="resetConfirmPasswordInput" class="form-input" placeholder="Confirm new password"
+                onkeydown="if(event.key==='Enter' && !event.repeat) handleResetPasswordSubmit()">
+              <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('resetConfirmPasswordInput', this)" aria-label="Show password" title="Show password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="resetPasswordSubmitBtn" style="width:100%; justify-content:center; padding:12px; margin-top:8px;"
+            onclick="handleResetPasswordSubmit()">Reset Password</button>
+        </div>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div id="resetSuccessContent" style="display:none; padding:32px 24px; text-align:center;">
+        <div style="width:56px; height:56px; border-radius:50%; background:rgba(34, 197, 94, 0.15); border:1px solid rgba(34, 197, 94, 0.3); color:#22C55E; display:inline-flex; align-items:center; justify-content:center; margin-bottom:16px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h3 style="font-size:22px; font-weight:700; margin-bottom:8px;">Password Reset Successfully</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:24px;">
+          Your SCFC password has been updated successfully.
+        </p>
+        <button class="btn btn-primary" onclick="finishResetAndLogin()" style="width:100%; justify-content:center; padding:12px;">Login to SCFC</button>
+      </div>
+
+      <!-- EXPIRED / INVALID STATE -->
+      <div id="resetInvalidContent" style="display:none; padding:32px 24px; text-align:center;">
+        <div style="width:56px; height:56px; border-radius:50%; background:rgba(239, 68, 68, 0.15); border:1px solid rgba(239, 68, 68, 0.3); color:#EF4444; display:inline-flex; align-items:center; justify-content:center; margin-bottom:16px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+        </div>
+        <h3 style="font-size:20px; font-weight:700; margin-bottom:8px;">Link Invalid or Expired</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:24px;">
+          This password reset link is invalid or has expired.
+        </p>
+        <button class="btn btn-primary" onclick="closeResetModalAndOpenForgot()" style="width:100%; justify-content:center; padding:12px;">Request New Reset Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANGE EMAIL MODAL -->
+  <div class="modal-overlay" id="changeEmailModal">
+    <div class="glass modal" style="width:460px;">
+      <div class="modal-head" style="text-align:center; padding-bottom:10px;">
+        <h3 style="font-size:22px; font-weight:700; margin-bottom:6px;">Change Email Address</h3>
+        <p style="font-size:13px; color:var(--ink-soft);">A verification link will be sent to your new email address.</p>
+      </div>
+      <div style="padding:24px;">
+        <div class="auth-banner" id="changeEmailBanner"></div>
+        <div class="form-group">
+          <label>Current Email Address</label>
+          <input type="email" id="changeCurrentEmailInput" class="form-input" disabled style="opacity:0.75;">
+        </div>
+        <div class="form-group">
+          <label>New Email Address</label>
+          <input type="email" id="changeNewEmailInput" class="form-input" placeholder="e.g. newstudent@example.com"
+            onkeydown="if(event.key==='Enter' && !event.repeat) handleChangeEmailSubmit()">
+        </div>
+        <div class="form-group">
+          <label>Confirm New Email Address</label>
+          <input type="email" id="changeConfirmEmailInput" class="form-input" placeholder="Confirm new email address"
+            onkeydown="if(event.key==='Enter' && !event.repeat) handleChangeEmailSubmit()">
+        </div>
+        <div style="display:flex; gap:10px; margin-top:16px;">
+          <button class="btn btn-ghost" onclick="closeChangeEmailModal()" style="flex:1; justify-content:center;">Cancel</button>
+          <button class="btn btn-primary" id="changeEmailSubmitBtn" style="flex:1.8; justify-content:center; padding:12px;"
+            onclick="handleChangeEmailSubmit()">Send Verification</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD RECOVERY EMAIL MODAL FOR EXISTING USERS -->
+  <div class="modal-overlay" id="addRecoveryEmailModal">
+    <div class="glass modal" style="width:460px;">
+      <div class="modal-head" style="text-align:center; padding-bottom:6px;">
+        <div style="width:48px; height:48px; border-radius:50%; background:rgba(108,99,255,0.15); border:1px solid rgba(108,99,255,0.3); color:var(--indigo); display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h3 style="font-size:22px; font-weight:700; margin-bottom:6px;">Secure Your Account</h3>
+        <p style="font-size:13px; color:var(--ink-soft);">Your SCFC account does not have a recovery email.<br>Add your email to enable password recovery.</p>
+      </div>
+      <div style="padding:20px 24px 24px 24px;">
+        <div class="auth-banner" id="recoveryEmailBanner"></div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="recoveryEmailInput" class="form-input" placeholder="e.g. student@example.com"
+            onkeydown="if(event.key==='Enter' && !event.repeat) handleAddRecoveryEmailSubmit()">
+        </div>
+        <div style="display:flex; gap:10px; margin-top:14px;">
+          <button class="btn btn-ghost" onclick="closeRecoveryEmailModal()" style="flex:1; justify-content:center;">Remind Me Later</button>
+          <button class="btn btn-primary" id="recoveryEmailSubmitBtn" onclick="handleAddRecoveryEmailSubmit()" style="flex:1.2; justify-content:center;">Verify Email</button>
         </div>
       </div>
     </div>
@@ -4607,30 +5656,38 @@
     /* =========================================================
        AUTHENTICATION & SESSION HANDLERS
     ========================================================= */
-    function switchAuthTab(tab) {
+    function switchAuthTab(tab, event) {
+      if (event && event.preventDefault) event.preventDefault();
+      isAuthSubmitting = false;
+
       const loginBox = document.getElementById('authLoginBox');
       const regBox = document.getElementById('authRegisterBox');
       const setupBox = document.getElementById('authSetupBox');
-      document.getElementById('loginBanner').className = 'auth-banner';
-      document.getElementById('registerBanner').className = 'auth-banner';
-      document.getElementById('setupBanner').className = 'auth-banner';
 
-      loginBox.style.display = 'none';
-      regBox.style.display = 'none';
-      setupBox.style.display = 'none';
+      const lb = document.getElementById('loginBanner'); if (lb) lb.className = 'auth-banner';
+      const rb = document.getElementById('registerBanner'); if (rb) rb.className = 'auth-banner';
+      const sb = document.getElementById('setupBanner'); if (sb) sb.className = 'auth-banner';
 
-      if (tab === 'login') {
+      if (loginBox) loginBox.style.display = 'none';
+      if (regBox) regBox.style.display = 'none';
+      if (setupBox) setupBox.style.display = 'none';
+
+      if (tab === 'login' && loginBox) {
         loginBox.style.display = 'block';
-      } else if (tab === 'register') {
+        if (typeof SCFCBackgroundManager !== 'undefined') {
+          SCFCBackgroundManager.displayRandomQuote();
+        }
+      } else if (tab === 'register' && regBox) {
         regBox.style.display = 'block';
-      } else if (tab === 'setup') {
+      } else if (tab === 'setup' && setupBox) {
         setupBox.style.display = 'block';
       }
     }
 
     let isAuthSubmitting = false;
 
-    async function handleLoginSubmit() {
+    async function handleLoginSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
       if (isAuthSubmitting) return;
 
       const usnInput = document.getElementById('loginUsnInput');
@@ -4639,6 +5696,11 @@
       const password = passwordInput ? passwordInput.value : '';
       const banner = document.getElementById('loginBanner');
       const btn = document.getElementById('loginSubmitBtn');
+
+      if (banner) {
+        banner.textContent = '';
+        banner.className = 'auth-banner';
+      }
 
       if (!usn || !password) {
         if (banner) {
@@ -4673,15 +5735,23 @@
         }
 
         if (!ok || !data || !data.success) {
+          const errMsg = (data && data.message) ? data.message : 'Invalid USN or Password.';
           if (banner) {
-            banner.textContent = (data && data.message) ? data.message : 'Invalid USN or Password.';
+            banner.textContent = errMsg;
             banner.className = 'auth-banner error';
+          }
+          if (data && data.incorrectPassword) {
+            openWrongPasswordModal();
           }
           return;
         }
 
         // Success Login
-        applyStudentData(data.student);
+        try {
+          applyStudentData(data.student);
+        } catch (dataErr) {
+          console.error('Error rendering student data on login:', dataErr);
+        }
         localStorage.setItem('scfc_active_usn', data.student.usn);
         const overlay = document.getElementById('authScreenOverlay');
         if (overlay) {
@@ -4689,6 +5759,14 @@
         }
         const appShell = document.getElementById('mainAppShell');
         if (appShell) appShell.style.display = 'block';
+
+        // ONE-TIME PROMPT: If existing account is missing recovery email
+        if (data.emailRequired || !data.student.email) {
+          setTimeout(() => {
+            const recoveryModal = document.getElementById('addRecoveryEmailModal');
+            if (recoveryModal) recoveryModal.classList.add('open');
+          }, 600);
+        }
       } catch (err) {
         console.error('Login submit error:', err);
         if (banner) {
@@ -4778,23 +5856,37 @@
       }
     }
 
-    async function handleRegisterSubmit() {
+    async function handleRegisterSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      if (isAuthSubmitting) return;
+
       const name = document.getElementById('registerNameInput').value.trim();
       const usn = document.getElementById('registerUsnInput').value.trim();
+      const emailEl = document.getElementById('registerEmailInput');
+      const email = emailEl ? emailEl.value.trim().toLowerCase() : '';
       const password = document.getElementById('registerPasswordInput').value || '';
       const confirmPassword = document.getElementById('registerConfirmPasswordInput').value || '';
       const banner = document.getElementById('registerBanner');
       const btn = document.getElementById('registerSubmitBtn');
 
-      if (!name || !usn) {
+      if (!name || !usn || !email || !password || !confirmPassword) {
         if (banner) {
-          banner.textContent = 'Please fill in Name and USN.';
+          banner.textContent = 'Please fill in all fields (Name, USN, Email, Password).';
           banner.className = 'auth-banner error';
         }
         return;
       }
 
-      if ((password || confirmPassword) && password !== confirmPassword) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        if (banner) {
+          banner.textContent = 'Please enter a valid email address.';
+          banner.className = 'auth-banner error';
+        }
+        return;
+      }
+
+      if (password !== confirmPassword) {
         if (banner) {
           banner.textContent = 'Password and Confirm Password must match.';
           banner.className = 'auth-banner error';
@@ -4802,7 +5894,7 @@
         return;
       }
 
-      if (password && password.length < 8) {
+      if (password.length < 8) {
         if (banner) {
           banner.textContent = 'Password must be at least 8 characters.';
           banner.className = 'auth-banner error';
@@ -4810,6 +5902,7 @@
         return;
       }
 
+      isAuthSubmitting = true;
       if (btn) {
         btn.disabled = true;
         btn.textContent = 'Creating Account...';
@@ -4819,12 +5912,12 @@
         const { ok, data } = await safeFetchJson('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, usn, password, confirmPassword })
+          body: JSON.stringify({ name, usn, email, password, confirmPassword })
         });
 
         if (!ok || !data || !data.success) {
           if (banner) {
-            banner.textContent = (data && data.message) ? data.message : 'This USN is already registered. Please Login.';
+            banner.textContent = (data && data.message) ? data.message : 'Registration failed. Please try again.';
             banner.className = 'auth-banner error';
           }
           return;
@@ -4833,7 +5926,7 @@
         // Success Register -> Redirect to Login
         const loginBanner = document.getElementById('loginBanner');
         if (loginBanner) {
-          loginBanner.textContent = 'Registration successful! Please login now.';
+          loginBanner.textContent = 'Registration successful! A verification email has been sent. Please login now.';
           loginBanner.className = 'auth-banner success';
         }
 
@@ -4846,6 +5939,7 @@
           banner.className = 'auth-banner error';
         }
       } finally {
+        isAuthSubmitting = false;
         if (btn) {
           btn.disabled = false;
           btn.textContent = 'Create Student Account';
@@ -4853,9 +5947,498 @@
       }
     }
 
+    // Modal controls for Forgot Password, Wrong Password, Reset Password, Add Recovery Email
+    function openWrongPasswordModal() {
+      const m = document.getElementById('wrongPasswordModal');
+      if (m) m.classList.add('open');
+    }
+    function closeWrongPasswordModal() {
+      const m = document.getElementById('wrongPasswordModal');
+      if (m) m.classList.remove('open');
+    }
+
+    function openForgotPasswordModal(e) {
+      if (e) e.preventDefault();
+      const loginUsn = document.getElementById('loginUsnInput').value.trim();
+      if (loginUsn) {
+        document.getElementById('forgotUsnInput').value = loginUsn.toUpperCase();
+      }
+      const banner = document.getElementById('forgotPasswordBanner');
+      if (banner) {
+        banner.textContent = '';
+        banner.className = 'auth-banner';
+      }
+      const m = document.getElementById('forgotPasswordModal');
+      if (m) m.classList.add('open');
+    }
+
+    function closeForgotPasswordModal(e) {
+      if (e) e.preventDefault();
+      const m = document.getElementById('forgotPasswordModal');
+      if (m) m.classList.remove('open');
+    }
+
+    function closeRecoveryEmailModal() {
+      const m = document.getElementById('addRecoveryEmailModal');
+      if (m) m.classList.remove('open');
+    }
+
+    let forgotCooldownTimer = null;
+    let forgotCooldownSeconds = 0;
+
+    async function handleForgotPasswordSubmit() {
+      const usn = document.getElementById('forgotUsnInput').value.trim().toUpperCase();
+      const email = document.getElementById('forgotEmailInput').value.trim().toLowerCase();
+      const banner = document.getElementById('forgotPasswordBanner');
+      const btn = document.getElementById('forgotSubmitBtn');
+
+      if (!usn || !email) {
+        if (banner) {
+          banner.textContent = 'Please enter both Enrollment Number and Email Address.';
+          banner.className = 'auth-banner error';
+        }
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        if (banner) {
+          banner.textContent = 'Please enter a valid email address.';
+          banner.className = 'auth-banner error';
+        }
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Sending Request...';
+      }
+
+      try {
+        const { ok, data } = await safeFetchJson('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usn, email })
+        });
+
+        if (!ok || !data || !data.success || !data.match) {
+          if (banner) {
+            banner.innerHTML = (data && data.message) ? data.message : 'Invalid details. The enrollment number and registered email do not match any SCFC account.';
+            banner.className = 'auth-banner error';
+          }
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Send Reset Link';
+          }
+          return;
+        }
+
+        // VALID DETAILS SUCCESS WITH TICKING ANIMATION
+        if (banner) {
+          banner.innerHTML = `
+            <div style="display:flex; align-items:center; gap:12px; text-align:left; padding:4px 0;">
+              <div style="width:32px; height:32px; border-radius:50%; background:rgba(34,197,94,0.25); border:1.5px solid #22C55E; color:#22C55E; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation: tickPop 0.4s ease-out forwards;">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div>
+                <b style="color:#22C55E; font-size:13.5px; display:block; margin-bottom:2px;">Email Sent Successfully!</b>
+                <span style="font-size:12px; color:var(--ink-soft); line-height:1.3; display:block;">A password reset link has been sent to <b>${email}</b>.</span>
+              </div>
+            </div>
+          `;
+          banner.className = 'auth-banner success';
+        }
+
+        // Start 60s cooldown timer
+        forgotCooldownSeconds = 60;
+        clearInterval(forgotCooldownTimer);
+        forgotCooldownTimer = setInterval(() => {
+          forgotCooldownSeconds--;
+          if (forgotCooldownSeconds <= 0) {
+            clearInterval(forgotCooldownTimer);
+            if (btn) {
+              btn.disabled = false;
+              btn.textContent = 'Send Reset Link';
+            }
+          } else {
+            if (btn) {
+              btn.disabled = true;
+              btn.textContent = `Resend available in ${forgotCooldownSeconds}s`;
+            }
+          }
+        }, 1000);
+
+      } catch (err) {
+        console.error('Forgot password error:', err);
+        if (banner) {
+          banner.textContent = 'Connection error. Please try again.';
+          banner.className = 'auth-banner error';
+        }
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Send Reset Link';
+        }
+      }
+    }
+
+    async function handleAddRecoveryEmailSubmit() {
+      const email = document.getElementById('recoveryEmailInput').value.trim().toLowerCase();
+      const banner = document.getElementById('recoveryEmailBanner');
+      const btn = document.getElementById('recoveryEmailSubmitBtn');
+
+      if (!email) {
+        if (banner) {
+          banner.textContent = 'Please enter your email address.';
+          banner.className = 'auth-banner error';
+        }
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        if (banner) {
+          banner.textContent = 'Please enter a valid email address.';
+          banner.className = 'auth-banner error';
+        }
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Saving Email...';
+      }
+
+      try {
+        const { ok, data } = await safeFetchJson('/api/auth/add-recovery-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usn: state.usn, email })
+        });
+
+        if (!ok || !data || !data.success) {
+          if (banner) {
+            banner.textContent = (data && data.message) ? data.message : 'Failed to update email.';
+            banner.className = 'auth-banner error';
+          }
+          return;
+        }
+
+        if (banner) {
+          banner.textContent = 'Recovery email saved successfully!';
+          banner.className = 'auth-banner success';
+        }
+
+        setTimeout(() => {
+          closeRecoveryEmailModal();
+        }, 1500);
+      } catch (err) {
+        console.error('Add recovery email error:', err);
+        if (banner) {
+          banner.textContent = 'Connection error. Please try again.';
+          banner.className = 'auth-banner error';
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Verify Email';
+        }
+      }
+    }
+
+    function updatePasswordStrength(val) {
+      const bar = document.getElementById('strengthBar');
+      const label = document.getElementById('strengthLabel');
+      if (!bar || !label) return;
+
+      if (!val) {
+        bar.style.width = '0%';
+        bar.style.background = '#EF4444';
+        label.textContent = '-';
+        return;
+      }
+
+      if (val.length < 8) {
+        bar.style.width = '33%';
+        bar.style.background = '#EF4444';
+        label.textContent = 'Weak';
+        label.style.color = '#EF4444';
+      } else if (val.length >= 8 && /[0-9]/.test(val) && /[a-zA-Z]/.test(val) && /[^a-zA-Z0-9]/.test(val)) {
+        bar.style.width = '100%';
+        bar.style.background = '#22C55E';
+        label.textContent = 'Strong';
+        label.style.color = '#22C55E';
+      } else {
+        bar.style.width = '66%';
+        bar.style.background = '#F59E0B';
+        label.textContent = 'Medium';
+        label.style.color = '#F59E0B';
+      }
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      const nextTheme = isDark ? 'light' : 'dark';
+
+      if (nextTheme === 'dark') {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('scfc_theme', 'dark');
+        if (typeof SCFCBackgroundManager !== 'undefined') {
+          const saved = SCFCBackgroundManager.getSavedBackground();
+          SCFCBackgroundManager.setBackground(saved === 'ocean' ? 'classic' : saved);
+        }
+      } else {
+        html.removeAttribute('data-theme');
+        localStorage.setItem('scfc_theme', 'light');
+        if (typeof SCFCBackgroundManager !== 'undefined') {
+          SCFCBackgroundManager.setBackground('ocean');
+        }
+      }
+      if (typeof SCFCBackgroundManager !== 'undefined') {
+        SCFCBackgroundManager.renderSelector();
+      }
+
+      state.theme = nextTheme;
+      triggerAutoSave();
+    }
+    window.toggleTheme = toggleTheme;
+
+    let activeResetToken = null;
+
+    function openResetPasswordModal(token) {
+      activeResetToken = token;
+      document.getElementById('resetFormContent').style.display = 'block';
+      document.getElementById('resetSuccessContent').style.display = 'none';
+      document.getElementById('resetInvalidContent').style.display = 'none';
+      const m = document.getElementById('resetPasswordModal');
+      if (m) m.classList.add('open');
+    }
+
+    async function handleResetPasswordSubmit() {
+      const password = document.getElementById('resetNewPasswordInput').value || '';
+      const confirmPassword = document.getElementById('resetConfirmPasswordInput').value || '';
+      const banner = document.getElementById('resetPasswordBanner');
+      const btn = document.getElementById('resetPasswordSubmitBtn');
+
+      if (!password || !confirmPassword) {
+        if (banner) {
+          banner.textContent = 'Please enter and confirm your new password.';
+          banner.className = 'auth-banner error';
+        }
+        return;
+      }
+
+      if (password.length < 8) {
+        if (banner) {
+          banner.textContent = 'Password must be at least 8 characters long.';
+          banner.className = 'auth-banner error';
+        }
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        if (banner) {
+          banner.textContent = 'Passwords do not match.';
+          banner.className = 'auth-banner error';
+        }
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Resetting Password...';
+      }
+
+      try {
+        const { ok, data } = await safeFetchJson('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: activeResetToken, password, confirmPassword })
+        });
+
+        if (data && data.expiredOrInvalid) {
+          document.getElementById('resetFormContent').style.display = 'none';
+          document.getElementById('resetInvalidContent').style.display = 'block';
+          return;
+        }
+
+        if (!ok || !data || !data.success) {
+          if (banner) {
+            banner.textContent = (data && data.message) ? data.message : 'Password reset failed.';
+            banner.className = 'auth-banner error';
+          }
+          return;
+        }
+
+        document.getElementById('resetFormContent').style.display = 'none';
+        document.getElementById('resetSuccessContent').style.display = 'block';
+      } catch (err) {
+        console.error('Reset password submit error:', err);
+        if (banner) {
+          banner.textContent = 'Connection error. Please try again.';
+          banner.className = 'auth-banner error';
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Reset Password';
+        }
+      }
+    }
+
+    function finishResetAndLogin() {
+      const m = document.getElementById('resetPasswordModal');
+      if (m) m.classList.remove('open');
+      const loginBanner = document.getElementById('loginBanner');
+      if (loginBanner) {
+        loginBanner.textContent = 'Password updated successfully! Please login with your new password.';
+        loginBanner.className = 'auth-banner success';
+      }
+      window.history.replaceState({}, document.title, window.location.pathname);
+      switchAuthTab('login');
+    }
+
+    function closeResetModalAndOpenForgot() {
+      const m = document.getElementById('resetPasswordModal');
+      if (m) m.classList.remove('open');
+      window.history.replaceState({}, document.title, window.location.pathname);
+      openForgotPasswordModal();
+    }
+
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+
+      if (btn) {
+        btn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+        btn.setAttribute('title', isPassword ? 'Hide password' : 'Show password');
+        btn.innerHTML = isPassword
+          ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>`
+          : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>`;
+      }
+    }
+
+    function openChangeEmailModal() {
+      const modal = document.getElementById('changeEmailModal');
+      const currentInput = document.getElementById('changeCurrentEmailInput');
+      const newInput = document.getElementById('changeNewEmailInput');
+      const confirmInput = document.getElementById('changeConfirmEmailInput');
+      const banner = document.getElementById('changeEmailBanner');
+
+      if (currentInput) currentInput.value = state.studentEmail || '';
+      if (newInput) newInput.value = '';
+      if (confirmInput) confirmInput.value = '';
+      if (banner) {
+        banner.textContent = '';
+        banner.className = 'auth-banner';
+      }
+
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeChangeEmailModal() {
+      const modal = document.getElementById('changeEmailModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    async function handleChangeEmailSubmit() {
+      const newEmail = document.getElementById('changeNewEmailInput').value.trim().toLowerCase();
+      const confirmNewEmail = document.getElementById('changeConfirmEmailInput').value.trim().toLowerCase();
+      const banner = document.getElementById('changeEmailBanner');
+      const btn = document.getElementById('changeEmailSubmitBtn');
+
+      if (!newEmail || !confirmNewEmail) {
+        if (banner) {
+          banner.textContent = 'Please enter and confirm your new email address.';
+          banner.className = 'auth-banner error';
+        }
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(newEmail)) {
+        if (banner) {
+          banner.textContent = 'Please enter a valid email address format.';
+          banner.className = 'auth-banner error';
+        }
+        return;
+      }
+
+      if (newEmail !== confirmNewEmail) {
+        if (banner) {
+          banner.textContent = 'New email and confirm email do not match.';
+          banner.className = 'auth-banner error';
+        }
+        return;
+      }
+
+      if (state.studentEmail && state.studentEmail.toLowerCase() === newEmail) {
+        if (banner) {
+          banner.textContent = 'The new email must be different from your current email address.';
+          banner.className = 'auth-banner error';
+        }
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Sending Verification...';
+      }
+
+      try {
+        const { ok, data } = await safeFetchJson('/api/auth/change-email-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usn: state.usn, newEmail, confirmNewEmail })
+        });
+
+        if (!ok || !data || !data.success) {
+          if (banner) {
+            banner.textContent = (data && data.message) ? data.message : 'Failed to request email change.';
+            banner.className = 'auth-banner error';
+          }
+          return;
+        }
+
+        if (banner) {
+          banner.textContent = data.message || 'Verification link sent to your new email address!';
+          banner.className = 'auth-banner success';
+        }
+
+        setTimeout(() => {
+          closeChangeEmailModal();
+        }, 2200);
+
+      } catch (err) {
+        console.error('Change email submit error:', err);
+        if (banner) {
+          banner.textContent = 'Connection error. Please try again.';
+          banner.className = 'auth-banner error';
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Send Verification';
+        }
+      }
+    }
+
     function applyStudentData(student) {
       state.studentName = student.name;
       state.usn = student.usn;
+      state.studentEmail = student.email || '';
+      state.emailVerified = Boolean(student.emailVerified);
       state.theme = student.theme || 'light';
       state.currentSemester = student.currentSemester || 1;
       state.semesters = student.semesters || {};
@@ -4902,6 +6485,31 @@
     }
 
     async function checkSavedSession() {
+      // Handle URL routes & tokens
+      const urlParams = new URLSearchParams(window.location.search);
+      const resetToken = urlParams.get('token');
+      const isEmailVerified = urlParams.get('emailVerified');
+      const isEmailChanged = urlParams.get('emailChanged');
+      const pathName = window.location.pathname || '';
+
+      if (resetToken || pathName === '/reset-password') {
+        if (resetToken) {
+          openResetPasswordModal(resetToken);
+        }
+      } else if (pathName === '/forgot-password') {
+        openForgotPasswordModal();
+      }
+
+      if (isEmailVerified === 'true' || isEmailChanged === 'true') {
+        const loginBanner = document.getElementById('loginBanner');
+        if (loginBanner) {
+          loginBanner.textContent = isEmailChanged === 'true'
+            ? 'Email address updated successfully! Please login.'
+            : 'Email verified successfully! Please login.';
+          loginBanner.className = 'auth-banner success';
+        }
+      }
+
       const activeUsn = localStorage.getItem('scfc_active_usn');
       if (activeUsn) {
         const { ok, data } = await safeFetchJson(`/api/student/${encodeURIComponent(activeUsn)}`);
@@ -4909,6 +6517,13 @@
           applyStudentData(data.student);
           document.getElementById('authScreenOverlay').classList.remove('open');
           document.getElementById('mainAppShell').style.display = 'block';
+
+          if (!data.student.email) {
+            setTimeout(() => {
+              const recoveryModal = document.getElementById('addRecoveryEmailModal');
+              if (recoveryModal) recoveryModal.classList.add('open');
+            }, 600);
+          }
           return;
         }
       }
@@ -4919,9 +6534,34 @@
     function updateStudentNameDisplays() {
       const name = state.studentName || 'Student';
       const usn = state.usn ? `USN: ${state.usn}` : 'USN: N/A';
+      const email = state.studentEmail || 'No email linked';
 
       document.querySelectorAll('.student-name-display').forEach(el => { el.textContent = name; });
       document.querySelectorAll('.student-usn-display').forEach(el => { el.textContent = usn; });
+      document.querySelectorAll('.student-email-display').forEach(el => { el.textContent = email; });
+
+      const emailInput = document.getElementById('settingsEmailInput');
+      if (emailInput) emailInput.value = email;
+
+      const emailBadge = document.getElementById('settingsEmailBadge');
+      if (emailBadge) {
+        if (!state.studentEmail) {
+          emailBadge.textContent = '⚠️ No Email Linked';
+          emailBadge.style.color = '#EF4444';
+          emailBadge.style.borderColor = 'rgba(239,68,68,0.3)';
+          emailBadge.style.background = 'rgba(239,68,68,0.12)';
+        } else if (state.pendingEmail) {
+          emailBadge.textContent = '⏳ Change Pending';
+          emailBadge.style.color = '#F59E0B';
+          emailBadge.style.borderColor = 'rgba(245,158,11,0.3)';
+          emailBadge.style.background = 'rgba(245,158,11,0.12)';
+        } else {
+          emailBadge.textContent = '✓ Email Active';
+          emailBadge.style.color = 'var(--green)';
+          emailBadge.style.borderColor = 'rgba(34,197,94,0.3)';
+          emailBadge.style.background = 'rgba(34,197,94,0.12)';
+        }
+      }
     }
 
     /* =========================================================
@@ -7572,6 +9212,7 @@
       openDayActionModal(activeDayModalDate);
       renderExamDashboard(true);
     }
+    window.saveWorkingDayFromDayModal = saveWorkingDayFromDayModal;
 
     function removeWorkingDayFromDayModal() {
       if (!activeDayModalDate) return;
@@ -8028,15 +9669,11 @@
       renderAll();
     });
 
-    // Theme toggle
-    const root = document.documentElement;
-    function toggleTheme() {
-      const nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', nextTheme);
-      state.theme = nextTheme;
-      triggerAutoSave();
+    // Theme toggle listener
+    const themeBtn = document.getElementById('themeToggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', toggleTheme);
     }
-    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
     // Spot tracking
     document.querySelectorAll('.spot').forEach(card => {
@@ -8080,8 +9717,338 @@
     }
 
     /* =========================================================
+       DYNAMIC BACKGROUND & MOTIVATION MANAGEMENT SYSTEM
+    ========================================================= */
+    const SCFCBackgroundManager = {
+      STORAGE_KEY: 'scfc_background',
+      DEFAULT_BG: 'classic',
+      activeLayer: 1,
+
+      options: [
+        {
+          id: 'classic',
+          name: 'Classic SCFC',
+          desc: 'Original ambient dark glow & signature purple aurora',
+          url: '',
+          thumb: '',
+          fallback: 'linear-gradient(135deg, #080B18 0%, #0C1024 50%, #15103a 100%)'
+        },
+        {
+          id: 'mountain-sunset',
+          name: 'Mountain Sunset',
+          desc: 'Warm 4K sunset, majestic mountains & vibrant orange sky',
+          url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=3840&q=85',
+          thumb: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=75',
+          fallback: 'linear-gradient(135deg, #2d1b4e 0%, #7b2cbf 40%, #ff6b6b 75%, #ffb703 100%)'
+        },
+        {
+          id: 'night-mountains',
+          name: 'Night Mountains',
+          desc: 'Dark blue starry 4K sky with serene mountain landscape',
+          url: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=3840&q=85',
+          thumb: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=75',
+          fallback: 'linear-gradient(180deg, #090a0f 0%, #121829 50%, #1a233a 100%)'
+        },
+        {
+          id: 'forest',
+          name: 'Forest',
+          desc: 'Cinematic 4K green woodland & natural foggy scenery',
+          url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=3840&q=85',
+          thumb: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=75',
+          fallback: 'linear-gradient(180deg, #0b1a13 0%, #132a1d 50%, #1f422e 100%)'
+        },
+        {
+          id: 'ocean',
+          name: 'Ocean / Beach',
+          desc: 'Calm dusk ocean waters & serene shoreline atmosphere',
+          url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=3840&q=85',
+          thumb: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=75',
+          fallback: 'linear-gradient(180deg, #081c24 0%, #0d3b4c 50%, #1a6580 100%)'
+        },
+        {
+          id: 'aurora',
+          name: 'Aurora Lights',
+          desc: 'Emerald northern lights glowing over dark peak silhouettes',
+          url: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=3840&q=85',
+          thumb: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=600&q=75',
+          fallback: 'linear-gradient(135deg, #050d1a 0%, #0c2b38 40%, #105e62 70%, #00b4d8 100%)'
+        },
+        {
+          id: 'space',
+          name: 'Space & Stars',
+          desc: 'Deep cosmic galaxy nebulae with brilliant stars',
+          url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=3840&q=85',
+          thumb: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=75',
+          fallback: 'linear-gradient(180deg, #030408 0%, #0b0d1b 50%, #181c3b 100%)'
+        }
+      ],
+
+      quotes: [
+        { text: "Small progress is still progress.", author: "SCFC Motivation" },
+        { text: "Your future is created by what you do today.", author: "SCFC Motivation" },
+        { text: "Success is the sum of small efforts, repeated day in and day out.", author: "SCFC Motivation" },
+        { text: "Don't stop until you're proud.", author: "SCFC Motivation" },
+        { text: "Consistency beats motivation every single time.", author: "SCFC Motivation" },
+        { text: "Believe you can, and you're halfway there.", author: "SCFC Motivation" },
+        { text: "Great things take time. Keep pushing.", author: "SCFC Motivation" },
+        { text: "Your only limit is your mindset.", author: "SCFC Motivation" },
+        { text: "Dream big. Work bigger.", author: "SCFC Motivation" },
+        { text: "One step closer every single day.", author: "SCFC Motivation" },
+        { text: "Focus on progress, not perfection.", author: "SCFC Motivation" },
+        { text: "Your hard work will pay off sooner than you think.", author: "SCFC Motivation" },
+        { text: "Stay focused. Stay consistent.", author: "SCFC Motivation" },
+        { text: "Every expert was once a beginner.", author: "SCFC Motivation" },
+        { text: "Make today count.", author: "SCFC Motivation" },
+        { text: "Your grades are a result, not your identity.", author: "SCFC Student Mindset" },
+        { text: "One better mark today can change your final result.", author: "SCFC Grade Assistant" },
+        { text: "Prepare today so tomorrow's exam feels easier.", author: "SCFC Exam Hub" },
+        { text: "Your semester is still in your hands.", author: "SCFC Academic Advice" },
+        { text: "Consistency today creates confidence tomorrow.", author: "SCFC Motivation" },
+        { text: "The expert in anything was once a beginner.", author: "Helen Hayes" },
+        { text: "Action is the foundational key to all success.", author: "Pablo Picasso" },
+        { text: "Strive for progress, not perfection.", author: "SCFC Motivation" },
+        { text: "Discipline is choosing between what you want now and what you want most.", author: "Abraham Lincoln" },
+        { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+        { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+        { text: "Success doesn't come to you, you go to it.", author: "Marva Collins" },
+        { text: "Don't wish it were easier; wish you were better.", author: "Jim Rohn" },
+        { text: "Work hard in silence, let your success be your noise.", author: "Frank Ocean" },
+        { text: "Small daily improvements over time lead to stunning results.", author: "Robin Sharma" },
+        { text: "Failure is not the opposite of success; it's part of success.", author: "Arianna Huffington" },
+        { text: "What you do today can improve all your tomorrows.", author: "Ralph Marston" },
+        { text: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe" },
+        { text: "Success is walking from failure to failure with no loss of enthusiasm.", author: "Winston Churchill" },
+        { text: "Every semester is a fresh start to reach new heights.", author: "SCFC Student Hub" },
+        { text: "Turn your excuses into your execution.", author: "SCFC Motivation" },
+        { text: "Study while others are sleeping; work while others are loafing.", author: "William A. Ward" },
+        { text: "Continuous effort — not strength or intelligence — is the key to unlocking our potential.", author: "Winston Churchill" },
+        { text: "Focus on your goals, not your obstacles.", author: "SCFC Motivation" },
+        { text: "Push yourself, because no one else is going to do it for you.", author: "SCFC Motivation" },
+        { text: "Master your timetable today, master your future tomorrow.", author: "SCFC Timetable" },
+        { text: "A little progress each day adds up to big results.", author: "SCFC Grade Predictor" },
+        { text: "Hard work beats talent when talent doesn't work hard.", author: "Tim Notke" },
+        { text: "The pain you feel today will be the strength you feel tomorrow.", author: "SCFC Motivation" },
+        { text: "Your time is limited, so don't waste it living someone else's life.", author: "Steve Jobs" },
+        { text: "Energy and persistence conquer all things.", author: "Benjamin Franklin" },
+        { text: "Make your effort visible, and your results will follow.", author: "SCFC Motivation" },
+        { text: "Study with focus, calculate with precision, succeed with confidence.", author: "SCFC Workspace" },
+        { text: "You don't have to be great to start, but you have to start to be great.", author: "Les Brown" },
+        { text: "The best way to predict your future is to create it.", author: "Abraham Lincoln" },
+        { text: "Every problem is a lesson in disguise. Keep solving.", author: "SCFC AI Recommendation" }
+      ],
+
+      getSavedBackground() {
+        try {
+          return localStorage.getItem(this.STORAGE_KEY) || this.DEFAULT_BG;
+        } catch (e) {
+          return this.DEFAULT_BG;
+        }
+      },
+
+      initParallax() {
+        if (window.innerWidth > 768 && !('ontouchstart' in window)) {
+          let mouseX = 0, mouseY = 0;
+          let currentX = 0, currentY = 0;
+
+          window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 14; // -7px to +7px
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 14; // -7px to +7px
+          });
+
+          const animateParallax = () => {
+            currentX += (mouseX - currentX) * 0.06;
+            currentY += (mouseY - currentY) * 0.06;
+            const bgContainer = document.getElementById('scfcBgContainer');
+            if (bgContainer) {
+              bgContainer.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0) scale(1.025)`;
+            }
+            requestAnimationFrame(animateParallax);
+          };
+          animateParallax();
+        }
+      },
+
+      getAvailableOptions() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (!isDark) {
+          // Light Mode: Ocean / Beach
+          return this.options.filter(o => o.id === 'ocean');
+        } else {
+          // Dark Mode: Remaining options
+          return this.options.filter(o => o.id !== 'ocean');
+        }
+      },
+
+      init() {
+        const savedTheme = localStorage.getItem('scfc_theme');
+        if (savedTheme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          let savedId = this.getSavedBackground();
+          if (savedId === 'ocean') savedId = 'classic';
+          this.setBackground(savedId, true);
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          this.setBackground('ocean', true);
+        }
+        this.renderSelector();
+        this.displayRandomQuote();
+        this.initParallax();
+      },
+
+      setBackground(bgId, immediate = false) {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        let targetId = bgId;
+        if (!isDark) {
+          targetId = 'ocean';
+        } else if (targetId === 'ocean') {
+          targetId = 'classic';
+        }
+
+        let opt = this.options.find(o => o.id === targetId);
+        if (!opt) {
+          opt = this.options.find(o => o.id === (isDark ? 'classic' : 'ocean')) || this.options[0];
+        }
+
+        document.documentElement.setAttribute('data-bg', opt.id);
+
+        if (isDark) {
+          try {
+            localStorage.setItem(this.STORAGE_KEY, opt.id);
+          } catch (e) {
+            console.warn('localStorage unavailable for background setting');
+          }
+        }
+
+        const layer1 = document.getElementById('scfcBgLayer1');
+        const layer2 = document.getElementById('scfcBgLayer2');
+        if (!layer1 || !layer2) return;
+
+        const nextLayer = (this.activeLayer === 1) ? layer2 : layer1;
+        const currentLayer = (this.activeLayer === 1) ? layer1 : layer2;
+
+        const auroraWrap = document.getElementById('auroraWrap');
+        if (auroraWrap) {
+          auroraWrap.style.display = 'block';
+          auroraWrap.style.opacity = (opt.id === 'classic') ? '1' : '0.45';
+        }
+
+        const applyStyle = (urlToUse) => {
+          const bgStyle = urlToUse ? `url("${urlToUse}"), ${opt.fallback}` : opt.fallback;
+          if (immediate) {
+            currentLayer.style.backgroundImage = bgStyle;
+            currentLayer.classList.add('active');
+            nextLayer.classList.remove('active');
+          } else {
+            nextLayer.style.backgroundImage = bgStyle;
+            nextLayer.classList.add('active');
+            currentLayer.classList.remove('active');
+            this.activeLayer = (this.activeLayer === 1) ? 2 : 1;
+          }
+          this.updateSelectorUI(opt.id);
+        };
+
+        if (opt.url) {
+          // Preload high-res 4K image before executing cross-fade transition
+          const img = new Image();
+          img.onload = () => applyStyle(opt.url);
+          img.onerror = () => applyStyle(''); // fallback gradient if load fails
+          img.src = opt.url;
+        } else {
+          applyStyle('');
+        }
+      },
+
+      resetBackground() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        this.setBackground(isDark ? 'classic' : 'ocean');
+      },
+
+      renderSelector() {
+        const grid = document.getElementById('bgSelectorGrid');
+        if (!grid) return;
+
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const available = this.getAvailableOptions();
+        const currentBg = isDark ? this.getSavedBackground() : 'ocean';
+
+        grid.innerHTML = available.map(opt => {
+          const isSelected = opt.id === currentBg;
+          return `
+            <div class="bg-option-card ${isSelected ? 'selected' : ''}" data-bg="${opt.id}" onclick="SCFCBackgroundManager.setBackground('${opt.id}')">
+              <div class="bg-option-thumb" style="background-image: ${opt.thumb ? `url('${opt.thumb}'), ` : ''}${opt.fallback};"></div>
+              <div class="bg-option-info">
+                <div class="bg-option-name">
+                  <span>${opt.name}</span>
+                  <div class="bg-option-check">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div style="font-size:11.5px; color:rgba(255,255,255,0.7); margin-top:2px;">${opt.desc}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      updateSelectorUI(selectedId) {
+        document.querySelectorAll('.bg-option-card').forEach(card => {
+          if (card.dataset.bg === selectedId) {
+            card.classList.add('selected');
+          } else {
+            card.classList.remove('selected');
+          }
+        });
+      },
+
+      openModal() {
+        const modal = document.getElementById('scfcBgSelectorModal');
+        if (modal) {
+          this.renderSelector();
+          modal.classList.add('open');
+        }
+      },
+
+      closeModal() {
+        const modal = document.getElementById('scfcBgSelectorModal');
+        if (modal) {
+          modal.classList.remove('open');
+        }
+      },
+
+      applyAndClose() {
+        const selected = this.getSavedBackground();
+        this.setBackground(selected);
+        this.closeModal();
+      },
+
+      displayRandomQuote() {
+        const quoteEl = document.getElementById('loginQuoteText');
+        const authorEl = document.getElementById('loginQuoteAuthor');
+        const pill = document.getElementById('loginQuotePill');
+
+        if (!quoteEl || !authorEl || this.quotes.length === 0) return;
+
+        const randomIndex = Math.floor(Math.random() * this.quotes.length);
+        const item = this.quotes[randomIndex];
+
+        if (pill) {
+          pill.style.animation = 'none';
+          void pill.offsetWidth;
+          pill.style.animation = 'quoteFadeIn 0.6s ease-out';
+        }
+
+        quoteEl.textContent = `"${item.text}"`;
+        authorEl.textContent = `— ${item.author}`;
+      }
+    };
+    window.SCFCBackgroundManager = SCFCBackgroundManager;
+
+    /* =========================================================
        INITIALIZATION
     ========================================================= */
+    SCFCBackgroundManager.init();
     checkSavedSession();
   </script>
   <script>

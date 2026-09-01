@@ -37,6 +37,45 @@ const StudentSchema = new mongoose.Schema({
     required: false,
     select: false
   },
+  email: {
+    type: String,
+    required: false,
+    trim: true,
+    lowercase: true
+  },
+  emailVerified: {
+    type: Boolean,
+    default: false
+  },
+  emailVerificationToken: {
+    type: String,
+    select: false
+  },
+  emailVerificationExpires: {
+    type: Date,
+    select: false
+  },
+  pendingEmail: {
+    type: String,
+    trim: true,
+    lowercase: true
+  },
+  pendingEmailToken: {
+    type: String,
+    select: false
+  },
+  pendingEmailExpires: {
+    type: Date,
+    select: false
+  },
+  resetPasswordToken: {
+    type: String,
+    select: false
+  },
+  resetPasswordExpires: {
+    type: Date,
+    select: false
+  },
   theme: {
     type: String,
     default: 'light'

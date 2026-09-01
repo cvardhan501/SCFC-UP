@@ -1,0 +1,17 @@
+{
+  "name": "SCFC StudentOS",
+  "short_name": "StudentOS",
+  "description": "Your Academic Operating System",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080B18",
+  "theme_color": "#6C63FF"
+}
