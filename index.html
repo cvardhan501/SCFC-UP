@@ -6890,6 +6890,8 @@
 
       state.theme = nextTheme;
       triggerAutoSave();
+    }
+
     function openMobileMenuModal() {
       const m = document.getElementById('mobileMenuModal');
       if (m) m.classList.add('open');
@@ -10778,6 +10780,7 @@
               </div>
             </div>
           `;
+        }).join('');
         this.updateZoomUI(this.getSavedZoom());
       },
 
