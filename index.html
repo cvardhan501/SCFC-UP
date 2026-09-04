@@ -6468,6 +6468,7 @@
         }
       }
     }
+    window.handleLoginSubmit = handleLoginSubmit;
 
     async function handleSetupPasswordSubmit() {
       const usn = document.getElementById('setupUsnInput').value.trim();
@@ -10777,14 +10778,7 @@
               </div>
             </div>
           `;
-        }).join('');
         this.updateZoomUI(this.getSavedZoom());
-      },
-                <div style="font-size:11.5px; color:rgba(255,255,255,0.7); margin-top:2px;">${opt.desc}</div>
-              </div>
-            </div>
-          `;
-        }).join('');
       },
 
       updateSelectorUI(selectedId) {

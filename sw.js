@@ -40,12 +40,25 @@ async function safeCachePut(request, response) {
   }
 }
 
-// Install Event - Cache Static App Shell
+// Install Event - Cache Static App Shell Resiliently
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(async cache => {
-      console.log('[SW] Caching app shell assets');
-      await cache.addAll(STATIC_ASSETS);
+      console.log('[SW] Resiliently pre-caching app shell assets');
+      await Promise.allSettled(
+        STATIC_ASSETS.map(async (assetUrl) => {
+          try {
+            const req = new Request(assetUrl, { cache: 'reload' });
+            const response = await fetch(req);
+            const isVercelSso = response.url && response.url.includes('vercel.com/sso-api');
+            if (response && response.ok && !isVercelSso) {
+              await cache.put(req, response);
+            }
+          } catch (err) {
+            console.warn('[SW] Could not pre-cache asset:', assetUrl);
+          }
+        })
+      );
     }).then(() => self.skipWaiting()).catch(err => {
       console.warn('[SW] App shell installation warning:', err);
     })
