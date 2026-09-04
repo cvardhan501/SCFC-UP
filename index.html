@@ -2622,21 +2622,35 @@
         height: 100% !important;
         min-height: 0 !important;
         overflow: hidden !important;
-        padding: 8px 10px 0 10px !important;
+        padding: 0 !important;
         box-sizing: border-box !important;
       }
 
       .topbar {
         flex-shrink: 0 !important;
-        padding: 6px 12px !important;
-        margin-bottom: 10px !important;
-        flex-wrap: nowrap !important;
-        gap: 6px !important;
-        width: 100% !important;
+        height: 56px !important;
+        min-height: 56px !important;
+        max-height: 56px !important;
+        padding: 0 12px !important;
+        margin: calc(6px + env(safe-area-inset-top, 0px)) 12px 4px 12px !important;
+        width: calc(100% - 24px) !important;
         box-sizing: border-box !important;
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
+        border-radius: 999px !important;
+        gap: 6px !important;
+      }
+
+      .topbar .icon-btn {
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        flex-shrink: 0 !important;
       }
 
       .search-pill,
@@ -2644,29 +2658,44 @@
         display: none !important;
       }
 
-      .profile-pill span,
-      .profile-pill b {
-        display: none;
+      .profile-pill {
+        padding: 4px 8px 4px 4px !important;
+        height: 38px !important;
+        border-radius: 999px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        cursor: pointer !important;
+        flex-shrink: 0 !important;
       }
 
-      .profile-pill {
-        padding: 6px;
+      .profile-pill .info {
+        display: none !important;
       }
 
       .profile-pill .av {
-        width: 32px !important;
-        height: 32px !important;
-        border-radius: 10px !important;
+        width: 30px !important;
+        height: 30px !important;
+        border-radius: 50% !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         background: linear-gradient(140deg, var(--indigo), var(--purple)) !important;
+        flex-shrink: 0 !important;
       }
 
       .profile-pill .av svg {
         display: block !important;
-        width: 18px !important;
-        height: 18px !important;
+        width: 16px !important;
+        height: 16px !important;
+      }
+
+      .profile-pill > svg {
+        display: block !important;
+        width: 14px !important;
+        height: 14px !important;
+        flex-shrink: 0 !important;
+        opacity: 0.8 !important;
       }
 
       /* Internal Vertical Scrollable Content Area for Page Views */
@@ -3081,33 +3110,26 @@
 
     /* Small Mobile (< 480px) */
     @media (max-width:479px) {
-      .app {
-        padding: 8px 8px 85px 8px;
-      }
-
       .hero h1 {
-        font-size: 20px;
+        font-size: 20px !important;
       }
 
       .dash-grid {
         grid-template-columns: 1fr !important;
-        gap: 10px;
+        gap: 10px !important;
       }
 
       .exam-hero-grid,
       .exam-cal-timeline-grid,
       .exam-tables-grid {
         grid-template-columns: 1fr !important;
-        gap: 10px;
+        gap: 10px !important;
       }
 
       .modal {
         width: 95vw !important;
         max-width: 100% !important;
-        padding: 16px !important;
-      }
-    }
-        margin: 0 auto;
+        margin: 0 auto !important;
         padding: 16px !important;
         border-radius: 20px !important;
       }
@@ -3790,39 +3812,7 @@
 
       <!-- RIGHT COLUMN (topbar + content) -->
       <div>
-        <!-- MOBILE TOP HEADER [Menu] SCFC StudentOS [Theme] [Profile] -->
-        <header class="glass mobile-top-header" aria-label="Mobile Header">
-          <button class="icon-btn mobile-menu-btn" onclick="openMobileMenuModal()" title="Menu" aria-label="Menu">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          </button>
-          <div class="mobile-app-brand" onclick="switchView('dashboard')">
-            <span style="font-size:18px;">🎓</span>
-            <span class="mobile-app-title">SCFC StudentOS</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:6px;">
-            <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
-              <svg class="theme-icon-moon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="M21 12.5A8.5 8.5 0 1111.5 3 7 7 0 0021 12.5z" />
-              </svg>
-              <svg class="theme-icon-sun" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <circle cx="12" cy="12" r="4.5" />
-                <path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" />
-              </svg>
-            </button>
-            <button class="icon-btn" onclick="switchView('settings')" title="User Profile" aria-label="Profile">
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </button>
-          </div>
-        </header>
-
-        <!-- DESKTOP TOP BAR -->
+        <!-- TOP CONTROL BAR (THE ONLY TOP HEADER ON DESKTOP & MOBILE) -->
         <div class="glass topbar">
           <button class="icon-btn" id="themeToggle" title="Toggle theme">
             <svg class="theme-icon-moon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -10853,7 +10843,7 @@
         { id: 'semester', label: 'Semester' },
         { id: 'timetable', label: 'Timetable' },
         { id: 'exams', label: 'Exam' },
-        { id: 'tracker', label: 'Credits' },
+        { id: 'gradesystem', label: 'Credits' },
         { id: 'analytics', label: 'Analytics' },
         { id: 'reports', label: 'Reports' }
       ];
