@@ -2948,29 +2948,43 @@
         box-sizing: border-box !important;
       }
 
-      /* Fixed Mobile Bottom Navigation - 7 Direct Navigation Items */
+      /* PREMIUM FLOATING GLASS CAPSULE NAVIGATION BAR */
       .mobile-bottomnav {
         display: flex !important;
         position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        width: 100% !important;
-        max-width: 100vw !important;
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(100% - 24px) !important;
+        max-width: 480px !important;
         box-sizing: border-box !important;
-        z-index: 99 !important;
-        padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px)) 4px !important;
-        border-radius: 18px 18px 0 0 !important;
-        gap: 1px !important;
+        z-index: 1000 !important;
+        padding: 6px 8px !important;
+        border-radius: 999px !important;
+        gap: 4px !important;
         align-items: center !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
         flex-wrap: nowrap !important;
-        background: var(--glass-bg-3, rgba(23, 26, 48, 0.96)) !important;
-        backdrop-filter: blur(20px) saturate(140%) !important;
-        -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
-        border-top: 1px solid var(--glass-border) !important;
-        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25) !important;
-        overflow: hidden !important;
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+        -webkit-overflow-scrolling: touch !important;
+
+        /* Clear 3D Glassmorphism Capsule */
+        background: rgba(255, 255, 255, 0.22) !important;
+        backdrop-filter: blur(24px) saturate(150%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.38) !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+      }
+
+      html[data-theme="dark"] .mobile-bottomnav {
+        background: rgba(15, 23, 42, 0.68) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+      }
+
+      .mobile-bottomnav::-webkit-scrollbar {
+        display: none !important;
       }
 
       .mnav-item {
@@ -2981,13 +2995,17 @@
         gap: 2px !important;
         color: var(--ink-soft) !important;
         cursor: pointer !important;
-        flex: 1 !important;
-        min-width: 0 !important;
-        padding: 4px 1px !important;
+        flex: 0 0 auto !important;
+        min-width: 60px !important;
+        min-height: 44px !important;
+        padding: 5px 12px !important;
         white-space: nowrap !important;
-        border-radius: 10px !important;
-        transition: color 0.2s ease, background 0.2s ease !important;
+        border-radius: 999px !important;
+        transition: transform 0.18s ease, background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease !important;
         text-align: center !important;
+        scroll-snap-align: center !important;
+        -webkit-tap-highlight-color: transparent !important;
+        user-select: none !important;
       }
 
       .mnav-item svg {
@@ -2996,39 +3014,60 @@
         flex-shrink: 0 !important;
         display: block !important;
         margin: 0 auto !important;
+        transition: transform 0.2s ease !important;
       }
 
       .mnav-item span {
-        font-size: 8.5px !important;
+        font-size: 9.5px !important;
         font-weight: 600 !important;
         line-height: 1.1 !important;
         white-space: nowrap !important;
         display: block !important;
         text-align: center !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        max-width: 100% !important;
+      }
+
+      .mnav-item:active {
+        transform: scale(0.92) !important;
       }
 
       .mnav-item.active {
-        color: var(--indigo) !important;
-        background: rgba(108, 99, 255, 0.14) !important;
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.28) !important;
+        border-radius: 999px !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+        backdrop-filter: blur(12px) !important;
       }
 
+      .mnav-item.active svg {
+        transform: scale(1.1) !important;
+      }
+
+      html[data-theme="dark"] .mnav-item.active {
+        color: #ffffff !important;
+        background: rgba(108, 99, 255, 0.35) !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 14px rgba(108, 99, 255, 0.3) !important;
+      }
+
+      /* FLOATING ACTION BUTTON POSITION */
       .fab {
         display: flex !important;
         position: fixed !important;
-        bottom: calc(75px + env(safe-area-inset-bottom, 0px)) !important;
-        right: 16px !important;
-        z-index: 90 !important;
-        width: 48px !important;
-        height: 48px !important;
-        border-radius: 14px !important;
+        bottom: calc(92px + env(safe-area-inset-bottom, 0px)) !important;
+        right: 20px !important;
+        z-index: 990 !important;
+        width: 50px !important;
+        height: 50px !important;
+        border-radius: 50% !important;
         align-items: center !important;
         justify-content: center !important;
-        background: linear-gradient(140deg, var(--indigo), var(--purple)) !important;
-        box-shadow: 0 10px 24px -6px rgba(108, 99, 255, .65) !important;
+        background: linear-gradient(135deg, var(--indigo), var(--purple)) !important;
+        box-shadow: 0 10px 24px -4px rgba(108, 99, 255, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
         color: #fff !important;
+        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease !important;
+      }
+
+      .fab:active {
+        transform: scale(0.92) !important;
       }
 
       .modal-search-row {
@@ -3751,7 +3790,39 @@
 
       <!-- RIGHT COLUMN (topbar + content) -->
       <div>
-        <!-- TOP BAR -->
+        <!-- MOBILE TOP HEADER [Menu] SCFC StudentOS [Theme] [Profile] -->
+        <header class="glass mobile-top-header" aria-label="Mobile Header">
+          <button class="icon-btn mobile-menu-btn" onclick="openMobileMenuModal()" title="Menu" aria-label="Menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="mobile-app-brand" onclick="switchView('dashboard')">
+            <span style="font-size:18px;">🎓</span>
+            <span class="mobile-app-title">SCFC StudentOS</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
+              <svg class="theme-icon-moon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M21 12.5A8.5 8.5 0 1111.5 3 7 7 0 0021 12.5z" />
+              </svg>
+              <svg class="theme-icon-sun" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="12" r="4.5" />
+                <path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" />
+              </svg>
+            </button>
+            <button class="icon-btn" onclick="switchView('settings')" title="User Profile" aria-label="Profile">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- DESKTOP TOP BAR -->
         <div class="glass topbar">
           <button class="icon-btn" id="themeToggle" title="Toggle theme">
             <svg class="theme-icon-moon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -4137,9 +4208,7 @@
             <div class="footer-content">
               <div class="footer-brand-title">SCFC StudentOS</div>
               <div class="footer-legal-row">
-                <span class="footer-copyright">© 2026 SCFC StudentOS</span>
-                <span class="footer-sep">·</span>
-                <span class="footer-credit">Designed &amp; Developed by <strong>C VISHNU VARDHAN</strong></span>
+                <span class="footer-copyright">SCFC StudentOS · Academic • Progress • Planning</span>
               </div>
             </div>
           </footer>
@@ -4236,9 +4305,7 @@
             <div class="footer-content">
               <div class="footer-brand-title">SCFC StudentOS</div>
               <div class="footer-legal-row">
-                <span class="footer-copyright">© 2026 SCFC StudentOS</span>
-                <span class="footer-sep">·</span>
-                <span class="footer-credit">Designed &amp; Developed by <strong>C VISHNU VARDHAN</strong></span>
+                <span class="footer-copyright">SCFC StudentOS · Academic • Progress • Planning</span>
               </div>
             </div>
           </footer>
@@ -4931,40 +4998,63 @@
   </div>
 
   <!-- MOBILE BOTTOM NAV -->
-  <nav class="glass mobile-bottomnav">
-    <div class="mnav-item active" data-view="dashboard" onclick="switchView('dashboard')"><svg width="19" height="19"
-        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M3 10.5L12 3l9 7.5" />
-        <path d="M5 9.5V21h14V9.5" />
-      </svg>Home</div>
-    <div class="mnav-item" data-view="semester" onclick="switchView('semester')"><svg width="19" height="19"
-        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <rect x="3" y="4" width="18" height="17" rx="3" />
-        <path d="M3 9h18" />
-      </svg>Sem</div>
-    <div class="mnav-item" data-view="timetable" onclick="switchView('timetable')"><svg width="19" height="19"
-        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <rect x="3" y="4" width="18" height="17" rx="3" />
-        <path d="M16 2v4M8 2v4M3 10h18" />
-      </svg>Timetable</div>
-    <div class="mnav-item" data-view="tracker" onclick="switchView('tracker')"><svg width="19" height="19"
-        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M12 2v20M2 12h20" />
-        <circle cx="12" cy="12" r="8" />
-      </svg>Tracker</div>
-    <div class="mnav-item" data-view="analytics" onclick="switchView('analytics')"><svg width="19" height="19"
-        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M4 20V10M12 20V4M20 20v-7" />
-      </svg>Stats</div>
-    <div class="mnav-item" data-view="reports" onclick="switchView('reports')"><svg width="19" height="19"
-        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6z" />
-      </svg>Reports</div>
-    <div class="mnav-item" data-view="settings" onclick="switchView('settings')"><svg width="19" height="19"
-        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <circle cx="12" cy="12" r="3" />
-        <path d="M19.4 15a1.7 1.7 0 00.34 1.87" />
-      </svg>Settings</div>
+  <!-- MOBILE FLOATING GLASS CAPSULE NAVIGATION BAR -->
+  <nav class="glass mobile-bottomnav" aria-label="Mobile Navigation">
+    <div class="mnav-item active" data-view="dashboard" onclick="switchView('dashboard')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+      <span>Dashboard</span>
+    </div>
+    <div class="mnav-item" data-view="semester" onclick="switchView('semester')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      </svg>
+      <span>Semester</span>
+    </div>
+    <div class="mnav-item" data-view="timetable" onclick="switchView('timetable')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+        <line x1="8" y1="2" x2="8" y2="6" />
+        <line x1="3" y1="10" x2="21" y2="10" />
+      </svg>
+      <span>Timetable</span>
+    </div>
+    <div class="mnav-item" data-view="exams" onclick="switchView('exams')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 11l3 3L22 4" />
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+      </svg>
+      <span>Exam</span>
+    </div>
+    <div class="mnav-item" data-view="gradesystem" onclick="switchView('gradesystem')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="8" r="7" />
+        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+      </svg>
+      <span>Credits</span>
+    </div>
+    <div class="mnav-item" data-view="analytics" onclick="switchView('analytics')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="20" x2="18" y2="10" />
+        <line x1="12" y1="20" x2="12" y2="4" />
+        <line x1="6" y1="20" x2="6" y2="14" />
+      </svg>
+      <span>Analytics</span>
+    </div>
+    <div class="mnav-item" data-view="reports" onclick="switchView('reports')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="16" y1="13" x2="8" y2="13" />
+        <line x1="16" y1="17" x2="8" y2="17" />
+        <polyline points="10 9 9 9 8 9" />
+      </svg>
+      <span>Reports</span>
+    </div>
   </nav>
   <button class="fab" id="fabAdd">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4">
@@ -5212,7 +5302,7 @@
         </div>
       </div>
 
-      <div class="modal-foot" style="display:flex; justify-content:space-between; align-items:center; padding-top:14px; border-top:1px solid var(--glass-border); margin-top:12px;">
+      <div class="modal-foot" style="display:flex; justify-content:space-between; align-items:center; padding-top:14px; border-top:1px solid var(--glass-border); margin-top:12px; flex-wrap:wrap; gap:10px;">
         <button class="btn btn-ghost" onclick="SCFCBackgroundManager.resetBackground()" style="font-size:13px; color:var(--ink-soft);">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;">
             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
@@ -5220,6 +5310,15 @@
           </svg>
           Reset Background
         </button>
+
+        <!-- BACKGROUND ZOOM CONTROL -->
+        <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.08); padding:4px 10px; border-radius:20px; border:1px solid var(--glass-border);">
+          <span style="font-size:11.5px; color:var(--ink-soft); font-weight:600;">Zoom:</span>
+          <button class="btn btn-ghost" onclick="SCFCBackgroundManager.zoomOut()" style="padding:2px 8px; font-weight:700; font-size:14px; line-height:1; min-width:28px;" title="Zoom Out">−</button>
+          <span id="bgZoomLabel" style="font-size:12px; font-weight:700; min-width:38px; text-align:center;">100%</span>
+          <button class="btn btn-ghost" onclick="SCFCBackgroundManager.zoomIn()" style="padding:2px 8px; font-weight:700; font-size:14px; line-height:1; min-width:28px;" title="Zoom In">+</button>
+        </div>
+
         <button class="btn btn-primary" id="applyBgBtn" onclick="SCFCBackgroundManager.applyAndClose()" style="padding:8px 24px;">Apply Background</button>
       </div>
     </div>
@@ -5273,9 +5372,48 @@
         </div>
       </div>
     </div>
+  <!-- MOBILE QUICK MENU MODAL -->
+  <div class="modal-overlay" id="mobileMenuModal">
+    <div class="glass modal" style="width: 380px; max-width: 90vw;">
+      <div class="modal-head" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--glass-border); padding-bottom:12px; margin-bottom:14px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:20px;">🎓</span>
+          <h3 style="margin:0; font-size:18px; font-weight:700;">SCFC StudentOS Menu</h3>
+        </div>
+        <button onclick="closeMobileMenuModal()" style="background:none; border:none; color:var(--ink-soft); font-size:24px; cursor:pointer;" title="Close">&times;</button>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px; padding:4px 0;">
+        <button class="btn btn-ghost" onclick="closeMobileMenuModal(); SCFCBackgroundManager.openModal();" style="justify-content:flex-start; padding:12px 14px; font-weight:600;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2" style="margin-right:10px;">
+            <path d="M12 21a9 9 0 1 1 0-18c4.97 0 9 3.58 9 8a4.5 4.5 0 0 1-4.5 4.5H14a2 2 0 0 0-2 2c0 1.1-.9 2-2 2h0z"/>
+          </svg>
+          Change Background Theme
+        </button>
+        <button class="btn btn-ghost" onclick="closeMobileMenuModal(); switchView('settings');" style="justify-content:flex-start; padding:12px 14px; font-weight:600;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:10px;">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.7 1.7 0 00.34 1.87l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.7 1.7 0 00-1.87-.34 1.7 1.7 0 00-1 1.55V21a2 2 0 11-4 0v-.09a1.7 1.7 0 00-1-1.55 1.7 1.7 0 00-1.87.34l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.7 1.7 0 004.6 15a1.7 1.7 0 00-1.55-1H3a2 2 0 010-4h.09a1.7 1.7 0 001.55-1 1.7 1.7 0 00-.34-1.87l-.06-.06a2 2 0 112.83-2.83l.06.06A1.7 1.7 0 009 4.6a1.7 1.7 0 001-1.55V3a2 2 0 014 0v.09a1.7 1.7 0 001 1.55 1.7 1.7 0 001.87-.34l.06-.06a2 2 0 112.83 2.83l-.06.06A1.7 1.7 0 0019.4 9a1.7 1.7 0 001.55 1H21a2 2 0 010 4h-.09a1.7 1.7 0 00-1.55 1z" />
+          </svg>
+          Account & Profile Settings
+        </button>
+        <button class="btn btn-ghost" onclick="closeMobileMenuModal(); switchView('history');" style="justify-content:flex-start; padding:12px 14px; font-weight:600;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:10px;">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 3" />
+          </svg>
+          Activity Logs
+        </button>
+        <button class="btn btn-ghost" onclick="closeMobileMenuModal(); logoutStudent();" style="justify-content:flex-start; padding:12px 14px; font-weight:600; color:#EF4444;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:10px;">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Logout Session
+        </button>
+      </div>
+    </div>
   </div>
-
-  <!-- RESET PASSWORD MODAL (LOADED VIA RESET TOKEN LINK) -->
   <div class="modal-overlay" id="resetPasswordModal">
     <div class="glass modal" style="width:460px;">
       <div id="resetFormContent">
@@ -6751,8 +6889,16 @@
 
       state.theme = nextTheme;
       triggerAutoSave();
+    function openMobileMenuModal() {
+      const m = document.getElementById('mobileMenuModal');
+      if (m) m.classList.add('open');
     }
-    window.toggleTheme = toggleTheme;
+    function closeMobileMenuModal() {
+      const m = document.getElementById('mobileMenuModal');
+      if (m) m.classList.remove('open');
+    }
+    window.openMobileMenuModal = openMobileMenuModal;
+    window.closeMobileMenuModal = closeMobileMenuModal;
 
     let activeResetToken = null;
 
@@ -7156,8 +7302,14 @@
       });
 
       document.querySelectorAll('.mnav-item[data-view]').forEach(item => {
-        if (item.dataset.view === viewName) item.classList.add('active');
-        else item.classList.remove('active');
+        if (item.dataset.view === viewName) {
+          item.classList.add('active');
+          try {
+            item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          } catch(e) {}
+        } else {
+          item.classList.remove('active');
+        }
       });
 
       if (viewName === 'dashboard') renderAll();
@@ -10452,6 +10604,8 @@
         { text: "Every problem is a lesson in disguise. Keep solving.", author: "SCFC AI Recommendation" }
       ],
 
+      ZOOM_KEY: 'scfc-background-zoom',
+
       getSavedBackground() {
         try {
           return localStorage.getItem(this.STORAGE_KEY) || this.DEFAULT_BG;
@@ -10460,22 +10614,60 @@
         }
       },
 
+      getSavedZoom() {
+        try {
+          const val = parseFloat(localStorage.getItem(this.ZOOM_KEY));
+          return (!isNaN(val) && val >= 0.7 && val <= 1.5) ? val : 1.0;
+        } catch (e) {
+          return 1.0;
+        }
+      },
+
+      setZoom(zoomVal) {
+        const container = document.getElementById('scfcBgContainer');
+        if (container) {
+          container.style.transform = `scale(${zoomVal})`;
+        }
+        try {
+          localStorage.setItem(this.ZOOM_KEY, zoomVal.toString());
+        } catch (e) {}
+        this.updateZoomUI(zoomVal);
+      },
+
+      zoomIn() {
+        const current = this.getSavedZoom();
+        const next = Math.min(1.4, Math.round((current + 0.05) * 100) / 100);
+        this.setZoom(next);
+      },
+
+      zoomOut() {
+        const current = this.getSavedZoom();
+        const next = Math.max(0.75, Math.round((current - 0.05) * 100) / 100);
+        this.setZoom(next);
+      },
+
+      updateZoomUI(zoomVal) {
+        const label = document.getElementById('bgZoomLabel');
+        if (label) label.textContent = `${Math.round(zoomVal * 100)}%`;
+      },
+
       initParallax() {
         if (window.innerWidth > 768 && !('ontouchstart' in window)) {
           let mouseX = 0, mouseY = 0;
           let currentX = 0, currentY = 0;
 
           window.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth - 0.5) * 14; // -7px to +7px
-            mouseY = (e.clientY / window.innerHeight - 0.5) * 14; // -7px to +7px
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 14;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 14;
           });
 
           const animateParallax = () => {
             currentX += (mouseX - currentX) * 0.06;
             currentY += (mouseY - currentY) * 0.06;
             const bgContainer = document.getElementById('scfcBgContainer');
+            const zoomVal = this.getSavedZoom();
             if (bgContainer) {
-              bgContainer.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0) scale(1.025)`;
+              bgContainer.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0) scale(${zoomVal * 1.025})`;
             }
             requestAnimationFrame(animateParallax);
           };
@@ -10484,54 +10676,36 @@
       },
 
       getAvailableOptions() {
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        if (!isDark) {
-          // Light Mode: Ocean / Beach
-          return this.options.filter(o => o.id === 'ocean');
-        } else {
-          // Dark Mode: Remaining options
-          return this.options.filter(o => o.id !== 'ocean');
-        }
+        return this.options;
       },
 
       init() {
         const savedTheme = localStorage.getItem('scfc_theme');
         if (savedTheme === 'dark') {
           document.documentElement.setAttribute('data-theme', 'dark');
-          let savedId = this.getSavedBackground();
-          if (savedId === 'ocean') savedId = 'classic';
-          this.setBackground(savedId, true);
         } else {
           document.documentElement.removeAttribute('data-theme');
-          this.setBackground('ocean', true);
         }
+        const savedId = this.getSavedBackground();
+        this.setBackground(savedId, true);
+        this.setZoom(this.getSavedZoom());
         this.renderSelector();
         this.displayRandomQuote();
         this.initParallax();
       },
 
       setBackground(bgId, immediate = false) {
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        let targetId = bgId;
-        if (!isDark) {
-          targetId = 'ocean';
-        } else if (targetId === 'ocean') {
-          targetId = 'classic';
-        }
-
-        let opt = this.options.find(o => o.id === targetId);
+        let opt = this.options.find(o => o.id === bgId);
         if (!opt) {
-          opt = this.options.find(o => o.id === (isDark ? 'classic' : 'ocean')) || this.options[0];
+          opt = this.options[0];
         }
 
         document.documentElement.setAttribute('data-bg', opt.id);
 
-        if (isDark) {
-          try {
-            localStorage.setItem(this.STORAGE_KEY, opt.id);
-          } catch (e) {
-            console.warn('localStorage unavailable for background setting');
-          }
+        try {
+          localStorage.setItem(this.STORAGE_KEY, opt.id);
+        } catch (e) {
+          console.warn('localStorage unavailable for background setting');
         }
 
         const layer1 = document.getElementById('scfcBgLayer1');
@@ -10563,10 +10737,9 @@
         };
 
         if (opt.url) {
-          // Preload high-res 4K image before executing cross-fade transition
           const img = new Image();
           img.onload = () => applyStyle(opt.url);
-          img.onerror = () => applyStyle(''); // fallback gradient if load fails
+          img.onerror = () => applyStyle('');
           img.src = opt.url;
         } else {
           applyStyle('');
@@ -10576,15 +10749,15 @@
       resetBackground() {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         this.setBackground(isDark ? 'classic' : 'ocean');
+        this.setZoom(1.0);
       },
 
       renderSelector() {
         const grid = document.getElementById('bgSelectorGrid');
         if (!grid) return;
 
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         const available = this.getAvailableOptions();
-        const currentBg = isDark ? this.getSavedBackground() : 'ocean';
+        const currentBg = this.getSavedBackground();
 
         grid.innerHTML = available.map(opt => {
           const isSelected = opt.id === currentBg;
@@ -10600,6 +10773,13 @@
                     </svg>
                   </div>
                 </div>
+                <div style="font-size:11.5px; color:rgba(255,255,255,0.7); margin-top:2px;">${opt.desc}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        this.updateZoomUI(this.getSavedZoom());
+      },
                 <div style="font-size:11.5px; color:rgba(255,255,255,0.7); margin-top:2px;">${opt.desc}</div>
               </div>
             </div>
