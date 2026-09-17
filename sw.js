@@ -3,7 +3,7 @@
    Version: 4.1.0
    ========================================================= */
 
-const CACHE_NAME = 'scfc-app-shell-v4.2';
+const CACHE_NAME = 'scfc-app-shell-v4.3';
 
 const STATIC_ASSETS = [
   '/',
