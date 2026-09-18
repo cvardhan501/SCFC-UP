@@ -34,26 +34,41 @@ module.exports = async function handler(req, res) {
     // PUT /api/student/:usn
     if (req.method === 'PUT') {
       const body = typeof req.body === 'string' ? (req.body ? JSON.parse(req.body) : {}) : (req.body || {});
-      const { name, theme, currentSemester, semesters, history, tasks, examConfig } = body;
+      const { name, theme, currentSemester, semesters, history, tasks, examConfig, timetable, trackerConfig } = body;
 
       const student = await Student.findOne({ usn: cleanUsn });
       if (!student) {
         return res.status(404).json({ success: false, message: 'Student not found.' });
       }
 
-      if (name) student.name = name.trim();
-      if (theme) student.theme = theme;
-      if (currentSemester) student.currentSemester = currentSemester;
-      if (semesters) {
+      if (name !== undefined) student.name = name.trim();
+      if (theme !== undefined) student.theme = theme;
+      if (currentSemester !== undefined) student.currentSemester = currentSemester;
+      if (history !== undefined) student.history = history;
+      if (tasks !== undefined) student.tasks = tasks;
+
+      if (semesters !== undefined) {
         student.semesters = semesters;
         student.markModified('semesters');
       }
-      if (history) student.history = history;
-      if (tasks) student.tasks = tasks;
-      if (examConfig) student.examConfig = examConfig;
+
+      if (examConfig !== undefined) {
+        student.examConfig = examConfig;
+        student.markModified('examConfig');
+      }
+
+      if (timetable !== undefined) {
+        student.timetable = timetable;
+        student.markModified('timetable');
+      }
+
+      if (trackerConfig !== undefined) {
+        student.trackerConfig = trackerConfig;
+        student.markModified('trackerConfig');
+      }
 
       await student.save();
-      return res.json({ success: true, message: 'Data auto-saved successfully.' });
+      return res.json({ success: true, message: 'Data auto-saved successfully.', student });
     }
 
     return res.status(405).json({ success: false, message: 'Method Not Allowed' });

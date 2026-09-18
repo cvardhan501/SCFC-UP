@@ -6627,6 +6627,9 @@
           // Success Login
           try {
             applyStudentData(data.student);
+            if (window.scfcDB && data.student && data.student.usn) {
+              await window.scfcDB.saveUserData(data.student.usn, data.student);
+            }
           } catch (dataErr) {
             console.error('Error rendering student data on login:', dataErr);
           }
@@ -7324,37 +7327,58 @@
       }
 
       function applyStudentData(student) {
-        state.studentName = student.name;
-        state.usn = student.usn;
+        if (!student) return;
+        state.studentName = student.name || 'Student';
+        state.usn = student.usn || '';
         state.studentEmail = student.email || '';
         state.emailVerified = Boolean(student.emailVerified);
+        state.pendingEmail = student.pendingEmail || '';
         state.theme = student.theme || 'light';
-        state.currentSemester = student.currentSemester || 1;
-        state.semesters = student.semesters || {};
+        state.currentSemester = parseInt(student.currentSemester) || 1;
+        state.semesters = (student.semesters && typeof student.semesters === 'object') ? student.semesters : {};
 
-        // Ensure all 8 semesters exist
+        // Ensure all 8 semesters exist as arrays
         for (let s = 1; s <= 8; s++) {
-          if (!state.semesters[s]) state.semesters[s] = [];
+          if (!Array.isArray(state.semesters[s])) state.semesters[s] = [];
         }
 
-        state.history = student.history || [];
-        state.tasks = student.tasks || [];
+        state.history = Array.isArray(student.history) ? student.history : [];
+        state.tasks = Array.isArray(student.tasks) ? student.tasks : [];
+        state.timetable = Array.isArray(student.timetable) ? student.timetable : [];
+        state.trackerConfig = (student.trackerConfig && typeof student.trackerConfig === 'object') ? student.trackerConfig : {};
 
-        // Restore Exam System configuration with local fallback and auto-sync to MongoDB
-        const localExamConfig = localStorage.getItem(`scfc_exam_config_${student.usn}`);
+        // Restore / initialize Exam System configuration
+        const localExamConfig = state.usn ? localStorage.getItem(`scfc_exam_config_${state.usn}`) : null;
+        let loadedExamConfig = null;
         if (student.examConfig && Object.keys(student.examConfig.schedules || {}).length > 0) {
-          state.examConfig = student.examConfig;
-          localStorage.setItem(`scfc_exam_config_${student.usn}`, JSON.stringify(student.examConfig));
+          loadedExamConfig = student.examConfig;
         } else if (localExamConfig) {
           try {
-            state.examConfig = JSON.parse(localExamConfig);
-            // Sync existing local exam schedule up to MongoDB Atlas
-            triggerAutoSave();
+            loadedExamConfig = JSON.parse(localExamConfig);
           } catch (e) { }
+        } else if (student.examConfig) {
+          loadedExamConfig = student.examConfig;
         }
 
-        if (!state.examConfig) {
-          state.examConfig = { activeExamTab: 'CA1', schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } }, studyPlanner: { completedTasks: [] }, holidays: [] };
+        if (loadedExamConfig && typeof loadedExamConfig === 'object') {
+          state.examConfig = loadedExamConfig;
+        } else {
+          state.examConfig = {
+            activeExamTab: 'CA1',
+            semesters: {},
+            schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } },
+            studyPlanner: { completedTasks: [] },
+            holidays: [...DEFAULT_AMITY_HOLIDAYS],
+            workingSaturdays: [...DEFAULT_AMITY_WORKING_DAYS]
+          };
+        }
+
+        ensureExamConfigStructure();
+
+        if (state.usn) {
+          try {
+            localStorage.setItem(`scfc_exam_config_${state.usn}`, JSON.stringify(state.examConfig));
+          } catch (e) { }
         }
 
         const root = document.documentElement;
@@ -7367,9 +7391,45 @@
 
       function logoutStudent() {
         localStorage.removeItem('scfc_active_usn');
-        state.usn = '';
-        document.getElementById('mainAppShell').style.display = 'none';
-        document.getElementById('authScreenOverlay').classList.add('open');
+        
+        // Reset state object completely to clear memory of logged out user
+        state = {
+          studentName: '',
+          usn: '',
+          studentEmail: '',
+          emailVerified: false,
+          pendingEmail: '',
+          theme: 'light',
+          currentSemester: 1,
+          semesters: {
+            1: [], 2: [], 3: [], 4: [],
+            5: [], 6: [], 7: [], 8: []
+          },
+          history: [],
+          tasks: [],
+          timetable: [],
+          trackerConfig: {},
+          examConfig: {
+            activeExamTab: 'CA1',
+            semesters: {},
+            schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } },
+            studyPlanner: { completedTasks: [] },
+            holidays: [...DEFAULT_AMITY_HOLIDAYS],
+            workingSaturdays: [...DEFAULT_AMITY_WORKING_DAYS]
+          }
+        };
+
+        const appShell = document.getElementById('mainAppShell');
+        if (appShell) appShell.style.display = 'none';
+
+        const overlay = document.getElementById('authScreenOverlay');
+        if (overlay) overlay.classList.add('open');
+
+        const loginUsnInput = document.getElementById('loginUsnInput');
+        if (loginUsnInput) loginUsnInput.value = '';
+        const loginPassInput = document.getElementById('loginPasswordInput');
+        if (loginPassInput) loginPassInput.value = '';
+
         switchAuthTab('login');
       }
 
@@ -7403,8 +7463,12 @@
         if (activeUsn) {
           // 1. OFFLINE-FIRST: Read from IndexedDB FIRST!
           let studentData = null;
-          if (window.scfcDB) {
-            studentData = await window.scfcDB.getUserData(activeUsn);
+          try {
+            if (window.scfcDB) {
+              studentData = await window.scfcDB.getUserData(activeUsn);
+            }
+          } catch (e) {
+            console.warn('IndexedDB read error:', e);
           }
 
           if (studentData) {
@@ -7435,8 +7499,12 @@
             document.getElementById('authScreenOverlay').classList.remove('open');
             document.getElementById('mainAppShell').style.display = 'block';
             return;
+          } else {
+            // If server request returned non-success (e.g. 404 user deleted/invalid) and no local data
+            localStorage.removeItem('scfc_active_usn');
           }
         }
+
         document.getElementById('mainAppShell').style.display = 'none';
         document.getElementById('authScreenOverlay').classList.add('open');
       }
@@ -7640,15 +7708,21 @@
         const elLegend = document.getElementById('donutLegend');
         if (!elCircles || !elCount || !elLegend) return;
 
-        const currentRows = state.semesters[state.currentSemester] || [];
+        const currentRows = (state.semesters && state.semesters[state.currentSemester]) ? state.semesters[state.currentSemester] : [];
         const counts = {}; GRADES.forEach(g => counts[g.g] = 0);
-        currentRows.forEach(r => counts[r.grade]++);
+        currentRows.forEach(r => {
+          if (r && r.grade && counts[r.grade] !== undefined) {
+            counts[r.grade]++;
+          } else if (counts['S'] !== undefined) {
+            counts['S']++;
+          }
+        });
         const total = currentRows.length;
         let acc = 0;
         let circles = '';
         let legend = '';
         GRADES.forEach(g => {
-          const count = counts[g.g];
+          const count = counts[g.g] || 0;
           if (count > 0 && total > 0) {
             const pct = (count / total) * 100;
             circles += `<circle cx="21" cy="21" r="15.9" fill="transparent" stroke="${g.color}" stroke-width="6" stroke-dasharray="${pct} ${100 - pct}" stroke-dashoffset="${25 - acc}" stroke-linecap="round"></circle>`;
@@ -9328,14 +9402,20 @@
 
         const holidays = getSemHolidays(state.currentSemester || 1);
 
-        if (holidays.length === 0) {
+        if (!Array.isArray(holidays) || holidays.length === 0) {
           container.innerHTML = `<span style="font-size:12px; color:var(--ink-soft); font-style:italic;">Saturdays and Sundays are automatically marked as holidays. Use the form above to add custom festival/study holidays.</span>`;
           return;
         }
 
-        container.innerHTML = holidays.sort((a, b) => a.date.localeCompare(b.date)).map(h => `
+        const sortedHolidays = [...holidays].sort((a, b) => {
+          const dA = (a && a.date) ? String(a.date) : '';
+          const dB = (b && b.date) ? String(b.date) : '';
+          return dA.localeCompare(dB);
+        });
+
+        container.innerHTML = sortedHolidays.map(h => `
         <span class="badge-sm" style="background:rgba(245,158,11,0.18); color:#F59E0B; border:1px solid rgba(245,158,11,0.4); font-size:12px; padding:4px 10px; display:inline-flex; align-items:center; gap:6px;">
-          <strong>${h.title}</strong> (${formatDateFormatted(h.date)})
+          <strong>${h.title || 'Holiday'}</strong> (${formatDateFormatted(h.date)})
           <button onclick="removeHoliday('${h.date}')" style="background:none; border:none; color:#F59E0B; cursor:pointer; font-weight:bold; padding:0 2px; font-size:14px;" title="Remove Holiday">&times;</button>
         </span>
       `).join('');
@@ -9361,12 +9441,18 @@
 
         const workingSats = getSemWorkingSaturdays(state.currentSemester || 1);
 
-        if (workingSats.length === 0) {
+        if (!Array.isArray(workingSats) || workingSats.length === 0) {
           container.innerHTML = '';
           return;
         }
 
-        container.innerHTML = workingSats.sort((a, b) => a.date.localeCompare(b.date)).map(w => `
+        const sortedWorking = [...workingSats].sort((a, b) => {
+          const dA = (a && a.date) ? String(a.date) : '';
+          const dB = (b && b.date) ? String(b.date) : '';
+          return dA.localeCompare(dB);
+        });
+
+        container.innerHTML = sortedWorking.map(w => `
         <span class="badge-sm" style="background:rgba(34,197,94,0.18); color:#22C55E; border:1px solid rgba(34,197,94,0.4); font-size:12px; padding:4px 10px; display:inline-flex; align-items:center; gap:6px;">
           <strong>Working Sat</strong> (${formatDateFormatted(w.date)} → ${w.followsDay} Timetable)
           <button onclick="removeWorkingSaturday('${w.date}')" style="background:none; border:none; color:#22C55E; cursor:pointer; font-weight:bold; padding:0 2px; font-size:14px;" title="Remove Working Saturday">&times;</button>
