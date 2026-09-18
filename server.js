@@ -544,20 +544,19 @@ app.get('/api/auth/verify-email', async (req, res) => {
 app.post('/api/auth/change-email', async (req, res) => {
   try {
     const { usn, newEmail, confirmNewEmail } = req.body;
-    if (!usn || !newEmail || !confirmNewEmail) {
-      return res.status(400).json({ success: false, message: 'USN, new email, and confirm new email are required.' });
+    if (!usn || !newEmail) {
+      return res.status(400).json({ success: false, message: 'USN and new email are required.' });
     }
 
     const cleanUsn = usn.trim().toUpperCase();
     const cleanNewEmail = newEmail.trim().toLowerCase();
-    const cleanConfirm = confirmNewEmail.trim().toLowerCase();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(cleanNewEmail)) {
       return res.status(400).json({ success: false, message: 'Please enter a valid email address format.' });
     }
 
-    if (cleanNewEmail !== cleanConfirm) {
+    if (confirmNewEmail && cleanNewEmail !== confirmNewEmail.trim().toLowerCase()) {
       return res.status(400).json({ success: false, message: 'New email and confirm email do not match.' });
     }
 
@@ -576,17 +575,12 @@ app.post('/api/auth/change-email', async (req, res) => {
       return res.status(400).json({ success: false, message: 'This email address is already associated with another SCFC account.' });
     }
 
-    // Update registered account email in MongoDB
+    // Update registered account email in MongoDB (leave recoveryEmail untouched)
     student.email = cleanNewEmail;
     student.emailVerified = true;
     student.pendingEmail = undefined;
     student.pendingEmailToken = undefined;
     student.pendingEmailExpires = undefined;
-
-    // PRESERVE existing recoveryEmail! Only set if student had no recovery email at all
-    if (!student.recoveryEmail) {
-      student.recoveryEmail = cleanNewEmail;
-    }
 
     await student.save();
     console.log(`Updated registered account email for USN ${cleanUsn} to ${cleanNewEmail}`);
@@ -599,9 +593,9 @@ app.post('/api/auth/change-email', async (req, res) => {
       message: 'Account email updated successfully!',
       student: updatedObj
     });
-  } catch (error) {
-    console.error('Change email error:', error);
-    return res.status(500).json({ success: false, message: 'Failed to update email address. Please try again.' });
+  } catch (err) {
+    console.error('Error updating email:', err);
+    return res.status(500).json({ success: false, message: 'Internal server error while updating email.' });
   }
 });
 

@@ -2292,7 +2292,6 @@
     #wrongPasswordModal.open,
     #forgotPasswordModal.open,
     #resetPasswordModal.open,
-    #changeEmailModal.open,
     #addRecoveryEmailModal.open,
     #dayActionModalOverlay.open,
     #modalOverlay.open {
@@ -4885,16 +4884,14 @@
               <div class="form-group">
                 <div
                   style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">
-                  <label style="margin-bottom:0;">Registered Recovery Email</label>
+                  <label style="margin-bottom:0;">Registered Email</label>
                   <span id="settingsEmailBadge"
                     style="font-size:11px; font-weight:700; color:var(--green); background:rgba(34,197,94,0.12); padding:2px 8px; border-radius:12px; border:1px solid rgba(34,197,94,0.3);">✓
-                    Email Verified</span>
+                    Email Active</span>
                 </div>
-                <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                  <input type="text" id="settingsEmailInput" class="form-input" disabled
-                    style="opacity:0.85; flex:1; min-width:200px; word-break:break-all;" placeholder="No email linked">
-                  <button class="btn btn-ghost" onclick="openChangeEmailModal()"
-                    style="white-space:nowrap; border-color:var(--indigo); color:var(--indigo);">Change Email</button>
+                <div>
+                  <div id="settingsEmailInput" class="form-input"
+                    style="opacity:0.9; width:100%; word-break:break-all; display:flex; align-items:center; user-select:text;">No email linked</div>
                 </div>
               </div>
               <button class="btn btn-primary" onclick="saveStudentNameSettings()">Save Name</button>
@@ -5675,46 +5672,11 @@
           <p style="font-size:13.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:24px;">
             This password reset link is invalid or has expired.
           </p>
-          <button class="btn btn-primary" onclick="closeResetModalAndOpenForgot()"
-            style="width:100%; justify-content:center; padding:12px;">Request New Reset Link</button>
         </div>
       </div>
     </div>
 
-    <!-- CHANGE EMAIL MODAL -->
-    <div class="modal-overlay" id="changeEmailModal">
-      <div class="glass modal" style="width:460px;">
-        <div class="modal-head" style="text-align:center; padding-bottom:10px;">
-          <h3 style="font-size:22px; font-weight:700; margin-bottom:6px;">Change Email Address</h3>
-          <p style="font-size:13px; color:var(--ink-soft);">Enter your new email address to update your registered profile.
-          </p>
-        </div>
-        <div style="padding:24px;">
-          <div class="auth-banner" id="changeEmailBanner"></div>
-          <div class="form-group">
-            <label>Current Email Address</label>
-            <input type="email" id="changeCurrentEmailInput" class="form-input" disabled style="opacity:0.75;">
-          </div>
-          <div class="form-group">
-            <label>New Email Address</label>
-            <input type="email" id="changeNewEmailInput" class="form-input" placeholder="e.g. newstudent@example.com"
-              onkeydown="if(event.key==='Enter' && !event.repeat) handleChangeEmailSubmit()">
-          </div>
-          <div class="form-group">
-            <label>Confirm New Email Address</label>
-            <input type="email" id="changeConfirmEmailInput" class="form-input" placeholder="Confirm new email address"
-              onkeydown="if(event.key==='Enter' && !event.repeat) handleChangeEmailSubmit()">
-          </div>
-          <div style="display:flex; gap:10px; margin-top:16px;">
-            <button class="btn btn-ghost" onclick="closeChangeEmailModal()"
-              style="flex:1; justify-content:center;">Cancel</button>
-            <button class="btn btn-primary" id="changeEmailSubmitBtn"
-              style="flex:1.8; justify-content:center; padding:12px;" onclick="handleChangeEmailSubmit()">Save
-              Changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
+
 
     <!-- ADD RECOVERY EMAIL MODAL FOR EXISTING USERS -->
     <div class="modal-overlay" id="addRecoveryEmailModal">
@@ -7255,145 +7217,6 @@
         }
       }
 
-      function openChangeEmailModal() {
-        const modal = document.getElementById('changeEmailModal');
-        const currentInput = document.getElementById('changeCurrentEmailInput');
-        const newInput = document.getElementById('changeNewEmailInput');
-        const confirmInput = document.getElementById('changeConfirmEmailInput');
-        const banner = document.getElementById('changeEmailBanner');
-        const btn = document.getElementById('changeEmailSubmitBtn');
-
-        if (currentInput) currentInput.value = state.studentEmail || '';
-        if (newInput) newInput.value = '';
-        if (confirmInput) confirmInput.value = '';
-        if (banner) {
-          banner.textContent = '';
-          banner.className = 'auth-banner';
-        }
-        if (btn) {
-          btn.disabled = false;
-          btn.textContent = 'Save Changes';
-        }
-
-        if (modal) modal.classList.add('open');
-      }
-
-      function closeChangeEmailModal(e) {
-        if (e && e.preventDefault) e.preventDefault();
-        const modal = document.getElementById('changeEmailModal');
-        if (modal) modal.classList.remove('open');
-        const btn = document.getElementById('changeEmailSubmitBtn');
-        if (btn) {
-          btn.disabled = false;
-          btn.textContent = 'Save Changes';
-        }
-      }
-
-      async function handleChangeEmailSubmit() {
-        const newInput = document.getElementById('changeNewEmailInput');
-        const confirmInput = document.getElementById('changeConfirmEmailInput');
-        const banner = document.getElementById('changeEmailBanner');
-        const btn = document.getElementById('changeEmailSubmitBtn');
-
-        const newEmail = newInput ? newInput.value.trim().toLowerCase() : '';
-        const confirmNewEmail = confirmInput ? confirmInput.value.trim().toLowerCase() : '';
-
-        if (!newEmail || !confirmNewEmail) {
-          if (banner) {
-            banner.textContent = 'Please enter and confirm your new email address.';
-            banner.className = 'auth-banner error';
-          }
-          return;
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(newEmail)) {
-          if (banner) {
-            banner.textContent = 'Please enter a valid email address format.';
-            banner.className = 'auth-banner error';
-          }
-          return;
-        }
-
-        if (newEmail !== confirmNewEmail) {
-          if (banner) {
-            banner.textContent = 'New email and confirm email do not match.';
-            banner.className = 'auth-banner error';
-          }
-          return;
-        }
-
-        if (state.studentEmail && state.studentEmail.toLowerCase() === newEmail) {
-          if (banner) {
-            banner.textContent = 'The new email must be different from your current email address.';
-            banner.className = 'auth-banner error';
-          }
-          return;
-        }
-
-        if (!state.usn) {
-          if (banner) {
-            banner.textContent = 'No active student session found. Please login.';
-            banner.className = 'auth-banner error';
-          }
-          return;
-        }
-
-        if (btn) {
-          btn.disabled = true;
-          btn.textContent = 'Saving Changes...';
-        }
-
-        try {
-          const { ok, data } = await safeFetchJson('/api/auth/change-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usn: state.usn, newEmail, confirmNewEmail })
-          });
-
-          if (!ok || !data || !data.success) {
-            if (banner) {
-              banner.textContent = (data && data.message) ? data.message : 'Failed to update email address.';
-              banner.className = 'auth-banner error';
-            }
-            return;
-          }
-
-          // Immediate Profile UI & State Update without page refresh!
-          if (data.student) {
-            applyStudentData(data.student);
-          } else {
-            state.studentEmail = newEmail;
-          }
-          updateStudentNameDisplays();
-
-          if (window.scfcDB && state.usn) {
-            await window.scfcDB.saveUserData(state.usn, data.student || { usn: state.usn, email: state.studentEmail });
-          }
-
-          if (banner) {
-            banner.textContent = data.message || 'Account email updated successfully!';
-            banner.className = 'auth-banner success';
-          }
-
-          setTimeout(() => {
-            closeChangeEmailModal();
-          }, 600);
-
-        } catch (err) {
-          console.error('Change email submit error:', err);
-          if (banner) {
-            banner.textContent = 'Connection error. Please try again.';
-            banner.className = 'auth-banner error';
-          }
-        } finally {
-          if (btn) {
-            btn.disabled = false;
-            btn.textContent = 'Save Changes';
-          }
-        }
-      }
-
       function applyStudentData(student) {
         if (!student) return;
         if (autoSaveTimer) {
@@ -7620,7 +7443,10 @@
         document.querySelectorAll('.student-email-display').forEach(el => { el.textContent = email; });
 
         const emailInput = document.getElementById('settingsEmailInput');
-        if (emailInput) emailInput.value = email;
+        if (emailInput) {
+          if ('value' in emailInput && emailInput.tagName === 'INPUT') emailInput.value = email || 'No email linked';
+          else emailInput.textContent = email || 'No email linked';
+        }
 
         const emailBadge = document.getElementById('settingsEmailBadge');
         if (emailBadge) {
