@@ -2,6 +2,7 @@ const connectDB = require('../../lib/mongodb');
 const Student = require('../../models/Student');
 
 module.exports = async function handler(req, res) {
+  res.setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');

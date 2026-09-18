@@ -71,14 +71,8 @@ module.exports = async function handler(req, res) {
       currentSemester: 1,
       theme: 'light',
       semesters: initialSemesters,
-      history: [
-        { timestamp: new Date().toLocaleString(), text: `Registered account for ${cleanName} (${cleanUsn}).` }
-      ],
-      tasks: [
-        { text: 'Add Semester 1 subjects', done: true, date: 'Completed' },
-        { text: 'Confirm grades with registrar', done: false, date: 'Tue' },
-        { text: 'Download SGPA report', done: false, date: 'Fri' }
-      ]
+      history: [],
+      tasks: []
     });
 
     await newStudent.save();

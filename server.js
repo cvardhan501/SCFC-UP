@@ -187,14 +187,8 @@ app.post('/api/auth/register', async (req, res) => {
       currentSemester: 1,
       theme: 'light',
       semesters: initialSemesters,
-      history: [
-        { timestamp: new Date().toLocaleString(), text: `Registered account for ${cleanName} (${cleanUsn}).` }
-      ],
-      tasks: [
-        { text: 'Add Semester 1 subjects', done: true, date: 'Completed' },
-        { text: 'Confirm grades with registrar', done: false, date: 'Tue' },
-        { text: 'Download SGPA report', done: false, date: 'Fri' }
-      ]
+      history: [],
+      tasks: []
     });
 
     await newStudent.save();
@@ -647,6 +641,7 @@ app.get('/verify-email-change', async (req, res) => {
 // GET STUDENT DATA ENDPOINT
 // ==========================================
 app.get('/api/student/:usn', async (req, res) => {
+  res.setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate');
   try {
     const cleanUsn = req.params.usn.trim().toUpperCase();
     const student = await Student.findOne({ usn: cleanUsn });

@@ -6439,8 +6439,10 @@
 
       function triggerAutoSave() {
         if (!state.usn) return;
+        const targetUsn = state.usn;
         clearTimeout(autoSaveTimer);
         autoSaveTimer = setTimeout(async () => {
+          if (!state.usn || state.usn !== targetUsn) return;
           const payloadData = {
             name: state.studentName,
             usn: state.usn,
@@ -6455,13 +6457,13 @@
           };
 
           // 1. Immediately Save to Local IndexedDB Master!
-          if (window.scfcDB) {
-            await window.scfcDB.saveUserData(state.usn, payloadData);
+          if (window.scfcDB && state.usn === targetUsn) {
+            await window.scfcDB.saveUserData(targetUsn, payloadData);
           }
 
           // 2. Enqueue Offline Change & Trigger Sync Engine!
-          if (window.scfcSyncEngine) {
-            await window.scfcSyncEngine.enqueueChange('student', state.usn, 'UPDATE', payloadData);
+          if (window.scfcSyncEngine && state.usn === targetUsn) {
+            await window.scfcSyncEngine.enqueueChange('student', targetUsn, 'UPDATE', payloadData);
           }
         }, 350);
       }
@@ -7328,6 +7330,11 @@
 
       function applyStudentData(student) {
         if (!student) return;
+        if (autoSaveTimer) {
+          clearTimeout(autoSaveTimer);
+          autoSaveTimer = null;
+        }
+
         state.studentName = student.name || 'Student';
         state.usn = student.usn || '';
         state.studentEmail = student.email || '';
@@ -7368,8 +7375,8 @@
             semesters: {},
             schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } },
             studyPlanner: { completedTasks: [] },
-            holidays: [...DEFAULT_AMITY_HOLIDAYS],
-            workingSaturdays: [...DEFAULT_AMITY_WORKING_DAYS]
+            holidays: [],
+            workingSaturdays: []
           };
         }
 
@@ -7390,6 +7397,10 @@
       }
 
       function logoutStudent() {
+        if (autoSaveTimer) {
+          clearTimeout(autoSaveTimer);
+          autoSaveTimer = null;
+        }
         localStorage.removeItem('scfc_active_usn');
         
         // Reset state object completely to clear memory of logged out user
@@ -7414,8 +7425,8 @@
             semesters: {},
             schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } },
             studyPlanner: { completedTasks: [] },
-            holidays: [...DEFAULT_AMITY_HOLIDAYS],
-            workingSaturdays: [...DEFAULT_AMITY_WORKING_DAYS]
+            holidays: [],
+            workingSaturdays: []
           }
         };
 
@@ -8878,46 +8889,31 @@
             semesters: {},
             schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } },
             studyPlanner: { completedTasks: [] },
-            holidays: [...DEFAULT_AMITY_HOLIDAYS],
-            workingSaturdays: [...DEFAULT_AMITY_WORKING_DAYS]
+            holidays: [],
+            workingSaturdays: []
           };
         }
         if (!state.examConfig.semesters) state.examConfig.semesters = {};
 
-        // Ensure Semester 3 defaults to uploaded Amity schedule
-        if (!state.examConfig.semesters[3]) {
-          state.examConfig.semesters[3] = {
-            schedules: {
-              CA1: { slotDates: { ...DEFAULT_AMITY_CA1_SLOTS } },
-              CA2: { slotDates: { ...DEFAULT_AMITY_CA2_SLOTS } },
-              CA3: { slotDates: { ...DEFAULT_AMITY_CA3_SLOTS } }
-            },
-            holidays: [...DEFAULT_AMITY_HOLIDAYS],
-            workingSaturdays: [...DEFAULT_AMITY_WORKING_DAYS]
-          };
-        }
-
         const currentSem = state.currentSemester || 1;
-        const isSem3 = (currentSem === 3 || currentSem === '3');
 
         if (!state.examConfig.semesters[currentSem]) {
           state.examConfig.semesters[currentSem] = {
             schedules: {
-              CA1: { slotDates: isSem3 ? { ...DEFAULT_AMITY_CA1_SLOTS } : {} },
-              CA2: { slotDates: isSem3 ? { ...DEFAULT_AMITY_CA2_SLOTS } : {} },
-              CA3: { slotDates: isSem3 ? { ...DEFAULT_AMITY_CA3_SLOTS } : {} }
+              CA1: { slotDates: {} },
+              CA2: { slotDates: {} },
+              CA3: { slotDates: {} }
             },
-            holidays: [...DEFAULT_AMITY_HOLIDAYS],
-            workingSaturdays: [...DEFAULT_AMITY_WORKING_DAYS]
+            holidays: [],
+            workingSaturdays: []
           };
         }
 
-        // Ensure holidays and workingSaturdays are pre-populated if empty
         if (!state.examConfig.semesters[currentSem].holidays) {
-          state.examConfig.semesters[currentSem].holidays = [...DEFAULT_AMITY_HOLIDAYS];
+          state.examConfig.semesters[currentSem].holidays = [];
         }
         if (!state.examConfig.semesters[currentSem].workingSaturdays) {
-          state.examConfig.semesters[currentSem].workingSaturdays = [...DEFAULT_AMITY_WORKING_DAYS];
+          state.examConfig.semesters[currentSem].workingSaturdays = [];
         }
         ['CA1', 'CA2', 'CA3'].forEach(caTab => {
           if (!state.examConfig.semesters[currentSem].schedules) {
@@ -8927,18 +8923,6 @@
             state.examConfig.semesters[currentSem].schedules[caTab] = { slotDates: {} };
           }
         });
-
-        // Clean up legacy auto-populated Semester 3 default slots from non-Sem 3 semesters
-        for (let s in state.examConfig.semesters) {
-          if (parseInt(s) !== 3) {
-            ['CA1', 'CA2', 'CA3'].forEach(caTab => {
-              const sched = state.examConfig.semesters[s].schedules?.[caTab]?.slotDates;
-              if (sched && sched['A1'] === DEFAULT_AMITY_CA1_SLOTS['A1'] && sched['B1'] === DEFAULT_AMITY_CA1_SLOTS['B1']) {
-                state.examConfig.semesters[s].schedules[caTab].slotDates = {};
-              }
-            });
-          }
-        }
       }
 
       function getSemExamSchedule(semNum, caTab) {
@@ -8975,33 +8959,23 @@
       function getSemHolidays(semNum) {
         ensureExamConfigStructure();
         const sem = semNum || state.currentSemester || 1;
-        let userHolidays = [];
         if (state.examConfig.semesters && state.examConfig.semesters[sem] && Array.isArray(state.examConfig.semesters[sem].holidays)) {
-          userHolidays = state.examConfig.semesters[sem].holidays;
+          return state.examConfig.semesters[sem].holidays;
         } else if (Array.isArray(state.examConfig.holidays)) {
-          userHolidays = state.examConfig.holidays;
+          return state.examConfig.holidays;
         }
-
-        const dateMap = {};
-        DEFAULT_AMITY_HOLIDAYS.forEach(h => { dateMap[h.date] = { ...h }; });
-        userHolidays.forEach(h => { dateMap[h.date] = { ...h }; });
-        return Object.values(dateMap);
+        return [];
       }
 
       function getSemWorkingSaturdays(semNum) {
         ensureExamConfigStructure();
         const sem = semNum || state.currentSemester || 1;
-        let userWorkingSats = [];
         if (state.examConfig.semesters && state.examConfig.semesters[sem] && Array.isArray(state.examConfig.semesters[sem].workingSaturdays)) {
-          userWorkingSats = state.examConfig.semesters[sem].workingSaturdays;
+          return state.examConfig.semesters[sem].workingSaturdays;
         } else if (Array.isArray(state.examConfig.workingSaturdays)) {
-          userWorkingSats = state.examConfig.workingSaturdays;
+          return state.examConfig.workingSaturdays;
         }
-
-        const dateMap = {};
-        DEFAULT_AMITY_WORKING_DAYS.forEach(w => { dateMap[w.date] = { ...w }; });
-        userWorkingSats.forEach(w => { dateMap[w.date] = { ...w }; });
-        return Object.values(dateMap);
+        return [];
       }
 
       function getWorkingSaturdayForDate(dateStr) {
