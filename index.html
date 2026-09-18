@@ -6644,12 +6644,7 @@
           if (appShell) appShell.style.display = 'block';
 
           // ONE-TIME PROMPT: If existing account is missing recovery email
-          if (data.emailRequired || !data.student.email) {
-            setTimeout(() => {
-              const recoveryModal = document.getElementById('addRecoveryEmailModal');
-              if (recoveryModal) recoveryModal.classList.add('open');
-            }, 600);
-          }
+          checkAndPromptRecoveryEmail(data.student);
         } catch (err) {
           console.error('Login submit error:', err);
           if (banner) {
@@ -6863,8 +6858,41 @@
       }
 
       function closeRecoveryEmailModal() {
+        if (state.usn) {
+          sessionStorage.setItem(`scfc_recovery_email_dismissed_${state.usn}`, 'true');
+        }
         const m = document.getElementById('addRecoveryEmailModal');
         if (m) m.classList.remove('open');
+      }
+
+      function checkAndPromptRecoveryEmail(student) {
+        if (!student || !student.usn) return;
+        // Verify current authenticated user matches student object
+        if (!state.usn || state.usn !== student.usn) {
+          console.log('[Recovery] Skipped prompt: active user does not match student USN.');
+          return;
+        }
+
+        // Do not prompt if user already has an email address
+        if (student.email && String(student.email).trim().length > 0) return;
+
+        // Do not prompt if user dismissed prompt for this browser session
+        if (sessionStorage.getItem(`scfc_recovery_email_dismissed_${student.usn}`) === 'true') {
+          console.log('[Recovery] Skipped prompt: dismissed for current session for USN:', student.usn);
+          return;
+        }
+
+        setTimeout(() => {
+          if (state.usn === student.usn && (!state.studentEmail || String(state.studentEmail).trim() === '')) {
+            if (sessionStorage.getItem(`scfc_recovery_email_dismissed_${student.usn}`) !== 'true') {
+              const recoveryModal = document.getElementById('addRecoveryEmailModal');
+              if (recoveryModal && !recoveryModal.classList.contains('open')) {
+                console.log('[Recovery] Prompting recovery email modal for USN:', student.usn);
+                recoveryModal.classList.add('open');
+              }
+            }
+          }
+        }, 600);
       }
 
       let forgotCooldownTimer = null;
@@ -7509,12 +7537,7 @@
             document.getElementById('authScreenOverlay').classList.remove('open');
             document.getElementById('mainAppShell').style.display = 'block';
 
-            if (!data.student.email) {
-              setTimeout(() => {
-                const recoveryModal = document.getElementById('addRecoveryEmailModal');
-                if (recoveryModal) recoveryModal.classList.add('open');
-              }, 600);
-            }
+            checkAndPromptRecoveryEmail(data.student);
             return;
           } else if (studentData) {
             // Keep UI active with offline IndexedDB data if network request fails
