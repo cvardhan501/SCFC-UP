@@ -5686,7 +5686,7 @@
       <div class="glass modal" style="width:460px;">
         <div class="modal-head" style="text-align:center; padding-bottom:10px;">
           <h3 style="font-size:22px; font-weight:700; margin-bottom:6px;">Change Email Address</h3>
-          <p style="font-size:13px; color:var(--ink-soft);">A verification link will be sent to your new email address.
+          <p style="font-size:13px; color:var(--ink-soft);">Enter your new email address to update your registered profile.
           </p>
         </div>
         <div style="padding:24px;">
@@ -5709,8 +5709,8 @@
             <button class="btn btn-ghost" onclick="closeChangeEmailModal()"
               style="flex:1; justify-content:center;">Cancel</button>
             <button class="btn btn-primary" id="changeEmailSubmitBtn"
-              style="flex:1.8; justify-content:center; padding:12px;" onclick="handleChangeEmailSubmit()">Send
-              Verification</button>
+              style="flex:1.8; justify-content:center; padding:12px;" onclick="handleChangeEmailSubmit()">Save
+              Changes</button>
           </div>
         </div>
       </div>
@@ -7272,7 +7272,7 @@
         }
         if (btn) {
           btn.disabled = false;
-          btn.textContent = 'Send Verification';
+          btn.textContent = 'Save Changes';
         }
 
         if (modal) modal.classList.add('open');
@@ -7285,15 +7285,18 @@
         const btn = document.getElementById('changeEmailSubmitBtn');
         if (btn) {
           btn.disabled = false;
-          btn.textContent = 'Send Verification';
+          btn.textContent = 'Save Changes';
         }
       }
 
       async function handleChangeEmailSubmit() {
-        const newEmail = document.getElementById('changeNewEmailInput').value.trim().toLowerCase();
-        const confirmNewEmail = document.getElementById('changeConfirmEmailInput').value.trim().toLowerCase();
+        const newInput = document.getElementById('changeNewEmailInput');
+        const confirmInput = document.getElementById('changeConfirmEmailInput');
         const banner = document.getElementById('changeEmailBanner');
         const btn = document.getElementById('changeEmailSubmitBtn');
+
+        const newEmail = newInput ? newInput.value.trim().toLowerCase() : '';
+        const confirmNewEmail = confirmInput ? confirmInput.value.trim().toLowerCase() : '';
 
         if (!newEmail || !confirmNewEmail) {
           if (banner) {
@@ -7328,13 +7331,21 @@
           return;
         }
 
+        if (!state.usn) {
+          if (banner) {
+            banner.textContent = 'No active student session found. Please login.';
+            banner.className = 'auth-banner error';
+          }
+          return;
+        }
+
         if (btn) {
           btn.disabled = true;
-          btn.textContent = 'Sending Verification...';
+          btn.textContent = 'Saving Changes...';
         }
 
         try {
-          const { ok, data } = await safeFetchJson('/api/auth/change-email-request', {
+          const { ok, data } = await safeFetchJson('/api/auth/change-email', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ usn: state.usn, newEmail, confirmNewEmail })
@@ -7342,20 +7353,32 @@
 
           if (!ok || !data || !data.success) {
             if (banner) {
-              banner.textContent = (data && data.message) ? data.message : 'Failed to request email change.';
+              banner.textContent = (data && data.message) ? data.message : 'Failed to update email address.';
               banner.className = 'auth-banner error';
             }
             return;
           }
 
+          // Immediate Profile UI & State Update without page refresh!
+          if (data.student) {
+            applyStudentData(data.student);
+          } else {
+            state.studentEmail = newEmail;
+          }
+          updateStudentNameDisplays();
+
+          if (window.scfcDB && state.usn) {
+            await window.scfcDB.saveUserData(state.usn, data.student || { usn: state.usn, email: state.studentEmail });
+          }
+
           if (banner) {
-            banner.textContent = data.message || 'Verification link sent to your new email address!';
+            banner.textContent = data.message || 'Account email updated successfully!';
             banner.className = 'auth-banner success';
           }
 
           setTimeout(() => {
             closeChangeEmailModal();
-          }, 1200);
+          }, 600);
 
         } catch (err) {
           console.error('Change email submit error:', err);
@@ -7366,7 +7389,7 @@
         } finally {
           if (btn) {
             btn.disabled = false;
-            btn.textContent = 'Send Verification';
+            btn.textContent = 'Save Changes';
           }
         }
       }
@@ -11245,6 +11268,17 @@
             modalEl.classList.remove('open');
           }
         });
+      });
+
+      // Escape Key Listener to dismiss active modals
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          document.querySelectorAll('.modal-overlay.open').forEach(modalEl => {
+            if (modalEl.id !== 'authScreenOverlay' || localStorage.getItem('scfc_active_usn')) {
+              modalEl.classList.remove('open');
+            }
+          });
+        }
       });
 
       // PWA Service Worker Registration & Sync Status Listener

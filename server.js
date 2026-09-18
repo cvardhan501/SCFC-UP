@@ -539,6 +539,73 @@ app.get('/api/auth/verify-email', async (req, res) => {
 });
 
 // ==========================================
+// DIRECT CHANGE EMAIL ADDRESS ENDPOINT
+// ==========================================
+app.post('/api/auth/change-email', async (req, res) => {
+  try {
+    const { usn, newEmail, confirmNewEmail } = req.body;
+    if (!usn || !newEmail || !confirmNewEmail) {
+      return res.status(400).json({ success: false, message: 'USN, new email, and confirm new email are required.' });
+    }
+
+    const cleanUsn = usn.trim().toUpperCase();
+    const cleanNewEmail = newEmail.trim().toLowerCase();
+    const cleanConfirm = confirmNewEmail.trim().toLowerCase();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(cleanNewEmail)) {
+      return res.status(400).json({ success: false, message: 'Please enter a valid email address format.' });
+    }
+
+    if (cleanNewEmail !== cleanConfirm) {
+      return res.status(400).json({ success: false, message: 'New email and confirm email do not match.' });
+    }
+
+    const student = await Student.findOne({ usn: cleanUsn });
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Student account not found.' });
+    }
+
+    if (student.email && student.email.toLowerCase() === cleanNewEmail) {
+      return res.status(400).json({ success: false, message: 'The new email address must be different from your current email.' });
+    }
+
+    // Check if new email is already registered to another account
+    const existingOther = await Student.findOne({ email: cleanNewEmail, usn: { $ne: cleanUsn } });
+    if (existingOther) {
+      return res.status(400).json({ success: false, message: 'This email address is already associated with another SCFC account.' });
+    }
+
+    // Update registered account email in MongoDB
+    student.email = cleanNewEmail;
+    student.emailVerified = true;
+    student.pendingEmail = undefined;
+    student.pendingEmailToken = undefined;
+    student.pendingEmailExpires = undefined;
+
+    // PRESERVE existing recoveryEmail! Only set if student had no recovery email at all
+    if (!student.recoveryEmail) {
+      student.recoveryEmail = cleanNewEmail;
+    }
+
+    await student.save();
+    console.log(`Updated registered account email for USN ${cleanUsn} to ${cleanNewEmail}`);
+
+    const updatedObj = student.toObject();
+    delete updatedObj.password;
+
+    return res.json({
+      success: true,
+      message: 'Account email updated successfully!',
+      student: updatedObj
+    });
+  } catch (error) {
+    console.error('Change email error:', error);
+    return res.status(500).json({ success: false, message: 'Failed to update email address. Please try again.' });
+  }
+});
+
+// ==========================================
 // REQUEST CHANGE EMAIL ADDRESS ENDPOINT
 // ==========================================
 app.post('/api/auth/change-email-request', async (req, res) => {
@@ -576,25 +643,25 @@ app.post('/api/auth/change-email-request', async (req, res) => {
       return res.status(400).json({ success: false, message: 'This email address is already associated with another SCFC account.' });
     }
 
-    // Generate secure verification token (valid 24h)
-    const token = crypto.randomBytes(32).toString('hex');
-    student.pendingEmail = cleanNewEmail;
-    student.pendingEmailToken = token;
-    student.pendingEmailExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    // Update registered account email in MongoDB directly
+    student.email = cleanNewEmail;
+    student.emailVerified = true;
+    student.pendingEmail = undefined;
+
+    if (!student.recoveryEmail) {
+      student.recoveryEmail = cleanNewEmail;
+    }
 
     await student.save();
 
-    await sendChangeEmailVerification({
-      toEmail: cleanNewEmail,
-      name: student.name,
-      usn: student.usn,
-      token
-    });
+    const updatedObj = student.toObject();
+    delete updatedObj.password;
 
-    console.log(`Change email verification sent for USN: ${cleanUsn} to ${cleanNewEmail}`);
+    console.log(`Change email updated for USN: ${cleanUsn} to ${cleanNewEmail}`);
     return res.json({
       success: true,
-      message: `A verification link has been sent to ${cleanNewEmail}. Please check your inbox to confirm the change.`
+      message: 'Account email updated successfully!',
+      student: updatedObj
     });
   } catch (error) {
     console.error('Change email request error:', error);
