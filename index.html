@@ -7402,6 +7402,13 @@
           autoSaveTimer = null;
         }
         localStorage.removeItem('scfc_active_usn');
+
+        // Close any open modal overlays to prevent frozen click backdrops
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+          if (modal.id !== 'authScreenOverlay') {
+            modal.classList.remove('open');
+          }
+        });
         
         // Reset state object completely to clear memory of logged out user
         state = {
@@ -7429,6 +7436,10 @@
             workingSaturdays: []
           }
         };
+
+        if (window.scfcSyncEngine) {
+          window.scfcSyncEngine.isSyncing = false;
+        }
 
         const appShell = document.getElementById('mainAppShell');
         if (appShell) appShell.style.display = 'none';
