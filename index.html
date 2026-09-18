@@ -7515,6 +7515,7 @@
           let studentData = null;
           try {
             if (window.scfcDB) {
+              await window.scfcDB.ensureReady();
               studentData = await window.scfcDB.getUserData(activeUsn);
             }
           } catch (e) {
@@ -7528,25 +7529,41 @@
           }
 
           // 2. Background / Network fetch to sync with database
-          const { ok, data } = await safeFetchJson(`/api/student/${encodeURIComponent(activeUsn)}`);
-          if (ok && data && data.success && data.student) {
-            applyStudentData(data.student);
-            if (window.scfcDB) {
-              await window.scfcDB.saveUserData(activeUsn, data.student);
-            }
-            document.getElementById('authScreenOverlay').classList.remove('open');
-            document.getElementById('mainAppShell').style.display = 'block';
+          try {
+            const { ok, status, data } = await safeFetchJson(`/api/student/${encodeURIComponent(activeUsn)}`);
+            if (ok && data && data.success && data.student) {
+              applyStudentData(data.student);
+              if (window.scfcDB) {
+                await window.scfcDB.saveUserData(activeUsn, data.student);
+              }
+              document.getElementById('authScreenOverlay').classList.remove('open');
+              document.getElementById('mainAppShell').style.display = 'block';
 
-            checkAndPromptRecoveryEmail(data.student);
-            return;
-          } else if (studentData) {
-            // Keep UI active with offline IndexedDB data if network request fails
+              checkAndPromptRecoveryEmail(data.student);
+              return;
+            } else if (status === 404) {
+              // Server explicitly returned 404 (user account deleted/invalid)
+              localStorage.removeItem('scfc_active_usn');
+              document.getElementById('mainAppShell').style.display = 'none';
+              document.getElementById('authScreenOverlay').classList.add('open');
+              return;
+            }
+          } catch (netErr) {
+            console.warn('Background student fetch error:', netErr);
+          }
+
+          if (studentData) {
+            // Keep UI active with offline IndexedDB data if network request fails or is offline
             document.getElementById('authScreenOverlay').classList.remove('open');
             document.getElementById('mainAppShell').style.display = 'block';
             return;
           } else {
-            // If server request returned non-success (e.g. 404 user deleted/invalid) and no local data
-            localStorage.removeItem('scfc_active_usn');
+            // If network fetch failed AND no IndexedDB cached data existed, but activeUsn is set:
+            // Apply basic active state so user is not stuck behind open authScreenOverlay
+            applyStudentData({ usn: activeUsn, name: 'Student', offline: true });
+            document.getElementById('authScreenOverlay').classList.remove('open');
+            document.getElementById('mainAppShell').style.display = 'block';
+            return;
           }
         }
 
