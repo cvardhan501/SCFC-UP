@@ -6866,33 +6866,33 @@
       }
 
       function checkAndPromptRecoveryEmail(student) {
-        if (!student || !student.usn) return;
-        // Verify current authenticated user matches student object
-        if (!state.usn || state.usn !== student.usn) {
+        // Must have fully loaded student object with valid USN and name matching active state
+        if (!student || !student.usn || !student.name || student.offline === true) return;
+        if (!state.usn || state.usn.toUpperCase() !== String(student.usn).trim().toUpperCase()) {
           console.log('[Recovery] Skipped prompt: active user does not match student USN.');
           return;
         }
 
-        // Do not prompt if user already has an email address
-        if (student.email && String(student.email).trim().length > 0) return;
+        // Do not prompt if email is undefined (incomplete load) or if user already has an email address
+        if (student.email === undefined || student.email === null) return;
+        const trimmedEmail = String(student.email).trim();
+        if (trimmedEmail.length > 0) return;
 
         // Do not prompt if user dismissed prompt for this browser session
-        if (sessionStorage.getItem(`scfc_recovery_email_dismissed_${student.usn}`) === 'true') {
-          console.log('[Recovery] Skipped prompt: dismissed for current session for USN:', student.usn);
+        if (sessionStorage.getItem(`scfc_recovery_email_dismissed_${state.usn.toUpperCase()}`) === 'true') {
+          console.log('[Recovery] Skipped prompt: dismissed for current session for USN:', state.usn);
           return;
         }
 
-        setTimeout(() => {
-          if (state.usn === student.usn && (!state.studentEmail || String(state.studentEmail).trim() === '')) {
-            if (sessionStorage.getItem(`scfc_recovery_email_dismissed_${student.usn}`) !== 'true') {
-              const recoveryModal = document.getElementById('addRecoveryEmailModal');
-              if (recoveryModal && !recoveryModal.classList.contains('open')) {
-                console.log('[Recovery] Prompting recovery email modal for USN:', student.usn);
-                recoveryModal.classList.add('open');
-              }
-            }
+        // Prompt synchronously when app shell is active without 600ms race condition
+        const appShell = document.getElementById('mainAppShell');
+        if (appShell && appShell.style.display !== 'none') {
+          const recoveryModal = document.getElementById('addRecoveryEmailModal');
+          if (recoveryModal && !recoveryModal.classList.contains('open')) {
+            console.log('[Recovery] Prompting recovery email modal for USN:', state.usn);
+            recoveryModal.classList.add('open');
           }
-        }, 600);
+        }
       }
 
       let forgotCooldownTimer = null;

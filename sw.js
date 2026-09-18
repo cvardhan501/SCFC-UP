@@ -3,7 +3,7 @@
    Version: 4.1.0
    ========================================================= */
 
-const CACHE_NAME = 'scfc-app-shell-v4.3';
+const CACHE_NAME = 'scfc-app-shell-v4.2';
 
 const STATIC_ASSETS = [
   '/',
@@ -105,13 +105,13 @@ self.addEventListener('fetch', event => {
   // 3. Handle API Requests: Network First, Fallback to Offline Response
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(
-      fetch(request)
+      fetch(request.clone())
         .then(networkResponse => networkResponse)
         .catch(err => {
           console.log('[SW] API offline fallback for:', url.pathname);
           return new Response(
-            JSON.stringify({ offline: true, message: 'Operating in offline mode.' }),
-            { headers: { 'Content-Type': 'application/json' } }
+            JSON.stringify({ offline: true, success: false, message: 'Operating in offline mode.' }),
+            { status: 503, headers: { 'Content-Type': 'application/json' } }
           );
         })
     );
