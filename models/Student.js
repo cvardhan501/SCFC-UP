@@ -43,6 +43,12 @@ const StudentSchema = new mongoose.Schema({
     trim: true,
     lowercase: true
   },
+  recoveryEmail: {
+    type: String,
+    required: false,
+    trim: true,
+    lowercase: true
+  },
   emailVerified: {
     type: Boolean,
     default: false

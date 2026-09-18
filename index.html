@@ -6873,9 +6873,13 @@
           return;
         }
 
-        // Do not prompt if email is undefined (incomplete load) or if user already has an email address
-        if (student.email === undefined || student.email === null) return;
-        const trimmedEmail = String(student.email).trim();
+        // Check recovery email field or account email
+        const recEmail = (student.recoveryEmail !== undefined && student.recoveryEmail !== null)
+          ? student.recoveryEmail
+          : student.email;
+
+        if (recEmail === undefined || recEmail === null) return;
+        const trimmedEmail = String(recEmail).trim();
         if (trimmedEmail.length > 0) return;
 
         // Do not prompt if user dismissed prompt for this browser session
@@ -6884,7 +6888,7 @@
           return;
         }
 
-        // Prompt synchronously when app shell is active without 600ms race condition
+        // Prompt synchronously when app shell is active without race condition
         const appShell = document.getElementById('mainAppShell');
         if (appShell && appShell.style.display !== 'none') {
           const recoveryModal = document.getElementById('addRecoveryEmailModal');
@@ -7257,6 +7261,7 @@
         const newInput = document.getElementById('changeNewEmailInput');
         const confirmInput = document.getElementById('changeConfirmEmailInput');
         const banner = document.getElementById('changeEmailBanner');
+        const btn = document.getElementById('changeEmailSubmitBtn');
 
         if (currentInput) currentInput.value = state.studentEmail || '';
         if (newInput) newInput.value = '';
@@ -7265,13 +7270,23 @@
           banner.textContent = '';
           banner.className = 'auth-banner';
         }
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Send Verification';
+        }
 
         if (modal) modal.classList.add('open');
       }
 
-      function closeChangeEmailModal() {
+      function closeChangeEmailModal(e) {
+        if (e && e.preventDefault) e.preventDefault();
         const modal = document.getElementById('changeEmailModal');
         if (modal) modal.classList.remove('open');
+        const btn = document.getElementById('changeEmailSubmitBtn');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Send Verification';
+        }
       }
 
       async function handleChangeEmailSubmit() {
@@ -7340,7 +7355,7 @@
 
           setTimeout(() => {
             closeChangeEmailModal();
-          }, 2200);
+          }, 1200);
 
         } catch (err) {
           console.error('Change email submit error:', err);
@@ -7366,6 +7381,7 @@
         state.studentName = student.name || 'Student';
         state.usn = student.usn || '';
         state.studentEmail = student.email || '';
+        state.recoveryEmail = student.recoveryEmail || student.email || '';
         state.emailVerified = Boolean(student.emailVerified);
         state.pendingEmail = student.pendingEmail || '';
         state.theme = student.theme || 'light';
@@ -11217,6 +11233,19 @@
           bottom.appendChild(div);
         });
       })();
+
+      // Universal Backdrop Click Dismiss Listener for all Modal Overlays
+      document.querySelectorAll('.modal-overlay').forEach(modalEl => {
+        modalEl.addEventListener('click', (e) => {
+          if (e.target === modalEl) {
+            // Do not dismiss auth overlay if user is not logged in
+            if (modalEl.id === 'authScreenOverlay' && !localStorage.getItem('scfc_active_usn')) {
+              return;
+            }
+            modalEl.classList.remove('open');
+          }
+        });
+      });
 
       // PWA Service Worker Registration & Sync Status Listener
       if ('serviceWorker' in navigator) {

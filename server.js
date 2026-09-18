@@ -181,6 +181,7 @@ app.post('/api/auth/register', async (req, res) => {
       name: cleanName,
       usn: cleanUsn,
       email: cleanEmail,
+      recoveryEmail: cleanEmail,
       emailVerified: false,
       emailVerificationToken: verificationToken,
       password: hashed,
@@ -249,6 +250,11 @@ app.post('/api/auth/login', async (req, res) => {
     }
 
     console.log(`User logged in: ${cleanUsn}`);
+    if (student.email && !student.recoveryEmail) {
+      student.recoveryEmail = student.email;
+      await student.save();
+    }
+
     const studentObj = student.toObject();
     delete studentObj.password;
 
@@ -259,7 +265,7 @@ app.post('/api/auth/login', async (req, res) => {
     };
 
     // Flag if existing account lacks a recovery email
-    if (!student.email) {
+    if (!student.recoveryEmail && !student.email) {
       responsePayload.emailRequired = true;
     }
 
@@ -337,7 +343,10 @@ app.post('/api/auth/add-recovery-email', async (req, res) => {
     }
 
     const verificationToken = crypto.randomBytes(32).toString('hex');
-    student.email = cleanEmail;
+    student.recoveryEmail = cleanEmail;
+    if (!student.email) {
+      student.email = cleanEmail;
+    }
     student.emailVerified = false;
     student.emailVerificationToken = verificationToken;
     await student.save();
