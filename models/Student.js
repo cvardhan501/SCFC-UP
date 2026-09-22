@@ -88,7 +88,7 @@ const StudentSchema = new mongoose.Schema({
   },
   currentSemester: {
     type: Number,
-    default: 1
+    default: 3
   },
   // Use a flexible structure to preserve existing frontend expectations
   semesters: {

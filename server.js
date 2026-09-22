@@ -185,7 +185,7 @@ app.post('/api/auth/register', async (req, res) => {
       emailVerified: false,
       emailVerificationToken: verificationToken,
       password: hashed,
-      currentSemester: 1,
+      currentSemester: 3,
       theme: 'light',
       semesters: initialSemesters,
       history: [],
@@ -264,8 +264,8 @@ app.post('/api/auth/login', async (req, res) => {
       student: studentObj
     };
 
-    // Flag if existing account lacks a recovery email
-    if (!student.recoveryEmail && !student.email) {
+    // Flag if existing account lacks an email
+    if (!student.email) {
       responsePayload.emailRequired = true;
     }
 

@@ -43,6 +43,9 @@ module.exports = async function handler(req, res) {
 
     const verifyToken = crypto.randomBytes(32).toString('hex');
     student.email = cleanEmail;
+    if (!student.recoveryEmail) {
+      student.recoveryEmail = cleanEmail;
+    }
     student.emailVerified = false;
     student.emailVerificationToken = verifyToken;
 
