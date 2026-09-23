@@ -2141,17 +2141,21 @@
       font-weight: 400;
     }
 
-    .footer-credit {
-      color: var(--ink-soft);
-      opacity: 0.85;
-      font-size: 12px;
-      font-weight: 450;
+    .footer-dev-credit {
+      font-size: 11.5px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      margin-top: 6px;
+      text-align: center;
+      transition: color 0.3s ease;
     }
 
-    .footer-credit strong {
-      font-weight: 600;
-      color: var(--ink);
-      opacity: 0.95;
+    html:not([data-theme="dark"]) .footer-dev-credit {
+      color: #64748B;
+    }
+
+    html[data-theme="dark"] .footer-dev-credit {
+      color: #94A3B8;
     }
 
     /* Light mode clear glass enhancement */
@@ -4326,6 +4330,7 @@
               <div class="footer-legal-row">
                 <span class="footer-copyright">SCFC StudentOS · Academic • Progress • Planning</span>
               </div>
+              <div class="footer-dev-credit">Designed &amp; Developed by C VISHNU VARDHAN</div>
             </div>
           </footer>
         </div>
@@ -4451,6 +4456,7 @@
               <div class="footer-legal-row">
                 <span class="footer-copyright">SCFC StudentOS · Academic • Progress • Planning</span>
               </div>
+              <div class="footer-dev-credit">Designed &amp; Developed by C VISHNU VARDHAN</div>
             </div>
           </footer>
         </div>
