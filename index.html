@@ -2314,9 +2314,10 @@
     #profileAddEmailModal .modal,
     #profileChangeEmailModal .modal,
     #addYourEmailModal .modal {
-      background: rgba(20, 20, 42, 0.97) !important;
-      border: 1px solid rgba(255, 255, 255, 0.18) !important;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75) !important;
+      background: rgba(20, 20, 42, 0.98) !important;
+      color: #F8FAFC !important;
+      border: 1px solid rgba(255, 255, 255, 0.22) !important;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.04) !important;
       backdrop-filter: blur(24px) !important;
       -webkit-backdrop-filter: blur(24px) !important;
       padding: 24px !important;
@@ -2327,8 +2328,73 @@
     html:not([data-theme="dark"]) #profileChangeEmailModal .modal,
     html:not([data-theme="dark"]) #addYourEmailModal .modal {
       background: rgba(255, 255, 255, 0.98) !important;
+      color: #0F172A !important;
       border: 1px solid rgba(0, 0, 0, 0.12) !important;
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    #profileAddEmailModal .modal h1,
+    #profileAddEmailModal .modal h2,
+    #profileAddEmailModal .modal h3,
+    #profileAddEmailModal .modal label,
+    #profileChangeEmailModal .modal h1,
+    #profileChangeEmailModal .modal h2,
+    #profileChangeEmailModal .modal h3,
+    #profileChangeEmailModal .modal label,
+    #addYourEmailModal .modal h1,
+    #addYourEmailModal .modal h2,
+    #addYourEmailModal .modal h3,
+    #addYourEmailModal .modal label {
+      color: #F8FAFC !important;
+    }
+
+    html:not([data-theme="dark"]) #profileAddEmailModal .modal h1,
+    html:not([data-theme="dark"]) #profileAddEmailModal .modal h2,
+    html:not([data-theme="dark"]) #profileAddEmailModal .modal h3,
+    html:not([data-theme="dark"]) #profileAddEmailModal .modal label,
+    html:not([data-theme="dark"]) #profileChangeEmailModal .modal h1,
+    html:not([data-theme="dark"]) #profileChangeEmailModal .modal h2,
+    html:not([data-theme="dark"]) #profileChangeEmailModal .modal h3,
+    html:not([data-theme="dark"]) #profileChangeEmailModal .modal label,
+    html:not([data-theme="dark"]) #addYourEmailModal .modal h1,
+    html:not([data-theme="dark"]) #addYourEmailModal .modal h2,
+    html:not([data-theme="dark"]) #addYourEmailModal .modal h3,
+    html:not([data-theme="dark"]) #addYourEmailModal .modal label {
+      color: #0F172A !important;
+    }
+
+    #profileAddEmailModal .modal p,
+    #profileChangeEmailModal .modal p,
+    #addYourEmailModal .modal p {
+      color: #94A3B8 !important;
+    }
+
+    #profileAddEmailModal .modal input,
+    #profileChangeEmailModal .modal input,
+    #addYourEmailModal .modal input {
+      color: #F8FAFC !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    html:not([data-theme="dark"]) #profileAddEmailModal .modal input,
+    html:not([data-theme="dark"]) #profileChangeEmailModal .modal input,
+    html:not([data-theme="dark"]) #addYourEmailModal .modal input {
+      color: #0F172A !important;
+      background: rgba(0, 0, 0, 0.04) !important;
+      border-color: rgba(0, 0, 0, 0.16);
+    }
+
+    #profileAddEmailModal .modal input::placeholder,
+    #profileChangeEmailModal .modal input::placeholder,
+    #addYourEmailModal .modal input::placeholder {
+      color: #94A3B8 !important;
+    }
+
+    #profileAddEmailModal .modal::before,
+    #profileChangeEmailModal .modal::before,
+    #addYourEmailModal .modal::before {
+      pointer-events: none;
     }
 
     .modal {
@@ -3750,17 +3816,6 @@
     }
 
     @media (max-width: 640px) {
-      .login-quote-pill {
-        bottom: 14px;
-        padding: 10px 14px;
-        gap: 10px;
-        max-width: 92vw;
-      }
-
-      .login-quote-pill .quote-text {
-        font-size: 12.5px;
-      }
-
       .login-quote-pill .quote-author {
         font-size: 11px;
       }
@@ -5174,13 +5229,6 @@
       </svg>
       <span>Dashboard</span>
     </div>
-    <div class="mnav-item" data-view="profile" onclick="switchView('profile')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-      </svg>
-      <span>Profile</span>
-    </div>
     <div class="mnav-item" data-view="calculator" onclick="switchView('calculator')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
         <rect x="4" y="3" width="16" height="18" rx="3" />
@@ -5216,14 +5264,14 @@
         <path d="M16 2v4M8 2v4M3 10h18" />
         <path d="M9 16l2 2 4-4" />
       </svg>
-      <span>Exam Schedule</span>
+      <span>Exam</span>
     </div>
     <div class="mnav-item" data-view="tracker" onclick="switchView('tracker')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
         <circle cx="12" cy="12" r="10" />
         <path d="M12 6v6l4 2" />
       </svg>
-      <span>Credit Tracker</span>
+      <span>Credits</span>
     </div>
     <div class="mnav-item" data-view="analytics" onclick="switchView('analytics')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -5251,6 +5299,13 @@
       </svg>
       <span>History</span>
     </div>
+    <div class="mnav-item" data-view="profile" onclick="switchView('profile')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+      <span>Profile</span>
+    </div>
     <div class="mnav-item" data-view="settings" onclick="switchView('settings')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
         <circle cx="12" cy="12" r="3" />
@@ -5265,37 +5320,6 @@
       <path d="M12 5v14M5 12h14" />
     </svg>
   </button>
-
-  <!-- ADD SUBJECTS MODAL -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="glass modal">
-      <div class="modal-head">
-        <h3>Add Subjects</h3>
-        <div class="modal-search-row">
-          <div class="modal-search">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="7" />
-              <path d="M21 21l-4.3-4.3" />
-            </svg>
-            <input type="text" id="modalSearchInput" placeholder="Search course code or name...">
-          </div>
-          <select class="basket-select" id="basketSelect">
-            <option value="all">All Baskets</option>
-          </select>
-        </div>
-      </div>
-      <div class="modal-list" id="modalList">
-        <!-- rows injected -->
-      </div>
-      <div class="modal-foot">
-        <div class="sel-count"><b id="selCount">0</b> subjects selected</div>
-        <div class="modal-btns">
-          <button class="btn btn-ghost" id="cancelModalBtn">Cancel</button>
-          <button class="btn btn-primary" id="addSelectedBtn">Add Selected Subjects</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- STUDENT AUTH MODAL OVERLAY (LOGIN / REGISTER) -->
   <div class="modal-overlay open" id="authScreenOverlay">
@@ -5609,7 +5633,9 @@
         </div>
       </div>
     </div>
-    <!-- MOBILE QUICK MENU MODAL -->
+  </div>
+
+  <!-- MOBILE QUICK MENU MODAL -->
     <div class="modal-overlay" id="mobileMenuModal">
       <div class="glass modal" style="width: 380px; max-width: 90vw;">
         <div class="modal-head"
@@ -5794,200 +5820,230 @@
           <div style="display:flex; gap:10px; margin-top:14px;">
             <button class="btn btn-ghost" onclick="closeRecoveryEmailModal()"
               style="flex:1; justify-content:center;">Remind Me Later</button>
-            <button class="btn btn-primary" id="recoveryEmailSubmitBtn" onclick="handleAddRecoveryEmailSubmit()"
-              style="flex:1.2; justify-content:center;">Verify Email</button>
-          </div>
-        </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- PROFILE ADD EMAIL MODAL -->
-    <div class="modal-overlay" id="profileAddEmailModal">
-      <div class="glass modal" style="width:440px; max-width:92vw; padding:24px;">
-        <div class="modal-head"
-          style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--glass-border); padding:0 0 14px 0; margin-bottom:18px;">
-          <div>
-            <h3 style="margin:0; font-size:20px; font-weight:700; display:flex; align-items:center; gap:8px;">
-              <span>✉</span> Add Email
-            </h3>
-            <p style="margin:2px 0 0 0; font-size:12.5px; color:var(--ink-soft);">Add your registered email</p>
-          </div>
-          <button onclick="closeAddEmailModal()"
-            style="background:none; border:none; color:var(--ink-soft); font-size:24px; cursor:pointer; padding:0 4px;"
-            title="Close">&times;</button>
+<!-- EXISTING APPLICATION MODAL CONTAINERS (DIRECT CHILDREN OF BODY) -->
+
+<!-- ADD SUBJECTS MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="glass modal">
+    <div class="modal-head">
+      <h3>Add Subjects</h3>
+      <div class="modal-search-row">
+        <div class="modal-search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7" />
+            <path d="M21 21l-4.3-4.3" />
+          </svg>
+          <input type="text" id="modalSearchInput" placeholder="Search course code or name...">
         </div>
-        <div style="padding:0;">
-          <div class="auth-banner" id="addEmailBanner"></div>
-          <div class="form-group" style="margin-bottom:18px;">
-            <label style="font-size:13px; font-weight:600; margin-bottom:6px; display:block;">New Email</label>
-            <input type="email" id="addEmailInput" class="form-input" placeholder="Enter email address"
-              autocomplete="off" onkeydown="if(event.key==='Enter' && !event.repeat) submitAddEmail()">
-          </div>
-          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
-            <button class="btn btn-ghost" onclick="closeAddEmailModal()" style="padding:9px 18px;">Cancel</button>
-            <button class="btn btn-primary" id="saveAddEmailBtn" onclick="submitAddEmail()"
-              style="padding:9px 20px;">Save Email</button>
-          </div>
-        </div>
+        <select class="basket-select" id="basketSelect">
+          <option value="all">All Baskets</option>
+        </select>
       </div>
     </div>
+    <div class="modal-list" id="modalList">
+      <!-- rows injected -->
+    </div>
+    <div class="modal-foot">
+      <div class="sel-count"><b id="selCount">0</b> subjects selected</div>
+      <div class="modal-btns">
+        <button class="btn btn-ghost" id="cancelModalBtn">Cancel</button>
+        <button class="btn btn-primary" id="addSelectedBtn">Add Selected Subjects</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <!-- PROFILE CHANGE EMAIL MODAL -->
-    <div class="modal-overlay" id="profileChangeEmailModal">
-      <div class="glass modal" style="width:440px; max-width:92vw; padding:24px;">
-        <div class="modal-head"
-          style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--glass-border); padding:0 0 14px 0; margin-bottom:18px;">
-          <div>
-            <h3 style="margin:0; font-size:20px; font-weight:700; display:flex; align-items:center; gap:8px;">
-              <span>✉</span> Change Email
-            </h3>
-            <p style="margin:2px 0 0 0; font-size:12.5px; color:var(--ink-soft);">Update your registered email</p>
-          </div>
-          <button onclick="closeChangeEmailModal()"
-            style="background:none; border:none; color:var(--ink-soft); font-size:24px; cursor:pointer; padding:0 4px;"
-            title="Close">&times;</button>
+<!-- PROFILE ADD EMAIL MODAL -->
+<div class="modal-overlay" id="profileAddEmailModal">
+  <div class="glass modal" style="width:440px; max-width:92vw; padding:24px;">
+    <div class="modal-head"
+      style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--glass-border); padding:0 0 14px 0; margin-bottom:18px;">
+      <div>
+        <h3 style="margin:0; font-size:20px; font-weight:700; display:flex; align-items:center; gap:8px;">
+          <span>✉</span> Add Email
+        </h3>
+        <p style="margin:2px 0 0 0; font-size:12.5px; color:var(--ink-soft);">Add your registered email</p>
+      </div>
+      <button onclick="closeAddEmailModal()"
+        style="background:none; border:none; color:var(--ink-soft); font-size:24px; cursor:pointer; padding:0 4px;"
+        title="Close">&times;</button>
+    </div>
+    <div style="padding:0;">
+      <div class="auth-banner" id="addEmailBanner"></div>
+      <div class="form-group" style="margin-bottom:18px;">
+        <label style="font-size:13px; font-weight:600; margin-bottom:6px; display:block;">New Email</label>
+        <input type="email" id="addEmailInput" class="form-input" placeholder="Enter email address"
+          autocomplete="off" onkeydown="if(event.key==='Enter' && !event.repeat) submitAddEmail()">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+        <button class="btn btn-ghost" onclick="closeAddEmailModal()" style="padding:9px 18px;">Cancel</button>
+        <button class="btn btn-primary" id="saveAddEmailBtn" onclick="submitAddEmail()"
+          style="padding:9px 20px;">Save Email</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE CHANGE EMAIL MODAL -->
+<div class="modal-overlay" id="profileChangeEmailModal">
+  <div class="glass modal" style="width:440px; max-width:92vw; padding:24px;">
+    <div class="modal-head"
+      style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--glass-border); padding:0 0 14px 0; margin-bottom:18px;">
+      <div>
+        <h3 style="margin:0; font-size:20px; font-weight:700; display:flex; align-items:center; gap:8px;">
+          <span>✉</span> Change Email
+        </h3>
+        <p style="margin:2px 0 0 0; font-size:12.5px; color:var(--ink-soft);">Update your registered email</p>
+      </div>
+      <button onclick="closeChangeEmailModal()"
+        style="background:none; border:none; color:var(--ink-soft); font-size:24px; cursor:pointer; padding:0 4px;"
+        title="Close">&times;</button>
+    </div>
+    <div style="padding:0;">
+      <div class="auth-banner" id="changeEmailBanner"></div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label style="font-size:13px; font-weight:600; margin-bottom:6px; display:block;">Current Email</label>
+        <div style="position:relative; display:flex; align-items:center;">
+          <input type="text" id="changeCurrentEmailInput" class="form-input" disabled autocomplete="off"
+            style="opacity:0.75; padding-right:36px; width:100%;">
+          <span style="position:absolute; right:12px; font-size:14px; pointer-events:none;" title="Locked">🔒</span>
         </div>
-        <div style="padding:0;">
-          <div class="auth-banner" id="changeEmailBanner"></div>
-          <div class="form-group" style="margin-bottom:14px;">
-            <label style="font-size:13px; font-weight:600; margin-bottom:6px; display:block;">Current Email</label>
-            <div style="position:relative; display:flex; align-items:center;">
-              <input type="text" id="changeCurrentEmailInput" class="form-input" disabled autocomplete="off"
-                style="opacity:0.75; padding-right:36px; width:100%;">
-              <span style="position:absolute; right:12px; font-size:14px; pointer-events:none;" title="Locked">🔒</span>
+      </div>
+      <div class="form-group" style="margin-bottom:18px;">
+        <label style="font-size:13px; font-weight:600; margin-bottom:6px; display:block;">New Email</label>
+        <input type="email" id="changeNewEmailInput" class="form-input" placeholder="Enter new email address"
+          autocomplete="off" onkeydown="if(event.key==='Enter' && !event.repeat) submitChangeEmail()">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+        <button class="btn btn-ghost" onclick="closeChangeEmailModal()" style="padding:9px 18px;">Cancel</button>
+        <button class="btn btn-primary" id="saveChangeEmailBtn" onclick="submitChangeEmail()"
+          style="padding:9px 20px;">Save Email</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD YOUR EMAIL PROMPT MODAL (FOR EXISTING USERS WITHOUT EMAIL) -->
+<div class="modal-overlay" id="addYourEmailModal">
+  <div class="glass modal" style="width:440px; max-width:92vw;">
+    <div class="modal-head" style="text-align:center; padding-bottom:6px;">
+      <div
+        style="width:48px; height:48px; border-radius:50%; background:rgba(108,99,255,0.15); border:1px solid rgba(108,99,255,0.3); color:var(--indigo); display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
+        <span style="font-size:24px;">✉</span>
+      </div>
+      <h3 style="font-size:22px; font-weight:700; margin-bottom:6px;">Add Your Email</h3>
+      <p style="font-size:13px; color:var(--ink-soft); line-height:1.4;">Add your email to your account for account
+        recovery and important notifications.</p>
+    </div>
+    <div style="padding:16px 4px 12px 4px;">
+      <div class="auth-banner" id="addYourEmailBanner"></div>
+      <div class="form-group" style="margin-bottom:18px;">
+        <label style="font-size:13px; font-weight:600; margin-bottom:6px; display:block;">Email</label>
+        <input type="email" id="addYourEmailInput" class="form-input" placeholder="Enter your email address"
+          autocomplete="off" onkeydown="if(event.key==='Enter' && !event.repeat) submitAddYourEmail()">
+      </div>
+      <div style="display:flex; gap:10px; margin-top:16px;">
+        <button class="btn btn-ghost" onclick="closeAddYourEmailModal()"
+          style="flex:1; justify-content:center; padding:11px;">Remind Me Later</button>
+        <button class="btn btn-primary" id="saveAddYourEmailBtn" onclick="submitAddYourEmail()"
+          style="flex:1.2; justify-content:center; padding:11px;">Save Email</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAY ACTION MODAL OVERLAY (CLICK ANY DAY ON CALENDAR) -->
+<div class="modal-overlay" id="dayActionModalOverlay">
+  <div class="glass modal" style="width:520px; max-width:92vw;">
+    <div class="modal-head"
+      style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--glass-border); padding-bottom:12px; margin-bottom:16px;">
+      <div>
+        <h3 style="margin:0; font-size:18px; font-weight:700;">Academic Day Options</h3>
+        <p style="margin:2px 0 0 0; font-size:13px; color:var(--indigo); font-weight:700;" id="dayModalDateTitle">10
+          October 2026 (Saturday)</p>
+      </div>
+      <button onclick="closeDayActionModal()"
+        style="background:none; border:none; color:var(--ink-soft); font-size:24px; cursor:pointer; padding:0 4px;"
+        title="Close">&times;</button>
+    </div>
+
+    <div style="padding:0 4px 12px 4px; max-height:75vh; overflow-y:auto;">
+      <!-- CURRENT STATUS BANNER -->
+      <div id="dayModalStatusContainer" style="margin-bottom:16px;"></div>
+
+      <!-- SCHEDULED EXAMS LIST -->
+      <div id="dayModalExamsContainer" style="margin-bottom:16px;"></div>
+
+      <!-- OPTIONS GRID -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;" class="day-options-grid">
+
+        <!-- OPTION 1: MARK HOLIDAY -->
+        <div
+          style="background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+              <span style="font-size:16px;">🌴</span>
+              <strong style="font-size:13.5px; color:var(--ink);">Mark as Holiday</strong>
+            </div>
+            <p style="font-size:11.5px; color:var(--ink-soft); margin-bottom:10px;">Designate this date as a custom
+              holiday or festival.</p>
+
+            <div class="form-group" style="margin-bottom:10px;">
+              <input type="text" id="dayModalHolidayTitleInput" placeholder="Holiday Title (e.g. Festival)"
+                class="form-input" style="padding:8px 10px; font-size:12px; width:100%;" />
             </div>
           </div>
-          <div class="form-group" style="margin-bottom:18px;">
-            <label style="font-size:13px; font-weight:600; margin-bottom:6px; display:block;">New Email</label>
-            <input type="email" id="changeNewEmailInput" class="form-input" placeholder="Enter new email address"
-              autocomplete="off" onkeydown="if(event.key==='Enter' && !event.repeat) submitChangeEmail()">
-          </div>
-          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
-            <button class="btn btn-ghost" onclick="closeChangeEmailModal()" style="padding:9px 18px;">Cancel</button>
-            <button class="btn btn-primary" id="saveChangeEmailBtn" onclick="submitChangeEmail()"
-              style="padding:9px 20px;">Save Email</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- ADD YOUR EMAIL PROMPT MODAL (FOR EXISTING USERS WITHOUT EMAIL) -->
-    <div class="modal-overlay" id="addYourEmailModal">
-      <div class="glass modal" style="width:440px; max-width:92vw;">
-        <div class="modal-head" style="text-align:center; padding-bottom:6px;">
-          <div
-            style="width:48px; height:48px; border-radius:50%; background:rgba(108,99,255,0.15); border:1px solid rgba(108,99,255,0.3); color:var(--indigo); display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
-            <span style="font-size:24px;">✉</span>
-          </div>
-          <h3 style="font-size:22px; font-weight:700; margin-bottom:6px;">Add Your Email</h3>
-          <p style="font-size:13px; color:var(--ink-soft); line-height:1.4;">Add your email to your account for account
-            recovery and important notifications.</p>
-        </div>
-        <div style="padding:16px 4px 12px 4px;">
-          <div class="auth-banner" id="addYourEmailBanner"></div>
-          <div class="form-group" style="margin-bottom:18px;">
-            <label style="font-size:13px; font-weight:600; margin-bottom:6px; display:block;">Email</label>
-            <input type="email" id="addYourEmailInput" class="form-input" placeholder="Enter your email address"
-              autocomplete="off" onkeydown="if(event.key==='Enter' && !event.repeat) submitAddYourEmail()">
-          </div>
-          <div style="display:flex; gap:10px; margin-top:16px;">
-            <button class="btn btn-ghost" onclick="closeAddYourEmailModal()"
-              style="flex:1; justify-content:center; padding:11px;">Remind Me Later</button>
-            <button class="btn btn-primary" id="saveAddYourEmailBtn" onclick="submitAddYourEmail()"
-              style="flex:1.2; justify-content:center; padding:11px;">Save Email</button>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;" id="dayModalHolidayBtnContainer">
+            <button class="btn btn-primary" onclick="saveHolidayFromDayModal()"
+              style="flex:1; padding:6px 12px; font-size:12px; justify-content:center; background:#EC4899; border:none;">Save
+              Holiday</button>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- DAY ACTION MODAL OVERLAY (CLICK ANY DAY ON CALENDAR) -->
-    <div class="modal-overlay" id="dayActionModalOverlay">
-      <div class="glass modal" style="width:520px; max-width:92vw;">
-        <div class="modal-head"
-          style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--glass-border); padding-bottom:12px; margin-bottom:16px;">
+        <!-- OPTION 2: MARK WORKING DAY -->
+        <div
+          style="background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
           <div>
-            <h3 style="margin:0; font-size:18px; font-weight:700;">Academic Day Options</h3>
-            <p style="margin:2px 0 0 0; font-size:13px; color:var(--indigo); font-weight:700;" id="dayModalDateTitle">10
-              October 2026 (Saturday)</p>
+            <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+              <span style="font-size:16px;">💼</span>
+              <strong style="font-size:13.5px; color:var(--ink);">Mark Working Day</strong>
+            </div>
+            <p style="font-size:11.5px; color:var(--ink-soft); margin-bottom:10px;">Make this Saturday a working day
+              following a weekday timetable.</p>
+
+            <div class="form-group" style="margin-bottom:10px;">
+              <select id="dayModalWorkingDaySelect" class="form-input"
+                style="padding:8px 10px; font-size:12px; width:100%; font-weight:600; cursor:pointer;">
+                <option value="Monday">Monday Timetable</option>
+                <option value="Tuesday">Tuesday Timetable</option>
+                <option value="Wednesday">Wednesday Timetable</option>
+                <option value="Thursday">Thursday Timetable</option>
+                <option value="Friday">Friday Timetable</option>
+              </select>
+            </div>
           </div>
-          <button onclick="closeDayActionModal()"
-            style="background:none; border:none; color:var(--ink-soft); font-size:24px; cursor:pointer; padding:0 4px;"
-            title="Close">&times;</button>
-        </div>
 
-        <div style="padding:0 4px 12px 4px; max-height:75vh; overflow-y:auto;">
-          <!-- CURRENT STATUS BANNER -->
-          <div id="dayModalStatusContainer" style="margin-bottom:16px;"></div>
-
-          <!-- SCHEDULED EXAMS LIST -->
-          <div id="dayModalExamsContainer" style="margin-bottom:16px;"></div>
-
-          <!-- OPTIONS GRID -->
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;" class="day-options-grid">
-
-            <!-- OPTION 1: MARK HOLIDAY -->
-            <div
-              style="background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
-              <div>
-                <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
-                  <span style="font-size:16px;">🌴</span>
-                  <strong style="font-size:13.5px; color:var(--ink);">Mark as Holiday</strong>
-                </div>
-                <p style="font-size:11.5px; color:var(--ink-soft); margin-bottom:10px;">Designate this date as a custom
-                  holiday or festival.</p>
-
-                <div class="form-group" style="margin-bottom:10px;">
-                  <input type="text" id="dayModalHolidayTitleInput" placeholder="Holiday Title (e.g. Festival)"
-                    class="form-input" style="padding:8px 10px; font-size:12px; width:100%;" />
-                </div>
-              </div>
-
-              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;" id="dayModalHolidayBtnContainer">
-                <button class="btn btn-primary" onclick="saveHolidayFromDayModal()"
-                  style="flex:1; padding:6px 12px; font-size:12px; justify-content:center; background:#EC4899; border:none;">Save
-                  Holiday</button>
-              </div>
-            </div>
-
-            <!-- OPTION 2: MARK WORKING DAY -->
-            <div
-              style="background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
-              <div>
-                <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
-                  <span style="font-size:16px;">💼</span>
-                  <strong style="font-size:13.5px; color:var(--ink);">Mark Working Day</strong>
-                </div>
-                <p style="font-size:11.5px; color:var(--ink-soft); margin-bottom:10px;">Make this Saturday a working day
-                  following a weekday timetable.</p>
-
-                <div class="form-group" style="margin-bottom:10px;">
-                  <select id="dayModalWorkingDaySelect" class="form-input"
-                    style="padding:8px 10px; font-size:12px; width:100%; font-weight:600; cursor:pointer;">
-                    <option value="Monday">Monday Timetable</option>
-                    <option value="Tuesday">Tuesday Timetable</option>
-                    <option value="Wednesday">Wednesday Timetable</option>
-                    <option value="Thursday">Thursday Timetable</option>
-                    <option value="Friday">Friday Timetable</option>
-                  </select>
-                </div>
-              </div>
-
-              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;" id="dayModalWorkingDayBtnContainer">
-                <button class="btn btn-primary" onclick="saveWorkingDayFromDayModal()"
-                  style="flex:1; padding:6px 12px; font-size:12px; justify-content:center; background:#22C55E; border:none;">Save
-                  Working Day</button>
-              </div>
-            </div>
-
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;" id="dayModalWorkingDayBtnContainer">
+            <button class="btn btn-primary" onclick="saveWorkingDayFromDayModal()"
+              style="flex:1; padding:6px 12px; font-size:12px; justify-content:center; background:#22C55E; border:none;">Save
+              Working Day</button>
           </div>
         </div>
+
       </div>
     </div>
+</div>
 
-    <!-- PRINTABLE CLEAN REPORT CONTAINER (PRINT ONLY) -->
-    <div id="printableReport">
-      <!-- Dynamic clean print template -->
-    </div>
+<!-- PRINTABLE CLEAN REPORT CONTAINER (PRINT ONLY) -->
+<div id="printableReport">
+  <!-- Dynamic clean print template -->
+</div>
 
     <script>
       /* =========================================================
@@ -6514,14 +6570,21 @@
         G2: { session: 'Afternoon', timeStr: '02:00 PM – 03:30 PM', startHour: 14, startMin: 0, endHour: 15, endMin: 30 }
       });
 
+      function getValidSemester(val) {
+        const sem = Number(val);
+        return (Number.isInteger(sem) && sem >= 1 && sem <= 8) ? sem : 3;
+      }
+
       /* =========================================================
          STATE & MONGODB API AUTO-SAVE MANAGEMENT
       ========================================================= */
       let state = {
         studentName: '',
         usn: '',
-        theme: 'light',
+        theme: 'dark',
+        themePreferenceSet: false,
         currentSemester: 3,
+        semesterPreferenceSet: false,
         semesters: {
           1: [],
           2: [],
@@ -6551,7 +6614,7 @@
       }
 
       function getAcademicYear(sem) {
-        const s = parseInt(sem) || 1;
+        const s = parseInt(sem) || 3;
         const startYear = 2025 + Math.floor((s - 1) / 2);
         return `${startYear} - ${startYear + 1}`;
       }
@@ -6573,7 +6636,16 @@
       async function safeFetchJson(url, options = {}) {
         try {
           const fullUrl = (url.startsWith('/api/') ? getApiBaseUrl() : '') + url;
-          const res = await fetch(fullUrl, options);
+          const reqOptions = { ...options };
+          const token = localStorage.getItem('scfc_session_token');
+          if (token) {
+            reqOptions.headers = {
+              ...(reqOptions.headers || {}),
+              'Authorization': `Bearer ${token}`,
+              'X-Session-Token': token
+            };
+          }
+          const res = await fetch(fullUrl, reqOptions);
           const contentType = res.headers.get('content-type') || '';
           if (contentType.includes('application/json')) {
             const data = await res.json();
@@ -6600,7 +6672,9 @@
             name: state.studentName,
             usn: state.usn,
             theme: state.theme,
+            themePreferenceSet: state.themePreferenceSet,
             currentSemester: state.currentSemester,
+            semesterPreferenceSet: state.semesterPreferenceSet,
             semesters: state.semesters,
             history: state.history,
             tasks: state.tasks,
@@ -6781,6 +6855,10 @@
 
           // Success Login
           try {
+            if (data.token || data.sessionToken) {
+              localStorage.setItem('scfc_session_token', data.token || data.sessionToken);
+            }
+            localStorage.setItem('scfc_active_usn', data.student.usn);
             applyStudentData(data.student);
             if (window.scfcDB && data.student && data.student.usn) {
               await window.scfcDB.saveUserData(data.student.usn, data.student);
@@ -6788,7 +6866,6 @@
           } catch (dataErr) {
             console.error('Error rendering student data on login:', dataErr);
           }
-          localStorage.setItem('scfc_active_usn', data.student.usn);
           const overlay = document.getElementById('authScreenOverlay');
           if (overlay) {
             overlay.classList.remove('open');
@@ -7024,20 +7101,34 @@
           return;
         }
 
-        const accountEmail = student.email ? String(student.email).trim() : '';
-        if (accountEmail.length > 0) return;
-
-        const appShell = document.getElementById('mainAppShell');
-        if (appShell && appShell.style.display !== 'none') {
-          const promptModal = document.getElementById('addYourEmailModal');
-          if (promptModal && !promptModal.classList.contains('open')) {
-            const inp = document.getElementById('addYourEmailInput');
-            if (inp) inp.value = '';
-            const banner = document.getElementById('addYourEmailBanner');
-            if (banner) { banner.textContent = ''; banner.className = 'auth-banner'; }
-            promptModal.classList.add('open');
-          }
+        const dismissalKey = `scfc_add_email_dismissed_${state.usn}`;
+        if (sessionStorage.getItem(dismissalKey) === 'true') {
+          return;
         }
+
+        const email = (
+          student && student.email
+            ? String(student.email).trim()
+            : String(state.studentEmail || '').trim()
+        );
+
+        if (email.length > 0) {
+          return;
+        }
+
+        requestAnimationFrame(() => {
+          const appShell = document.getElementById('mainAppShell');
+          if (appShell && appShell.style.display !== 'none') {
+            const promptModal = document.getElementById('addYourEmailModal');
+            if (promptModal && !promptModal.classList.contains('open')) {
+              const inp = document.getElementById('addYourEmailInput');
+              if (inp) inp.value = '';
+              const banner = document.getElementById('addYourEmailBanner');
+              if (banner) { banner.textContent = ''; banner.className = 'auth-banner'; }
+              promptModal.classList.add('open');
+            }
+          }
+        });
       }
 
       let forgotCooldownTimer = null;
@@ -7258,6 +7349,7 @@
         }
 
         state.theme = nextTheme;
+        state.themePreferenceSet = true;
         triggerAutoSave();
       }
 
@@ -7409,9 +7501,31 @@
         state.recoveryEmail = student.recoveryEmail || student.email || '';
         state.emailVerified = Boolean(student.emailVerified);
         state.pendingEmail = student.pendingEmail || '';
-        state.theme = student.theme || 'light';
-        const savedSem = parseInt(student.currentSemester);
-        state.currentSemester = (savedSem >= 1 && savedSem <= 8) ? savedSem : 3;
+
+        state.themePreferenceSet = Boolean(student.themePreferenceSet);
+
+        const localTheme = localStorage.getItem('scfc_theme');
+        let effectiveTheme = 'dark';
+        if (localTheme === 'light' || localTheme === 'dark') {
+          effectiveTheme = localTheme;
+        } else if (
+          student.themePreferenceSet === true &&
+          (student.theme === 'light' || student.theme === 'dark')
+        ) {
+          effectiveTheme = student.theme;
+        }
+        state.theme = effectiveTheme;
+
+        state.semesterPreferenceSet = Boolean(student.semesterPreferenceSet);
+        const savedSem = Number(student.currentSemester);
+        const isValidSem = Number.isInteger(savedSem) && savedSem >= 1 && savedSem <= 8;
+
+        if (state.semesterPreferenceSet === true && isValidSem) {
+          state.currentSemester = savedSem;
+        } else {
+          state.currentSemester = 3;
+        }
+
         state.semesters = (student.semesters && typeof student.semesters === 'object') ? student.semesters : {};
 
         // Ensure all 8 semesters exist as arrays
@@ -7459,36 +7573,44 @@
         }
 
         const root = document.documentElement;
-        root.setAttribute('data-theme', state.theme);
+        if (state.theme === 'dark') {
+          root.setAttribute('data-theme', 'dark');
+        } else {
+          root.removeAttribute('data-theme');
+        }
 
         syncSemesterDropdowns();
         updateStudentNameDisplays();
         renderAll();
       }
 
-      function logoutStudent() {
+      function resetAuthenticatedState() {
         if (autoSaveTimer) {
           clearTimeout(autoSaveTimer);
           autoSaveTimer = null;
         }
+
+        // Clear user identifiers & token
         localStorage.removeItem('scfc_active_usn');
+        localStorage.removeItem('scfc_session_token');
 
-        // Close any open modal overlays to prevent frozen click backdrops
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-          if (modal.id !== 'authScreenOverlay') {
-            modal.classList.remove('open');
-          }
-        });
+        // Stop active sync engine
+        if (window.scfcSyncEngine) {
+          window.scfcSyncEngine.isSyncing = false;
+        }
 
-        // Reset state object completely to clear memory of logged out user
+        // Reset in-memory state object to defaults
         state = {
           studentName: '',
           usn: '',
           studentEmail: '',
           emailVerified: false,
           pendingEmail: '',
-          theme: 'light',
+          recoveryEmail: '',
+          theme: 'dark',
+          themePreferenceSet: false,
           currentSemester: 3,
+          semesterPreferenceSet: false,
           semesters: {
             1: [], 2: [], 3: [], 4: [],
             5: [], 6: [], 7: [], 8: []
@@ -7507,9 +7629,24 @@
           }
         };
 
-        if (window.scfcSyncEngine) {
-          window.scfcSyncEngine.isSyncing = false;
-        }
+        updateStudentNameDisplays();
+
+        const tableBody = document.getElementById('tableBody');
+        if (tableBody) tableBody.innerHTML = '';
+
+        const timetableBody = document.getElementById('timetableBody');
+        if (timetableBody) timetableBody.innerHTML = '';
+      }
+
+      function logoutStudent() {
+        resetAuthenticatedState();
+
+        // Close any open modal overlays to prevent frozen click backdrops
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+          if (modal.id !== 'authScreenOverlay') {
+            modal.classList.remove('open');
+          }
+        });
 
         const appShell = document.getElementById('mainAppShell');
         if (appShell) appShell.style.display = 'none';
@@ -7552,65 +7689,75 @@
         }
 
         const activeUsn = localStorage.getItem('scfc_active_usn');
-        if (activeUsn) {
-          // 1. OFFLINE-FIRST: Read from IndexedDB FIRST!
-          let studentData = null;
-          try {
-            if (window.scfcDB) {
-              await window.scfcDB.ensureReady();
-              studentData = await window.scfcDB.getUserData(activeUsn);
-            }
-          } catch (e) {
-            console.warn('IndexedDB read error:', e);
-          }
+        const token = localStorage.getItem('scfc_session_token');
 
-          if (studentData) {
-            applyStudentData(studentData);
-            document.getElementById('authScreenOverlay').classList.remove('open');
-            document.getElementById('mainAppShell').style.display = 'block';
-          }
+        if (!activeUsn || !token) {
+          resetAuthenticatedState();
+          document.getElementById('mainAppShell').style.display = 'none';
+          document.getElementById('authScreenOverlay').classList.add('open');
+          return;
+        }
 
-          // 2. Background / Network fetch to sync with database
-          try {
-            const { ok, status, data } = await safeFetchJson(`/api/student/${encodeURIComponent(activeUsn)}`);
-            if (ok && data && data.success && data.student) {
-              applyStudentData(data.student);
+        // 1. OFFLINE-FIRST: Read from IndexedDB FIRST for the active USN ONLY
+        let studentData = null;
+        try {
+          if (window.scfcDB) {
+            await window.scfcDB.ensureReady();
+            studentData = await window.scfcDB.getUserData(activeUsn);
+          }
+        } catch (e) {
+          console.warn('IndexedDB read error:', e);
+        }
+
+        if (studentData && studentData.usn === activeUsn) {
+          applyStudentData(studentData);
+          document.getElementById('authScreenOverlay').classList.remove('open');
+          document.getElementById('mainAppShell').style.display = 'block';
+          requestAnimationFrame(() => {
+            checkAndPromptRecoveryEmail(studentData);
+          });
+        }
+
+        // 2. Background / Network fetch to sync with database
+        try {
+          const { ok, status, data } = await safeFetchJson(`/api/student/${encodeURIComponent(activeUsn)}`);
+          if (ok && data && data.success && data.student) {
+            if (data.student.usn === activeUsn) {
+              const serverStr = JSON.stringify(data.student);
+              const localStr = studentData ? JSON.stringify(studentData) : '';
+              if (serverStr !== localStr) {
+                applyStudentData(data.student);
+              }
               if (window.scfcDB) {
                 await window.scfcDB.saveUserData(activeUsn, data.student);
               }
               document.getElementById('authScreenOverlay').classList.remove('open');
               document.getElementById('mainAppShell').style.display = 'block';
-
-              checkAndPromptRecoveryEmail(data.student);
-              return;
-            } else if (status === 404) {
-              // Server explicitly returned 404 (user account deleted/invalid)
-              localStorage.removeItem('scfc_active_usn');
-              document.getElementById('mainAppShell').style.display = 'none';
-              document.getElementById('authScreenOverlay').classList.add('open');
+              requestAnimationFrame(() => {
+                checkAndPromptRecoveryEmail(data.student);
+              });
               return;
             }
-          } catch (netErr) {
-            console.warn('Background student fetch error:', netErr);
-          }
-
-          if (studentData) {
-            // Keep UI active with offline IndexedDB data if network request fails or is offline
-            document.getElementById('authScreenOverlay').classList.remove('open');
-            document.getElementById('mainAppShell').style.display = 'block';
-            return;
-          } else {
-            // If network fetch failed AND no IndexedDB cached data existed, but activeUsn is set:
-            // Apply basic active state so user is not stuck behind open authScreenOverlay
-            applyStudentData({ usn: activeUsn, name: 'Student', offline: true });
-            document.getElementById('authScreenOverlay').classList.remove('open');
-            document.getElementById('mainAppShell').style.display = 'block';
+          } else if (status === 401 || status === 403 || status === 404) {
+            // Unauthorized or token expired -> Force clean logout
+            logoutStudent();
             return;
           }
+        } catch (netErr) {
+          console.warn('Background student fetch error:', netErr);
         }
 
-        document.getElementById('mainAppShell').style.display = 'none';
-        document.getElementById('authScreenOverlay').classList.add('open');
+        if (studentData && studentData.usn === activeUsn) {
+          document.getElementById('authScreenOverlay').classList.remove('open');
+          document.getElementById('mainAppShell').style.display = 'block';
+          requestAnimationFrame(() => {
+            checkAndPromptRecoveryEmail(studentData);
+          });
+          return;
+        } else {
+          logoutStudent();
+          return;
+        }
       }
 
       function updateStudentNameDisplays() {
@@ -7686,11 +7833,6 @@
          PROFILE EMAIL MANAGEMENT & MODAL HANDLERS
       ========================================================= */
       function handleProfileEmailAction() {
-        const pInput = document.getElementById('profileEmailInput');
-        if (pInput && pInput.value.trim() && pInput.value.trim().toLowerCase() !== (state.studentEmail || '').toLowerCase()) {
-          saveProfileEmailDirectly();
-          return;
-        }
         if (state.studentEmail) {
           openChangeEmailModal();
         } else {
@@ -7804,6 +7946,9 @@
       }
 
       function closeAddYourEmailModal() {
+        if (state.usn) {
+          sessionStorage.setItem(`scfc_add_email_dismissed_${state.usn}`, 'true');
+        }
         const m = document.getElementById('addYourEmailModal');
         if (m) m.classList.remove('open');
         document.body.style.overflow = '';
@@ -8135,21 +8280,25 @@
         }
       }
 
-      semesterSelect.addEventListener('change', (e) => {
-        const newSem = parseInt(e.target.value);
-        if (!isNaN(newSem)) {
-          state.currentSemester = newSem;
-          syncSemesterDropdowns();
-          logHistory(`Switched active workspace to Semester ${newSem}.`);
-          triggerAutoSave();
-          renderAll();
-        }
-      });
+      if (semesterSelect) {
+        semesterSelect.addEventListener('change', (e) => {
+          const newSem = parseInt(e.target.value);
+          if (!isNaN(newSem)) {
+            state.currentSemester = newSem;
+            state.semesterPreferenceSet = true;
+            syncSemesterDropdowns();
+            logHistory(`Switched active workspace to Semester ${newSem}.`);
+            triggerAutoSave();
+            renderAll();
+          }
+        });
+      }
 
       function changeTimetableSemester(val) {
         const semNum = parseInt(val);
         if (!isNaN(semNum)) {
           state.currentSemester = semNum;
+          state.semesterPreferenceSet = true;
           syncSemesterDropdowns();
           logHistory(`Switched active workspace to Semester ${semNum} from Timetable view.`);
           triggerAutoSave();
@@ -8161,6 +8310,7 @@
         const semNum = parseInt(val);
         if (!isNaN(semNum)) {
           state.currentSemester = semNum;
+          state.semesterPreferenceSet = true;
           syncSemesterDropdowns();
           logHistory(`Switched active workspace to Semester ${semNum} from Exam view.`);
           triggerAutoSave();
@@ -8172,6 +8322,7 @@
         const semNum = parseInt(val);
         if (!isNaN(semNum)) {
           state.currentSemester = semNum;
+          state.semesterPreferenceSet = true;
           syncSemesterDropdowns();
           logHistory(`Switched active workspace to Semester ${semNum} from Reports view.`);
           triggerAutoSave();
@@ -8179,10 +8330,46 @@
         }
       }
 
+      function initTableListeners() {
+        const tbodyEl = document.getElementById('tableBody');
+        if (!tbodyEl || tbodyEl.dataset.listenersInitialized) return;
+        tbodyEl.dataset.listenersInitialized = 'true';
+
+        tbodyEl.addEventListener('change', e => {
+          if (e.target && e.target.classList.contains('grade-select')) {
+            const idx = +e.target.dataset.i;
+            const currentRows = state.semesters[getValidSemester(state.currentSemester)] || [];
+            if (currentRows[idx]) {
+              const oldGrade = currentRows[idx].grade;
+              const newGrade = e.target.value;
+              currentRows[idx].grade = newGrade;
+              logHistory(`Updated ${currentRows[idx].code} grade from ${oldGrade} to ${newGrade} in Semester ${getValidSemester(state.currentSemester)}.`);
+              triggerAutoSave();
+              renderAll();
+            }
+          }
+        });
+
+        tbodyEl.addEventListener('click', e => {
+          const btn = e.target.closest('[data-del]');
+          if (btn) {
+            const idx = +btn.dataset.del;
+            const currentRows = state.semesters[getValidSemester(state.currentSemester)] || [];
+            if (currentRows[idx]) {
+              const removed = currentRows.splice(idx, 1)[0];
+              logHistory(`Removed ${removed.code} (${removed.name}) from Semester ${getValidSemester(state.currentSemester)}.`);
+              triggerAutoSave();
+              renderAll();
+            }
+          }
+        });
+      }
+
       function renderTable() {
-        const currentRows = state.semesters[state.currentSemester] || [];
+        initTableListeners();
+        const currentRows = state.semesters[getValidSemester(state.currentSemester)] || [];
         if (currentRows.length === 0) {
-          tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No subjects added for Semester ${state.currentSemester} yet — tap "Add Subjects" to pick courses.</td></tr>`;
+          tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No subjects added for Semester ${getValidSemester(state.currentSemester)} yet — tap "Add Subjects" to pick courses.</td></tr>`;
           return;
         }
 
@@ -8200,28 +8387,6 @@
       <td><button class="del-btn" data-del="${i}" title="Remove subject"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2m2 0v13a2 2 0 01-2 2H8a2 2 0 01-2-2V7h12z"/></svg></button></td>
     </tr>`;
         }).join('');
-
-        tbody.querySelectorAll('.grade-select').forEach(sel => {
-          sel.addEventListener('change', e => {
-            const idx = +e.target.dataset.i;
-            const oldGrade = currentRows[idx].grade;
-            const newGrade = e.target.value;
-            currentRows[idx].grade = newGrade;
-            logHistory(`Updated ${currentRows[idx].code} grade from ${oldGrade} to ${newGrade} in Semester ${state.currentSemester}.`);
-            triggerAutoSave();
-            renderAll();
-          });
-        });
-
-        tbody.querySelectorAll('[data-del]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const idx = +btn.dataset.del;
-            const removed = currentRows.splice(idx, 1)[0];
-            logHistory(`Removed ${removed.code} (${removed.name}) from Semester ${state.currentSemester}.`);
-            triggerAutoSave();
-            renderAll();
-          });
-        });
       }
 
       function renderDonut() {
@@ -8354,8 +8519,84 @@
         renderTasks();
       }
 
+      function initTimetableListeners() {
+        const assignBody = document.getElementById('timetableAssignBody');
+        if (!assignBody || assignBody.dataset.listenersInitialized) return;
+        assignBody.dataset.listenersInitialized = 'true';
+
+        assignBody.addEventListener('change', e => {
+          const target = e.target;
+          if (!target || target.dataset.i === undefined) return;
+          const idx = +target.dataset.i;
+          const semNum = getValidSemester(state.currentSemester);
+          const rows = state.semesters[semNum] || [];
+          if (!rows[idx]) return;
+
+          if (target.classList.contains('tt-inst')) {
+            rows[idx].instructor = target.value;
+            triggerAutoSave();
+          } else if (target.classList.contains('tt-lab-inst')) {
+            rows[idx].labInstructor = target.value;
+            triggerAutoSave();
+          } else if (target.classList.contains('tt-type')) {
+            const newType = target.value;
+            rows[idx].type = newType;
+            if (newType === 'Theory') {
+              rows[idx].labSlot = '';
+              rows[idx].labSlot2 = '';
+              rows[idx].labInstructor = '';
+            } else if (newType === 'Lab') {
+              rows[idx].theorySlot = '';
+              rows[idx].instructor = '';
+            }
+            triggerAutoSave();
+            renderTimetable();
+          } else if (target.classList.contains('tt-tslot')) {
+            const newVal = target.value;
+            if (newVal) {
+              const check = hasConflict('Theory', newVal, rows, idx, 'theorySlot');
+              if (check.conflict) {
+                alert(check.message);
+                target.value = rows[idx].theorySlot || '';
+                return;
+              }
+            }
+            rows[idx].theorySlot = newVal;
+            triggerAutoSave();
+            renderTimetable();
+          } else if (target.classList.contains('tt-lslot')) {
+            const newVal = target.value;
+            if (newVal) {
+              const check = hasConflict('Lab', newVal, rows, idx, 'labSlot');
+              if (check.conflict) {
+                alert(check.message);
+                target.value = rows[idx].labSlot || '';
+                return;
+              }
+            }
+            rows[idx].labSlot = newVal;
+            triggerAutoSave();
+            renderTimetable();
+          } else if (target.classList.contains('tt-lslot2')) {
+            const newVal = target.value;
+            if (newVal) {
+              const check = hasConflict('Lab', newVal, rows, idx, 'labSlot2');
+              if (check.conflict) {
+                alert(check.message);
+                target.value = rows[idx].labSlot2 || '';
+                return;
+              }
+            }
+            rows[idx].labSlot2 = newVal;
+            triggerAutoSave();
+            renderTimetable();
+          }
+        });
+      }
+
       function renderTimetable() {
-        const semNum = state.currentSemester || 1;
+        initTimetableListeners();
+        const semNum = Number(state.currentSemester) || 3;
         const semSelect = document.getElementById('timetableSemSelect');
         if (semSelect) semSelect.value = String(semNum);
 
@@ -8394,94 +8635,6 @@
               </td>
             </tr>`;
             }).join('');
-
-            assignBody.querySelectorAll('.tt-inst').forEach(inp => {
-              inp.addEventListener('change', e => {
-                const idx = +e.target.dataset.i;
-                rows[idx].instructor = e.target.value;
-                triggerAutoSave();
-              });
-            });
-
-            assignBody.querySelectorAll('.tt-lab-inst').forEach(inp => {
-              inp.addEventListener('change', e => {
-                const idx = +e.target.dataset.i;
-                rows[idx].labInstructor = e.target.value;
-                triggerAutoSave();
-              });
-            });
-
-            assignBody.querySelectorAll('.tt-type').forEach(sel => {
-              sel.addEventListener('change', e => {
-                const idx = +e.target.dataset.i;
-                const newType = e.target.value;
-                rows[idx].type = newType;
-                if (newType === 'Theory') {
-                  rows[idx].labSlot = '';
-                  rows[idx].labSlot2 = '';
-                  rows[idx].labInstructor = '';
-                } else if (newType === 'Lab') {
-                  rows[idx].theorySlot = '';
-                  rows[idx].instructor = '';
-                }
-                triggerAutoSave();
-                renderTimetable();
-              });
-            });
-
-            assignBody.querySelectorAll('.tt-tslot').forEach(sel => {
-              sel.addEventListener('change', e => {
-                const idx = +e.target.dataset.i;
-                const newVal = e.target.value;
-                if (newVal) {
-                  const check = hasConflict('Theory', newVal, rows, idx, 'theorySlot');
-                  if (check.conflict) {
-                    alert(check.message);
-                    e.target.value = rows[idx].theorySlot || '';
-                    return;
-                  }
-                }
-                rows[idx].theorySlot = newVal;
-                triggerAutoSave();
-                renderTimetable();
-              });
-            });
-
-            assignBody.querySelectorAll('.tt-lslot').forEach(sel => {
-              sel.addEventListener('change', e => {
-                const idx = +e.target.dataset.i;
-                const newVal = e.target.value;
-                if (newVal) {
-                  const check = hasConflict('Lab', newVal, rows, idx, 'labSlot');
-                  if (check.conflict) {
-                    alert(check.message);
-                    e.target.value = rows[idx].labSlot || '';
-                    return;
-                  }
-                }
-                rows[idx].labSlot = newVal;
-                triggerAutoSave();
-                renderTimetable();
-              });
-            });
-
-            assignBody.querySelectorAll('.tt-lslot2').forEach(sel => {
-              sel.addEventListener('change', e => {
-                const idx = +e.target.dataset.i;
-                const newVal = e.target.value;
-                if (newVal) {
-                  const check = hasConflict('Lab', newVal, rows, idx, 'labSlot2');
-                  if (check.conflict) {
-                    alert(check.message);
-                    e.target.value = rows[idx].labSlot2 || '';
-                    return;
-                  }
-                }
-                rows[idx].labSlot2 = newVal;
-                triggerAutoSave();
-                renderTimetable();
-              });
-            });
           }
         }
 
@@ -8814,6 +8967,7 @@
 
       function openSemester(s) {
         state.currentSemester = s;
+        state.semesterPreferenceSet = true;
         logHistory(`Switched to Semester ${s} from Semester Overview.`);
         triggerAutoSave();
         switchView('dashboard');
@@ -9330,10 +9484,10 @@
             }
           }
           if (!hasAny) {
-            fullReportHtml = buildSemesterTimetableHtml(state.currentSemester || 1);
+            fullReportHtml = buildSemesterTimetableHtml(Number(state.currentSemester) || 3);
           }
         } else {
-          const semNum = parseInt(val) || state.currentSemester || 1;
+          const semNum = parseInt(val) || Number(state.currentSemester) || 3;
           fullReportHtml = buildSemesterTimetableHtml(semNum);
         }
 
@@ -9406,7 +9560,7 @@
         }
         if (!state.examConfig.semesters) state.examConfig.semesters = {};
 
-        const currentSem = state.currentSemester || 1;
+        const currentSem = Number(state.currentSemester) || 3;
 
         if (!state.examConfig.semesters[currentSem]) {
           state.examConfig.semesters[currentSem] = {
@@ -9438,7 +9592,7 @@
 
       function getSemExamSchedule(semNum, caTab) {
         ensureExamConfigStructure();
-        const sem = semNum || state.currentSemester || 1;
+        const sem = semNum || Number(state.currentSemester) || 3;
         if (!state.examConfig.semesters[sem]) {
           state.examConfig.semesters[sem] = {
             schedules: { CA1: { slotDates: {} }, CA2: { slotDates: {} }, CA3: { slotDates: {} } },
@@ -9457,7 +9611,7 @@
 
       function setSemExamSlotDate(semNum, caTab, slotName, dateValue) {
         ensureExamConfigStructure();
-        const sem = semNum || state.currentSemester || 1;
+        const sem = semNum || Number(state.currentSemester) || 3;
         const slotDates = getSemExamSchedule(sem, caTab);
         slotDates[slotName] = dateValue;
 
@@ -9469,7 +9623,7 @@
 
       function getSemHolidays(semNum) {
         ensureExamConfigStructure();
-        const sem = semNum || state.currentSemester || 1;
+        const sem = semNum || Number(state.currentSemester) || 3;
         if (state.examConfig.semesters && state.examConfig.semesters[sem] && Array.isArray(state.examConfig.semesters[sem].holidays)) {
           return state.examConfig.semesters[sem].holidays;
         } else if (Array.isArray(state.examConfig.holidays)) {
@@ -9480,7 +9634,7 @@
 
       function getSemWorkingSaturdays(semNum) {
         ensureExamConfigStructure();
-        const sem = semNum || state.currentSemester || 1;
+        const sem = semNum || Number(state.currentSemester) || 3;
         if (state.examConfig.semesters && state.examConfig.semesters[sem] && Array.isArray(state.examConfig.semesters[sem].workingSaturdays)) {
           return state.examConfig.semesters[sem].workingSaturdays;
         } else if (Array.isArray(state.examConfig.workingSaturdays)) {
@@ -9491,13 +9645,13 @@
 
       function getWorkingSaturdayForDate(dateStr) {
         if (!dateStr) return null;
-        const workingSats = getSemWorkingSaturdays(state.currentSemester || 1);
+        const workingSats = getSemWorkingSaturdays(Number(state.currentSemester) || 3);
         return workingSats.find(w => w.date === dateStr) || null;
       }
 
       function getHolidayInfoForDate(dateStr) {
         if (!dateStr) return null;
-        const holidays = getSemHolidays(state.currentSemester || 1);
+        const holidays = getSemHolidays(Number(state.currentSemester) || 3);
         const foundCustom = holidays.find(h => h.date === dateStr);
         if (foundCustom) {
           return { title: foundCustom.title, isCustom: true };
@@ -9590,6 +9744,7 @@
         const semNum = parseInt(val);
         if (!isNaN(semNum)) {
           state.currentSemester = semNum;
+          state.semesterPreferenceSet = true;
           const mainSelect = document.getElementById('semesterSelect');
           if (mainSelect) mainSelect.value = semNum;
           const ttSelect = document.getElementById('timetableSemSelect');
@@ -11008,6 +11163,7 @@
 
       function openSemester(sem) {
         state.currentSemester = sem;
+        state.semesterPreferenceSet = true;
         const semSel = document.getElementById('semesterSelect');
         if (semSel) semSel.value = sem;
         switchView('dashboard');
@@ -11154,14 +11310,23 @@
           }).join('');
         }
 
-        modalList.querySelectorAll('.course-row:not(.already)').forEach(row => {
-          row.addEventListener('click', () => {
+        initModalListeners();
+        document.getElementById('selCount').textContent = pendingSelected.size;
+      }
+
+      function initModalListeners() {
+        const modalList = document.getElementById('modalList');
+        if (!modalList || modalList.dataset.listenersInitialized) return;
+        modalList.dataset.listenersInitialized = 'true';
+
+        modalList.addEventListener('click', e => {
+          const row = e.target.closest('.course-row:not(.already)');
+          if (row) {
             const code = row.dataset.code;
             if (pendingSelected.has(code)) pendingSelected.delete(code); else pendingSelected.add(code);
             renderModal();
-          });
+          }
         });
-        document.getElementById('selCount').textContent = pendingSelected.size;
       }
 
       function openModal() {
@@ -11621,7 +11786,6 @@
       checkSavedSession();
     </script>
     <script>
-      // Synchronize mobile bottom nav with all primary dock views including Credit Tracker
       (function rebuildMobileNav() {
         const bottom = document.querySelector('.mobile-bottomnav');
         if (!bottom) return;
@@ -11632,12 +11796,13 @@
           { id: 'addsubjects', label: 'Add Subjects', isModal: true },
           { id: 'semester', label: 'Semester' },
           { id: 'timetable', label: 'Timetable' },
-          { id: 'exams', label: 'Exam Schedule' },
-          { id: 'tracker', label: 'Credit Tracker' },
+          { id: 'exams', label: 'Exam' },
+          { id: 'tracker', label: 'Credits' },
           { id: 'analytics', label: 'Analytics' },
           { id: 'gradesystem', label: 'Grade System' },
           { id: 'reports', label: 'Reports' },
           { id: 'history', label: 'History' },
+          { id: 'profile', label: 'Profile' },
           { id: 'settings', label: 'Settings' }
         ];
 
@@ -11666,6 +11831,16 @@
 
           if (dock && dock.querySelector('svg')) {
             div.appendChild(dock.querySelector('svg').cloneNode(true));
+          } else if (item.id === 'profile') {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '20');
+            svg.setAttribute('height', '20');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('fill', 'none');
+            svg.setAttribute('stroke', 'currentColor');
+            svg.setAttribute('stroke-width', '1.8');
+            svg.innerHTML = '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>';
+            div.appendChild(svg);
           } else {
             const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
             svg.setAttribute('width', '20');

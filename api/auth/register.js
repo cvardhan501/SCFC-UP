@@ -3,12 +3,13 @@ const Student = require('../../models/Student');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { sendVerificationEmail } = require('../../lib/email');
+const { createSessionToken, sanitizeStudent } = require('../../lib/auth-session');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, X-Session-Token');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -70,7 +71,9 @@ module.exports = async function handler(req, res) {
       emailVerificationToken: verificationToken,
       password: hashed,
       currentSemester: 3,
-      theme: 'light',
+      semesterPreferenceSet: false,
+      theme: 'dark',
+      themePreferenceSet: false,
       semesters: initialSemesters,
       history: [],
       tasks: []
@@ -86,21 +89,22 @@ module.exports = async function handler(req, res) {
       token: verificationToken
     }).catch(err => console.error('Verification email error:', err));
 
-    const studentObj = newStudent.toObject();
-    delete studentObj.password;
+    const token = createSessionToken(newStudent.usn);
+    const sanitizedObj = sanitizeStudent(newStudent);
 
     return res.status(201).json({
       success: true,
       message: 'Registration successful. A verification email has been sent to your inbox.',
-      student: studentObj
+      token,
+      sessionToken: token,
+      student: sanitizedObj
     });
 
   } catch (error) {
     console.error('Registration error:', error);
     if (error.code === 11000) {
-      return res.status(400).json({ success: false, message: 'This USN or Email is already registered.' });
+      return res.status(400).json({ success: false, message: 'Enrollment Number (USN) or Email is already registered.' });
     }
     return res.status(500).json({ success: false, message: 'Server error during registration. Please try again.' });
   }
 };
-

@@ -1,12 +1,13 @@
 const connectDB = require('../../lib/mongodb');
 const Student = require('../../models/Student');
 const bcrypt = require('bcryptjs');
+const { createSessionToken, sanitizeStudent } = require('../../lib/auth-session');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, X-Session-Token');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -44,13 +45,15 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ success: false, incorrectPassword: true, message: 'The password you entered is incorrect.' });
     }
 
-    const studentObj = student.toObject();
-    delete studentObj.password;
+    const token = createSessionToken(student.usn);
+    const sanitizedObj = sanitizeStudent(student);
 
     const responsePayload = {
       success: true,
       message: 'Login successful.',
-      student: studentObj
+      token,
+      sessionToken: token,
+      student: sanitizedObj
     };
 
     if (!student.email) {

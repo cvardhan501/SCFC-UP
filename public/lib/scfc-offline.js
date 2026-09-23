@@ -272,6 +272,13 @@
       return '';
     }
 
+    getSessionToken() {
+      if (typeof localStorage !== 'undefined') {
+        return localStorage.getItem('scfc_session_token') || '';
+      }
+      return '';
+    }
+
     async enqueueChange(entityType, entityId, operation, payload) {
       const usn = this.getActiveUSN();
       if (!usn) return;
@@ -290,6 +297,9 @@
     async triggerSync() {
       const usn = this.getActiveUSN();
       if (!usn || this.isSyncing) return;
+
+      const token = this.getSessionToken();
+      if (!token) return;
 
       if (!navigator.onLine) {
         this.isOnline = false;
@@ -321,7 +331,11 @@
 
         const res = await fetch(`/api/student/${encodeURIComponent(usn)}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            'X-Session-Token': token
+          },
           body: JSON.stringify({
             semesters: localData.semesters || {},
             examConfig: localData.examConfig || {},
@@ -351,6 +365,9 @@
           }
 
           this.notifyStatus('synced', 'Saved & Synced to Database');
+        } else if (res.status === 401) {
+          console.warn('[SyncEngine] Backend sync unauthorized (401). Pausing sync until re-authenticated.');
+          this.notifyStatus('unauthenticated', 'Session unauthenticated');
         } else {
           console.warn('[SyncEngine] Backend sync server returned error status:', res.status);
           await this.handleSyncFailure(pendingItems);
@@ -380,8 +397,16 @@
       const currentUsn = this.getActiveUSN();
       if (!currentUsn || currentUsn !== usn) return;
 
+      const token = this.getSessionToken();
+      if (!token) return;
+
       try {
-        const res = await fetch(`/api/student/${encodeURIComponent(usn)}`);
+        const res = await fetch(`/api/student/${encodeURIComponent(usn)}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'X-Session-Token': token
+          }
+        });
         if (res.ok) {
           const contentType = res.headers.get('content-type') || '';
           if (!contentType.includes('application/json')) return;
@@ -395,6 +420,8 @@
               console.log('[SyncEngine] Updated local IndexedDB with latest MongoDB state for USN:', usn);
             }
           }
+        } else if (res.status === 401) {
+          console.warn('[SyncEngine] Server pull unauthorized (401). Pausing sync.');
         }
       } catch (err) {
         console.log('[SyncEngine] Offline pull fallback:', err);

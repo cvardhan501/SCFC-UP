@@ -3,11 +3,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const crypto = require('crypto');
 require('dotenv').config();
 
 const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
 const { sendPasswordResetEmail, sendVerificationEmail, sendChangeEmailVerification } = require('./lib/email');
+const { createSessionToken, authorizeStudentAccess, sanitizeStudent } = require('./lib/auth-session');
 
 // In-memory rate limiting for forgot password requests (cooldown tracking)
 const forgotPasswordCooldowns = new Map();
@@ -186,7 +187,9 @@ app.post('/api/auth/register', async (req, res) => {
       emailVerificationToken: verificationToken,
       password: hashed,
       currentSemester: 3,
-      theme: 'light',
+      semesterPreferenceSet: false,
+      theme: 'dark',
+      themePreferenceSet: false,
       semesters: initialSemesters,
       history: [],
       tasks: []
@@ -203,13 +206,15 @@ app.post('/api/auth/register', async (req, res) => {
       token: verificationToken
     }).catch(err => console.error('Verification email error:', err));
 
-    const studentObj = newStudent.toObject();
-    delete studentObj.password;
+    const token = createSessionToken(newStudent.usn);
+    const sanitizedObj = sanitizeStudent(newStudent);
 
     return res.status(201).json({
       success: true,
       message: 'Registration successful. A verification email has been sent to your inbox.',
-      student: studentObj
+      token,
+      sessionToken: token,
+      student: sanitizedObj
     });
   } catch (error) {
     console.error('Registration error:', error);
@@ -255,13 +260,15 @@ app.post('/api/auth/login', async (req, res) => {
       await student.save();
     }
 
-    const studentObj = student.toObject();
-    delete studentObj.password;
+    const token = createSessionToken(student.usn);
+    const sanitizedObj = sanitizeStudent(student);
 
     const responsePayload = {
       success: true,
       message: 'Login successful.',
-      student: studentObj
+      token,
+      sessionToken: token,
+      student: sanitizedObj
     };
 
     // Flag if existing account lacks an email
@@ -714,13 +721,22 @@ app.get('/api/student/:usn', async (req, res) => {
   res.setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate');
   try {
     const cleanUsn = req.params.usn.trim().toUpperCase();
+
+    const authResult = authorizeStudentAccess(req, cleanUsn);
+    if (!authResult.authenticated) {
+      return res.status(401).json({ success: false, message: authResult.message });
+    }
+    if (!authResult.authorized) {
+      return res.status(403).json({ success: false, message: authResult.message });
+    }
+
     const student = await Student.findOne({ usn: cleanUsn });
 
     if (!student) {
       return res.status(404).json({ success: false, message: 'Student profile not found.' });
     }
 
-    return res.json({ success: true, student });
+    return res.json({ success: true, student: sanitizeStudent(student) });
   } catch (error) {
     console.error('Fetch student error:', error);
     return res.status(500).json({ success: false, message: 'Failed to retrieve student data.' });
@@ -733,7 +749,20 @@ app.get('/api/student/:usn', async (req, res) => {
 app.put('/api/student/:usn', async (req, res) => {
   try {
     const cleanUsn = req.params.usn.trim().toUpperCase();
-    const { name, theme, currentSemester, semesters, history, tasks, examConfig, timetable, trackerConfig } = req.body;
+
+    const authResult = authorizeStudentAccess(req, cleanUsn);
+    if (!authResult.authenticated) {
+      return res.status(401).json({ success: false, message: authResult.message });
+    }
+    if (!authResult.authorized) {
+      return res.status(403).json({ success: false, message: authResult.message });
+    }
+
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ success: false, message: 'Invalid request data.' });
+    }
+
+    const { name, theme, themePreferenceSet, currentSemester, semesterPreferenceSet, semesters, history, tasks, examConfig, timetable, trackerConfig } = req.body;
 
     const student = await Student.findOne({ usn: cleanUsn });
     if (!student) {
@@ -743,7 +772,9 @@ app.put('/api/student/:usn', async (req, res) => {
     // Apply updates
     if (name !== undefined) student.name = name.trim();
     if (theme !== undefined) student.theme = theme;
+    if (themePreferenceSet !== undefined) student.themePreferenceSet = Boolean(themePreferenceSet);
     if (currentSemester !== undefined) student.currentSemester = currentSemester;
+    if (semesterPreferenceSet !== undefined) student.semesterPreferenceSet = Boolean(semesterPreferenceSet);
     if (history !== undefined) student.history = history;
     if (tasks !== undefined) student.tasks = tasks;
 
@@ -773,7 +804,7 @@ app.put('/api/student/:usn', async (req, res) => {
     return res.json({
       success: true,
       message: 'Data auto-saved successfully.',
-      student
+      student: sanitizeStudent(student)
     });
   } catch (error) {
     console.error('Auto-save error:', error);

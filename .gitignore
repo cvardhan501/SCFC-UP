@@ -8,3 +8,7 @@ node_modules/
 
 # Vercel
 .vercel/
+
+# Scratch directory
+scratch/
+

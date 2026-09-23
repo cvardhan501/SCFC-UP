@@ -84,11 +84,19 @@ const StudentSchema = new mongoose.Schema({
   },
   theme: {
     type: String,
-    default: 'light'
+    default: 'dark'
+  },
+  themePreferenceSet: {
+    type: Boolean,
+    default: false
   },
   currentSemester: {
     type: Number,
     default: 3
+  },
+  semesterPreferenceSet: {
+    type: Boolean,
+    default: false
   },
   // Use a flexible structure to preserve existing frontend expectations
   semesters: {
