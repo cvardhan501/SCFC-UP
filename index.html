@@ -1649,87 +1649,7 @@
       }
     }
 
-    /* Print layout adjustments to avoid overlapping header/text */
-    @media print {
-      * {
-        -webkit-print-color-adjust: exact;
-        color-adjust: exact;
-      }
 
-      body {
-        background: #fff !important;
-        color: #000 !important;
-      }
-
-      /* leave space for browser print header to avoid overlap */
-      body,
-      #printableReport {
-        padding-top: 22mm !important;
-      }
-
-      /* Hide non-essential UI */
-      .dock,
-      .topbar,
-      .rsidebar,
-      .ws-controls,
-      .dock-logo,
-      .dock-user {
-        display: none !important;
-      }
-
-      /* Use single-column shell for print */
-      .shell {
-        grid-template-columns: 1fr !important;
-        max-width: 100% !important;
-        padding: 0 !important;
-      }
-
-      /* Reduce hero size so header doesn't overlap */
-      .hero h1 {
-        font-size: 20px !important;
-        line-height: 1.1 !important;
-      }
-
-      .hero p {
-        font-size: 12px !important;
-        color: #333 !important;
-      }
-
-      /* Make cards print-friendly */
-      .dash-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px !important;
-      }
-
-      .dash-grid .glass.p-6 {
-        min-height: 120px !important;
-        padding: 12px !important;
-        background: transparent !important;
-        box-shadow: none !important;
-        border: 1px solid #ddd !important;
-      }
-
-      .dash-grid .glass.p-6 .val {
-        font-size: 1.6rem !important;
-        color: #000 !important;
-      }
-
-      .glass::before,
-      .glass.spot::after {
-        display: none !important;
-      }
-
-      /* hide large hero/banner that collides with browser print header */
-      .hero {
-        display: none !important;
-      }
-
-      /* Prevent page breaks inside cards */
-      .glass {
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
-    }
 
     .dash-grid .glass.p-6 p {
       margin: 0;
@@ -3450,25 +3370,53 @@
       }
     }
 
-    /* ---------------- PRINT LAYOUT STYLES ---------------- */
+    /* ---------------- PRINT LAYOUT STYLES (MODERN CLEAN & PROFESSIONAL BLUE) ---------------- */
     @media print {
-      body {
-        background: #ffffff !important;
-        color: #000000 !important;
+      * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
 
+      html,
+      body,
+      :root {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        background-image: none !important;
+        color: #0F172A !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+      }
+
+      html::before,
+      html::after,
+      body::before,
+      body::after {
+        display: none !important;
+        background: none !important;
+        content: none !important;
+      }
+
       .aurora-wrap,
+      .blob,
       .dock,
       .topbar,
       .mobile-bottomnav,
       .fab,
-      .modal-overlay {
+      .modal-overlay,
+      .hero,
+      #auroraBg,
+      canvas {
         display: none !important;
+        background: none !important;
       }
 
-      body>*:not(#printableReport) {
+      body > *:not(#printableReport) {
         display: none !important;
       }
 
@@ -3479,25 +3427,48 @@
         top: auto !important;
         width: 100% !important;
         max-width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
         background: #ffffff !important;
-        color: #000000 !important;
+        background-color: #ffffff !important;
+        background-image: none !important;
+        color: #0F172A !important;
         margin: 0 auto !important;
         padding: 5mm !important;
+        box-shadow: none !important;
+        border: none !important;
       }
 
       #printableReport * {
-        color: #000000 !important;
+        box-sizing: border-box !important;
       }
 
-      #printableReport table,
-      #printableReport th,
-      #printableReport td {
-        border-color: #cccccc !important;
+      #printableReport table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        page-break-inside: auto !important;
+        break-inside: auto !important;
+      }
+
+      #printableReport thead {
+        display: table-header-group !important;
+      }
+
+      #printableReport tbody {
+        display: table-row-group !important;
+      }
+
+      #printableReport tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
 
       @page {
         size: auto;
-        margin: 10mm;
+        margin: 8mm;
+        background: #ffffff;
       }
     }
 
@@ -4470,6 +4441,7 @@
                 </tbody>
               </table>
             </div>
+            <div id="timetableLegendContainer"></div>
           </div>
 
           <footer class="app-footer">
@@ -4793,7 +4765,7 @@
               <h3>Courses Completed</h3>
               <div class="val" id="trackerCompletedCourses" style="font-size:36px; margin: 10px 0; color:var(--green);">
                 0</div>
-              <p style="color:var(--ink-soft); font-size:13px;">Courses with grade D or higher</p>
+              <p style="color:var(--ink-soft); font-size:13px;">Courses with grade E or higher</p>
             </div>
             <div class="glass p-6">
               <h3>Courses Pending</h3>
@@ -6038,6 +6010,7 @@
 
       </div>
     </div>
+  </div>
 </div>
 
 <!-- PRINTABLE CLEAN REPORT CONTAINER (PRINT ONLY) -->
@@ -6320,8 +6293,8 @@
         'Fullstack Development': 'Full Stack Development'
       });
 
-      const TRACKER_PASS_GRADES = new Set(['S', 'A', 'B', 'C', 'D']);
-      const TRACKER_PENDING_GRADES = new Set(['E', 'F', 'ABSENT', 'NOT ATTEMPTED', 'PENDING']);
+      const TRACKER_PASS_GRADES = new Set(['S', 'A', 'B', 'C', 'D', 'E']);
+      const TRACKER_PENDING_GRADES = new Set(['F', 'ABSENT', 'NOT ATTEMPTED', 'PENDING']);
       const trackerExpandedState = {};
       const trackerSectionState = {};
 
@@ -8594,6 +8567,42 @@
         });
       }
 
+      /* =========================================================
+         DETERMINISTIC SUBJECT COLOR PALETTE & MAPPING
+      ========================================================= */
+      const SUBJECT_PALETTE = [
+        { border: '#3B82F6', bgDark: 'rgba(59, 130, 246, 0.18)', bgPrint: '#EFF6FF', textDark: '#60A5FA', textPrint: '#1E40AF' }, // Blue
+        { border: '#8B5CF6', bgDark: 'rgba(139, 92, 246, 0.18)', bgPrint: '#F5F3FF', textDark: '#A78BFA', textPrint: '#6D28D9' }, // Violet/Purple
+        { border: '#10B981', bgDark: 'rgba(16, 185, 129, 0.18)', bgPrint: '#ECFDF5', textDark: '#34D399', textPrint: '#047857' }, // Emerald/Green
+        { border: '#F59E0B', bgDark: 'rgba(245, 158, 11, 0.18)', bgPrint: '#FFFBEB', textDark: '#FBBF24', textPrint: '#B45309' }, // Amber/Orange
+        { border: '#06B6D4', bgDark: 'rgba(6, 182, 212, 0.18)', bgPrint: '#ECFEFF', textDark: '#22D3EE', textPrint: '#0E7490' }, // Cyan
+        { border: '#EC4899', bgDark: 'rgba(236, 72, 153, 0.18)', bgPrint: '#FDF2F8', textDark: '#F472B6', textPrint: '#BE185D' }, // Pink
+        { border: '#6366F1', bgDark: 'rgba(99, 102, 241, 0.18)', bgPrint: '#EEF2FF', textDark: '#818CF8', textPrint: '#4338CA' }, // Indigo
+        { border: '#14B8A6', bgDark: 'rgba(20, 184, 166, 0.18)', bgPrint: '#F0FDFA', textDark: '#2DD4BF', textPrint: '#0F766E' }, // Teal
+        { border: '#F97316', bgDark: 'rgba(249, 115, 22, 0.18)', bgPrint: '#FFF7ED', textDark: '#FB923C', textPrint: '#C2410C' }, // Orange
+        { border: '#84CC16', bgDark: 'rgba(132, 204, 22, 0.18)', bgPrint: '#F7FEE7', textDark: '#A3E635', textPrint: '#4D7C0F' }  // Lime/Gold
+      ];
+
+      function getSubjectColor(courseCode, activeCourses = []) {
+        if (!courseCode) return SUBJECT_PALETTE[0];
+        const code = String(courseCode).trim().toUpperCase();
+
+        if (Array.isArray(activeCourses) && activeCourses.length > 0) {
+          const uniqueCodes = Array.from(new Set(activeCourses.map(c => String(c.code || c).trim().toUpperCase()))).sort();
+          const idx = uniqueCodes.indexOf(code);
+          if (idx !== -1) {
+            return SUBJECT_PALETTE[idx % SUBJECT_PALETTE.length];
+          }
+        }
+
+        let hash = 0;
+        for (let i = 0; i < code.length; i++) {
+          hash = (hash << 5) - hash + code.charCodeAt(i);
+          hash |= 0;
+        }
+        return SUBJECT_PALETTE[Math.abs(hash) % SUBJECT_PALETTE.length];
+      }
+
       function renderTimetable() {
         initTimetableListeners();
         const semNum = Number(state.currentSemester) || 3;
@@ -8643,8 +8652,10 @@
         const grid = { MON: Array(9).fill(null), TUE: Array(9).fill(null), WED: Array(9).fill(null), THU: Array(9).fill(null), FRI: Array(9).fill(null) };
 
         rows.forEach(r => {
-          const typeColor = r.type === 'Theory + Lab' ? 'rgba(168,85,247,0.15)' : (r.type === 'Lab' ? 'rgba(34,197,94,0.15)' : 'rgba(56,189,248,0.15)');
-          const borderColor = r.type === 'Theory + Lab' ? '#A855F7' : (r.type === 'Lab' ? '#22C55E' : '#38BDF8');
+          const colorObj = getSubjectColor(r.code, rows);
+          const typeColor = colorObj.bgDark;
+          const borderColor = colorObj.border;
+          const textDarkColor = colorObj.textDark;
 
           const renderCell = (mapping, slotName, isLab = false) => {
             const instName = isLab ? (r.labInstructor || r.instructor || 'Faculty Name') : (r.instructor || 'Faculty Name');
@@ -8653,7 +8664,7 @@
                 const cellHtml = `<div class="tt-card-box" style="padding:5px 6px; background:${typeColor}; border-left:3.5px solid ${borderColor}; border-radius:6px; font-size:11px; height:100%; display:flex; flex-direction:column; justify-content:center; text-align:center; box-sizing:border-box; width:100%; min-width:0; max-width:100%; overflow:hidden;">
                          <b style="color:#ffffff; font-size:10.5px; font-weight:700; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; min-width:0; max-width:100%;">${r.code}</b>
                          <span class="tt-course-name" style="color:var(--ink-soft); font-size:9px; line-height:1.15; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; text-overflow:ellipsis; margin-top:2px; word-break:break-word; min-width:0; max-width:100%;" title="${r.name}">${r.name}</span>
-                         <div style="margin-top:2px; font-weight:700; font-size:9px; color:${borderColor}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; max-width:100%;">${slotName}</div>
+                         <div style="margin-top:2px; font-weight:700; font-size:9px; color:${textDarkColor}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; max-width:100%;">${slotName}</div>
                          <div style="font-size:8.5px; color:var(--ink-soft); margin-top:1px; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; max-width:100%;" title="${instName}">${instName}</div>
                       </div>`;
 
@@ -8709,6 +8720,31 @@
             tr += `</tr>`;
             return tr;
           }).join('');
+        }
+
+        // Render Subject Color Key Legend
+        const legendContainer = document.getElementById('timetableLegendContainer');
+        if (legendContainer) {
+          if (rows.length === 0) {
+            legendContainer.innerHTML = '';
+          } else {
+            legendContainer.innerHTML = `
+              <div class="tt-legend" style="margin-top:14px; margin-bottom:18px; padding:12px 16px; background:var(--glass-bg-2); border:1px solid var(--glass-border); border-radius:8px;">
+                <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                  <span style="font-size:12px;">🎨</span> SUBJECT COLOR KEY
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:10px 18px; font-size:11px;">
+                  ${rows.map(c => {
+                    const col = getSubjectColor(c.code, rows);
+                    return `<div style="display:flex; align-items:center; gap:6px;">
+                      <span style="width:10px; height:10px; border-radius:50%; background:${col.border}; display:inline-block; flex-shrink:0;"></span>
+                      <strong style="color:var(--ink); font-size:11px;">${c.code}</strong>
+                      <span style="color:var(--ink-soft); font-size:10.5px;">— ${c.name}</span>
+                    </div>`;
+                  }).join('')}
+                </div>
+              </div>`;
+          }
         }
       }
 
@@ -9138,66 +9174,92 @@
 
         let rowsHtml = '';
         if (courses.length === 0) {
-          rowsHtml = `<tr><td colspan="6" style="text-align:center; padding:15px; color:#666;">No courses registered for Semester ${semNum}.</td></tr>`;
+          rowsHtml = `<tr><td colspan="7" style="text-align:center; padding:16px; color:#64748B;">No courses registered for Semester ${semNum}.</td></tr>`;
         } else {
           rowsHtml = courses.map((c, i) => {
             const gp = gpFor(c.grade);
             const cp = c.credits * gp;
-            return `<tr>
-        <td style="padding:8px; border-bottom:1px solid #ddd; font-family:monospace;">${i + 1}</td>
-        <td style="padding:8px; border-bottom:1px solid #ddd;">
-          <strong>${c.name}</strong><br><small style="color:#666;">${c.code}</small>
-        </td>
-        <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${c.credits}</td>
-        <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center; font-weight:bold;">${c.grade}</td>
-        <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${gp}</td>
-        <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${cp}</td>
-      </tr>`;
+            const isPass = TRACKER_PASS_GRADES.has(String(c.grade || '').toUpperCase());
+            const gradeBadge = isPass
+              ? `<span style="background:#DCFCE7; color:#15803D; padding:2px 8px; border-radius:4px; font-weight:800; font-size:11px;">${c.grade}</span>`
+              : `<span style="background:#FEE2E2; color:#B91C1C; padding:2px 8px; border-radius:4px; font-weight:800; font-size:11px;">${c.grade || 'F'}</span>`;
+
+            const bgClr = i % 2 === 0 ? '#FFFFFF' : '#F8FAFC';
+
+            return `<tr style="background:${bgClr}; border-bottom:1px solid #E2E8F0; font-size:12px;">
+              <td style="padding:9px 10px; border-right:1px solid #E2E8F0; text-align:center; font-weight:600; color:#475569;">${i + 1}</td>
+              <td style="padding:9px 10px; border-right:1px solid #E2E8F0;">
+                <strong style="color:#0F172A; font-size:12.5px;">${c.name}</strong><br><small style="color:#64748B; font-size:11px;">${c.code}</small>
+              </td>
+              <td style="padding:9px 10px; border-right:1px solid #E2E8F0; text-align:center; color:#0F172A;">${c.credits}</td>
+              <td style="padding:9px 10px; border-right:1px solid #E2E8F0; text-align:center;">${gradeBadge}</td>
+              <td style="padding:9px 10px; border-right:1px solid #E2E8F0; text-align:center; color:#0F172A; font-weight:600;">${gp}</td>
+              <td style="padding:9px 10px; border-right:1px solid #E2E8F0; text-align:center; color:#0F172A; font-weight:600;">${cp}</td>
+              <td style="padding:9px 10px; text-align:center;">
+                ${isPass ? '<span style="color:#15803D; font-weight:700; font-size:11px;">PASSED</span>' : '<span style="color:#B91C1C; font-weight:700; font-size:11px;">FAILED</span>'}
+              </td>
+            </tr>`;
           }).join('');
         }
 
         const printArea = document.getElementById('printableReport');
         printArea.innerHTML = `
-    <div style="font-family:'Inter', Arial, sans-serif; max-width:800px; margin:0 auto; padding:20px; color:#000; background:#fff;">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #000; padding-bottom:12px; margin-bottom:20px;">
-        <div>
-          <h1 style="font-size:22px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.05em;">SCFC Academic Grade Report</h1>
-          <p style="margin:4px 0 0 0; font-size:13px; color:#444;">School of Computer Science & Engineering</p>
+    <div style="font-family:'Inter', Arial, sans-serif; max-width:960px; margin:0 auto; padding:16px; color:#0F172A; background:#ffffff; height:auto; min-height:0; max-height:none; overflow:visible;">
+      <!-- REPORT HEADER -->
+      <div style="background:#1E3A8A; color:#ffffff; padding:16px 20px; border-radius:6px 6px 0 0; display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:26px;">🎓</span>
+          <div>
+            <h1 style="font-size:20px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.05em; color:#ffffff;">SCFC StudentOS</h1>
+            <div style="font-size:13px; font-weight:600; color:#93C5FD; margin-top:2px;">Academic Grade Report</div>
+          </div>
         </div>
         <div style="text-align:right;">
-          <div style="font-size:11px; color:#666;">Date Generated</div>
-          <div style="font-size:13px; font-weight:600;">${new Date().toLocaleDateString()}</div>
+          <div style="font-size:13px; font-weight:700; color:#ffffff;">School of Computer Science & Engineering</div>
+          <div style="font-size:12px; color:#93C5FD; margin-top:2px;">Amity University Bengaluru</div>
+        </div>
+      </div>
+      <div style="height:4px; background:#2563EB; margin-bottom:16px;"></div>
+
+      <!-- STUDENT INFORMATION CARD -->
+      <div style="background:#F0F9FF; border:1px solid #BFDBFE; border-radius:6px; padding:12px 16px; margin-bottom:20px; display:grid; grid-template-columns:repeat(5, 1fr); gap:12px; page-break-inside:avoid; break-inside:avoid;">
+        <div>
+          <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Student Name</span>
+          <strong style="font-size:14px; color:#0F172A;">${state.studentName || 'N/A'}</strong>
+        </div>
+        <div>
+          <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">USN</span>
+          <strong style="font-size:14px; color:#0F172A;">${state.usn || 'N/A'}</strong>
+        </div>
+        <div>
+          <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Academic Year</span>
+          <strong style="font-size:14px; color:#0F172A;">${getAcademicYear(semNum)}</strong>
+        </div>
+        <div>
+          <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Semester</span>
+          <strong style="font-size:14px; color:#0F172A;">Semester ${semNum}</strong>
+        </div>
+        <div>
+          <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Date Generated</span>
+          <strong style="font-size:14px; color:#0F172A;">${new Date().toLocaleDateString()}</strong>
         </div>
       </div>
 
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:8px; padding:16px; margin-bottom:24px;">
-        <div>
-          <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Student Name</span>
-          <strong style="font-size:16px; color:#111;">${state.studentName || 'N/A'}</strong>
-        </div>
-        <div>
-          <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">USN</span>
-          <strong style="font-size:16px; color:#111;">${state.usn || 'N/A'}</strong>
-        </div>
-        <div>
-          <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Academic Year</span>
-          <strong style="font-size:16px; color:#111;">${getAcademicYear(semNum)}</strong>
-        </div>
-        <div>
-          <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Semester</span>
-          <strong style="font-size:16px; color:#111;">Semester ${semNum}</strong>
-        </div>
+      <!-- SECTION HEADER -->
+      <div style="background:#2563EB; color:#ffffff; padding:6px 12px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; border-radius:4px; margin-bottom:10px; display:inline-block;">
+        SEMESTER SUBJECTS & GRADES
       </div>
 
-      <table style="width:100%; border-collapse:collapse; margin-bottom:24px; font-size:13px;">
+      <table style="width:100%; border-collapse:collapse; margin-bottom:20px; font-size:12px; border:1px solid #BFDBFE;">
         <thead>
-          <tr style="background:#f1f3f5; border-bottom:2px solid #dee2e6; text-align:left;">
-            <th style="padding:10px 8px; width:40px;">#</th>
-            <th style="padding:10px 8px;">Course Title & Code</th>
-            <th style="padding:10px 8px; text-align:center;">Credits</th>
-            <th style="padding:10px 8px; text-align:center;">Grade</th>
-            <th style="padding:10px 8px; text-align:center;">GP</th>
-            <th style="padding:10px 8px; text-align:center;">CP</th>
+          <tr style="background:#1E3A8A; color:#ffffff; text-align:left;">
+            <th style="padding:9px 10px; width:40px; text-align:center; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">#</th>
+            <th style="padding:9px 10px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">Course Title & Code</th>
+            <th style="padding:9px 10px; text-align:center; width:65px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">Credits</th>
+            <th style="padding:9px 10px; text-align:center; width:65px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">Grade</th>
+            <th style="padding:9px 10px; text-align:center; width:55px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">GP</th>
+            <th style="padding:9px 10px; text-align:center; width:55px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">CP</th>
+            <th style="padding:9px 10px; text-align:center; width:80px; color:#ffffff; font-weight:700;">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -9205,23 +9267,26 @@
         </tbody>
       </table>
 
-      <div style="display:flex; justify-content:space-between; align-items:center; background:#f8f9fa; border:1.5px solid #000; border-radius:8px; padding:16px; margin-top:20px;">
+      <!-- SUMMARY CARD -->
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#F0F9FF; border:1.5px solid #BFDBFE; border-radius:6px; padding:14px 18px; margin-top:20px; page-break-inside:avoid; break-inside:avoid;">
         <div>
-          <span style="font-size:12px; color:#444; display:block;">Total Credits</span>
-          <strong style="font-size:18px;">${stat.credits}</strong>
+          <span style="font-size:11px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Total Credits Registered</span>
+          <strong style="font-size:18px; color:#0F172A;">${stat.credits} credits</strong>
         </div>
         <div style="text-align:center;">
-          <span style="font-size:12px; color:#444; display:block;">Semester SGPA</span>
-          <strong style="font-size:22px; color:#2563eb;">${stat.sgpa !== null ? stat.sgpa.toFixed(2) : 'N/A'}</strong>
+          <span style="font-size:11px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Semester SGPA</span>
+          <strong style="font-size:22px; color:#1D4ED8;">${stat.sgpa !== null ? stat.sgpa.toFixed(2) : 'N/A'}</strong>
         </div>
         <div style="text-align:right;">
-          <span style="font-size:12px; color:#444; display:block;">Overall CGPA</span>
-          <strong style="font-size:22px; color:#7c3aed;">${allStats.cgpa.toFixed(2)}</strong>
+          <span style="font-size:11px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Overall CGPA</span>
+          <strong style="font-size:22px; color:#1E3A8A;">${allStats.cgpa.toFixed(2)}</strong>
         </div>
       </div>
 
-      <div style="margin-top:40px; border-top:1px solid #eee; padding-top:12px; font-size:11px; color:#888; text-align:center;">
-        Computer-generated Unofficial Transcript • SCFC Grade Calculator
+      <!-- FOOTER -->
+      <div style="margin-top:30px; border-top:1px solid #BFDBFE; padding-top:10px; font-size:10.5px; color:#64748B; display:flex; justify-content:space-between; align-items:center; page-break-inside:avoid; break-inside:avoid;">
+        <div>Official Academic Grade Report • SCFC StudentOS • Amity University Bengaluru</div>
+        <div style="font-size:9.5px; color:#94A3B8; font-weight:500; letter-spacing:0.02em;">Designed &amp; Developed by C VISHNU VARDHAN</div>
       </div>
     </div>
   `;
@@ -9230,83 +9295,160 @@
       }
 
       function printTrackerReport() {
-        // collect all courses across semesters
-        let rows = '';
+        const degreeTotal = 160;
+
+        // Collect all registered courses across semesters 1..8
+        const gradeMap = new Map();
         for (let s = 1; s <= 8; s++) {
-          const courses = state.semesters[s] || [];
-          courses.forEach((c, i) => {
-            const gp = gpFor(c.grade);
-            const cp = c.credits * gp;
-            rows += `<tr>
-            <td style="padding:8px; border-bottom:1px solid #ddd;">${s}</td>
-            <td style="padding:8px; border-bottom:1px solid #ddd;">${c.name}<br><small style="color:#666;">${c.code}</small></td>
-            <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${c.credits}</td>
-            <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center; font-weight:bold;">${c.grade}</td>
-            <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${gp}</td>
-            <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${cp}</td>
-          </tr>`;
+          if (!state.semesters[s]) continue;
+          state.semesters[s].forEach(r => {
+            if (!gradeMap.has(r.code)) {
+              gradeMap.set(r.code, { ...r, _semester: s });
+            }
           });
         }
 
+        const registeredCourses = Array.from(gradeMap.values());
+        
+        // Calculated credit totals
+        const totalEarned = registeredCourses
+          .filter(isTrackerCourseCompleted)
+          .reduce((sum, r) => sum + Number(r.credits || 0), 0);
+
+        const totalPendingCredits = registeredCourses
+          .filter(r => getTrackerCourseStatus(r) === 'pending')
+          .reduce((sum, r) => sum + Number(r.credits || 0), 0);
+
+        const totalRemainingCredits = Math.max(0, degreeTotal - totalEarned);
+        const overallPct = Math.min(100, Math.round((totalEarned / degreeTotal) * 100));
         const allStats = computeAllStats();
+
+        // Build course breakdown rows across all 8 semesters
+        let rowsHtml = '';
+        for (let s = 1; s <= 8; s++) {
+          const courses = state.semesters[s] || [];
+          courses.forEach((c) => {
+            const gp = gpFor(c.grade);
+            const cp = c.credits * gp;
+            const status = getTrackerCourseStatus(c);
+            const statusBadge = status === 'completed'
+              ? '<span style="color:#166534; font-weight:700;">Completed</span>'
+              : (status === 'pending' ? '<span style="color:#854d0e; font-weight:700;">Pending</span>' : '<span style="color:#999; font-style:italic;">Not Started</span>');
+
+            rowsHtml += `<tr style="border-bottom:1px solid #ddd; font-size:12px;">
+              <td style="padding:8px; text-align:center; font-weight:700; background:#f8f9fa;">Sem ${s}</td>
+              <td style="padding:8px;"><strong>${c.code}</strong><br><small style="color:#555;">${c.name}</small></td>
+              <td style="padding:8px; text-align:center;">${c.credits}</td>
+              <td style="padding:8px; text-align:center; font-weight:bold;">${c.grade || '—'}</td>
+              <td style="padding:8px; text-align:center;">${gp}</td>
+              <td style="padding:8px; text-align:center;">${cp}</td>
+              <td style="padding:8px; text-align:center;">${statusBadge}</td>
+            </tr>`;
+          });
+        }
+
         const printArea = document.getElementById('printableReport');
         printArea.innerHTML = `
-      <div style="font-family:'Inter', Arial, sans-serif; max-width:900px; margin:0 auto; padding:16px; color:#000; background:#fff;">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #000; padding-bottom:12px; margin-bottom:20px;">
-          <div>
-            <h1 style="font-size:20px; font-weight:800; margin:0; text-transform:uppercase;">SCFC Tracker Report</h1>
-            <p style="margin:4px 0 0 0; font-size:12px; color:#444;">Student progress across semesters</p>
+      <div style="font-family:'Inter', Arial, sans-serif; max-width:960px; margin:0 auto; padding:16px; color:#0F172A; background:#ffffff; height:auto; min-height:0; max-height:none; overflow:visible;">
+        <!-- REPORT HEADER -->
+        <div style="background:#1E3A8A; color:#ffffff; padding:16px 20px; border-radius:6px 6px 0 0; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:26px;">🎓</span>
+            <div>
+              <h1 style="font-size:20px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.05em; color:#ffffff;">SCFC StudentOS</h1>
+              <div style="font-size:13px; font-weight:600; color:#93C5FD; margin-top:2px;">Credit Tracker & Degree Completion Report</div>
+            </div>
           </div>
           <div style="text-align:right;">
-            <div style="font-size:11px; color:#666;">Date Generated</div>
-            <div style="font-size:13px; font-weight:600;">${new Date().toLocaleDateString()}</div>
+            <div style="font-size:13px; font-weight:700; color:#ffffff;">School of Computer Science & Engineering</div>
+            <div style="font-size:12px; color:#93C5FD; margin-top:2px;">Amity University Bengaluru</div>
+          </div>
+        </div>
+        <div style="height:4px; background:#2563EB; margin-bottom:16px;"></div>
+
+        <!-- STUDENT INFORMATION CARD -->
+        <div style="background:#F0F9FF; border:1px solid #BFDBFE; border-radius:6px; padding:12px 16px; margin-bottom:20px; display:grid; grid-template-columns:repeat(5, 1fr); gap:12px; page-break-inside:avoid; break-inside:avoid;">
+          <div>
+            <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Student Name</span>
+            <strong style="font-size:14px; color:#0F172A;">${state.studentName || 'N/A'}</strong>
+          </div>
+          <div>
+            <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">USN</span>
+            <strong style="font-size:14px; color:#0F172A;">${state.usn || 'N/A'}</strong>
+          </div>
+          <div>
+            <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Active Semester</span>
+            <strong style="font-size:14px; color:#0F172A;">Semester ${state.currentSemester || 1}</strong>
+          </div>
+          <div>
+            <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Overall CGPA</span>
+            <strong style="font-size:14px; color:#1E3A8A;">${allStats.cgpa.toFixed(2)}</strong>
+          </div>
+          <div>
+            <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Date Generated</span>
+            <strong style="font-size:14px; color:#0F172A;">${new Date().toLocaleDateString()}</strong>
           </div>
         </div>
 
-        <div style="margin-bottom:16px; display:flex; gap:12px;">
-          <div style="flex:1;">
-            <span style="font-size:11px; text-transform:uppercase; color:#6c757d; display:block;">Student</span>
-            <strong style="font-size:14px;">${state.studentName || 'N/A'}</strong>
+        <!-- SECTION HEADER -->
+        <div style="background:#2563EB; color:#ffffff; padding:6px 12px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; border-radius:4px; margin-bottom:10px; display:inline-block;">
+          CREDIT PROGRESS SUMMARY
+        </div>
+
+        <!-- CREDITS PROGRESS SUMMARY METRICS -->
+        <div style="margin-bottom:20px; page-break-inside:avoid; break-inside:avoid;">
+          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; background:#F0F9FF; border:1.5px solid #BFDBFE; border-radius:6px; padding:14px 16px;">
+            <div style="text-align:center; border-right:1px solid #BFDBFE;">
+              <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Total Required</span>
+              <strong style="font-size:20px; color:#0F172A;">${degreeTotal} credits</strong>
+            </div>
+            <div style="text-align:center; border-right:1px solid #BFDBFE;">
+              <span style="font-size:10px; text-transform:uppercase; color:#15803D; font-weight:800; display:block;">Credits Earned</span>
+              <strong style="font-size:20px; color:#15803D;">${totalEarned} credits</strong>
+            </div>
+            <div style="text-align:center; border-right:1px solid #BFDBFE;">
+              <span style="font-size:10px; text-transform:uppercase; color:#B45309; font-weight:800; display:block;">Credits Pending</span>
+              <strong style="font-size:20px; color:#B45309;">${totalPendingCredits} credits</strong>
+            </div>
+            <div style="text-align:center;">
+              <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Credits Remaining</span>
+              <strong style="font-size:20px; color:#1E40AF;">${totalRemainingCredits} credits</strong>
+            </div>
           </div>
-          <div style="flex:1; text-align:center;">
-            <span style="font-size:11px; text-transform:uppercase; color:#6c757d; display:block;">USN</span>
-            <strong style="font-size:14px;">${state.usn || 'N/A'}</strong>
-          </div>
-          <div style="flex:1; text-align:right;">
-            <span style="font-size:11px; text-transform:uppercase; color:#6c757d; display:block;">Overall CGPA</span>
-            <strong style="font-size:14px; color:#7c3aed;">${allStats.cgpa.toFixed(2)}</strong>
+          <div style="margin-top:10px; font-size:12.5px; font-weight:700; color:#1E3A8A; text-align:center; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:4px; padding:8px;">
+            Degree Completion Status: ${totalEarned} / ${degreeTotal} credits completed (${overallPct}%)
           </div>
         </div>
 
-        <table style="width:100%; border-collapse:collapse; font-size:13px;">
-          <thead>
-            <tr style="background:#f1f3f5; border-bottom:2px solid #dee2e6; text-align:left;">
-              <th style="padding:10px; width:60px;">Sem</th>
-              <th style="padding:10px;">Course</th>
-              <th style="padding:10px; text-align:center;">Cr</th>
-              <th style="padding:10px; text-align:center;">Gr</th>
-              <th style="padding:10px; text-align:center;">GP</th>
-              <th style="padding:10px; text-align:center;">CP</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows || '<tr><td colspan="6" style="padding:12px; text-align:center; color:#666;">No courses available</td></tr>'}
-          </tbody>
-        </table>
+        <!-- SECTION HEADER -->
+        <div style="background:#2563EB; color:#ffffff; padding:6px 12px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; border-radius:4px; margin-bottom:10px; display:inline-block;">
+          FULL COURSE & SEMESTER HISTORY
+        </div>
 
-        <div style="margin-top:18px; display:flex; justify-content:space-between; gap:12px;">
-          <div style="flex:1;">
-            <span style="font-size:11px; color:#444; display:block;">Total Credits</span>
-            <strong style="font-size:16px;">${allStats.totalOverallCredits}</strong>
-          </div>
-          <div style="flex:1; text-align:center;">
-            <span style="font-size:11px; color:#444; display:block;">Semesters Completed</span>
-            <strong style="font-size:16px;">${allStats.completedCount}</strong>
-          </div>
-          <div style="flex:1; text-align:right;">
-            <span style="font-size:11px; color:#444; display:block;">Overall CGPA</span>
-            <strong style="font-size:16px; color:#7c3aed;">${allStats.cgpa.toFixed(2)}</strong>
-          </div>
+        <!-- COMPLETE COURSE BREAKDOWN -->
+        <div style="margin-bottom:16px;">
+          <table style="width:100%; border-collapse:collapse; margin-bottom:14px; font-size:12px; border:1px solid #BFDBFE;">
+            <thead>
+              <tr style="background:#1E3A8A; color:#ffffff; text-align:left;">
+                <th style="padding:9px 10px; width:65px; text-align:center; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">Sem</th>
+                <th style="padding:9px 10px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">Course Code & Title</th>
+                <th style="padding:9px 10px; text-align:center; width:65px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">Credits</th>
+                <th style="padding:9px 10px; text-align:center; width:65px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">Grade</th>
+                <th style="padding:9px 10px; text-align:center; width:55px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">GP</th>
+                <th style="padding:9px 10px; text-align:center; width:55px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">CP</th>
+                <th style="padding:9px 10px; text-align:center; width:90px; color:#ffffff; font-weight:700;">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml || '<tr><td colspan="7" style="padding:14px; text-align:center; color:#64748B;">No course history found</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FOOTER -->
+        <div style="border-top:1px solid #BFDBFE; margin-top:20px; padding-top:10px; font-size:10.5px; color:#64748B; display:flex; justify-content:space-between; align-items:center; page-break-inside:avoid; break-inside:avoid;">
+          <div>Official Credit Tracker Report • SCFC StudentOS • Amity University Bengaluru</div>
+          <div style="font-size:9.5px; color:#94A3B8; font-weight:500; letter-spacing:0.02em;">Designed &amp; Developed by C VISHNU VARDHAN</div>
         </div>
       </div>`;
 
@@ -9342,18 +9484,20 @@
         courses.forEach(r => {
           const isLabOnly = r.type === 'Lab';
           const isTheoryOnly = r.type === 'Theory';
-          const typeColor = r.type === 'Theory + Lab' ? 'rgba(168,85,247,0.1)' : (r.type === 'Lab' ? 'rgba(34,197,94,0.1)' : 'rgba(56,189,248,0.1)');
-          const borderColor = r.type === 'Theory + Lab' ? '#A855F7' : (r.type === 'Lab' ? '#22C55E' : '#38BDF8');
+          const colorObj = getSubjectColor(r.code, courses);
+          const typeColor = colorObj.bgPrint;
+          const borderColor = colorObj.border;
+          const textPrintColor = colorObj.textPrint;
 
           const renderCell = (mapping, slotName, isLab = false) => {
             const instName = isLab ? (r.labInstructor || r.instructor || 'Faculty Name') : (r.instructor || 'Faculty Name');
             mapping.forEach(m => {
               if (grid[m.d]) {
-                const cellHtml = `<div style="padding:4px; background:${typeColor}; border-left:3px solid ${borderColor}; border-radius:4px; font-size:10px;">
-                <b style="color:#111; font-size:10.5px;">${r.code}</b><br>
-                <span style="color:#333; font-size:9.5px;">${r.name}</span><br>
-                <strong style="color:${borderColor}; font-size:9px;">${slotName}</strong><br>
-                <span style="color:#555; font-size:9px;">${instName}</span>
+                const cellHtml = `<div style="padding:4px; background:${typeColor}; border-left:3.5px solid ${borderColor}; border-radius:4px; font-size:10px;">
+                <b style="color:#0F172A; font-size:10.5px;">${r.code}</b><br>
+                <span style="color:#334155; font-size:9.5px;">${r.name}</span><br>
+                <strong style="color:${textPrintColor}; font-size:9px;">${slotName}</strong><br>
+                <span style="color:#64748B; font-size:9px;">${instName}</span>
               </div>`;
                 if (m.span === 2) {
                   grid[m.d][m.c] = { html: cellHtml, span: 2 };
@@ -9384,7 +9528,7 @@
 
         const times = ['9:00-9:50', '9:55-10:45', '10:50-11:40', '11:45-12:35', 'LUNCH', '1:15-2:05', '2:10-3:00', '3:05-3:55', '4:00-4:50'];
 
-        let gridTableHtml = `<table style="width:100%; border-collapse:collapse; text-align:center; font-size:11px; margin-bottom:16px;">
+        let gridTableHtml = `<table style="width:100%; border-collapse:collapse; text-align:center; font-size:11px; margin-bottom:12px;">
         <thead>
           <tr style="background:#f1f3f5;">
             <th style="padding:6px; border:1px solid #ccc; font-size:10px;">Day / Time</th>
@@ -9412,59 +9556,106 @@
         });
         gridTableHtml += `</tbody></table>`;
 
+        let legendPrintHtml = '';
+        if (courses.length > 0) {
+          legendPrintHtml = `
+            <div style="margin-top:10px; margin-bottom:16px; padding:10px 14px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; page-break-inside:avoid; break-inside:avoid;">
+              <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#1E3A8A; margin-bottom:6px;">
+                SUBJECT COLOR KEY
+              </div>
+              <div style="display:flex; flex-wrap:wrap; gap:8px 18px; font-size:10.5px;">
+                ${courses.map(c => {
+                  const col = getSubjectColor(c.code, courses);
+                  return `<div style="display:flex; align-items:center; gap:6px;">
+                    <span style="width:9px; height:9px; border-radius:50%; background:${col.border}; display:inline-block; flex-shrink:0;"></span>
+                    <strong style="color:#0F172A;">${c.code}</strong>
+                    <span style="color:#475569;">— ${c.name}</span>
+                  </div>`;
+                }).join('')}
+              </div>
+            </div>`;
+        }
+
         return `
-        <div style="font-family:'Inter', Arial, sans-serif; max-width:960px; margin:0 auto; padding:16px; color:#000; background:#fff; page-break-after:always; break-after:page;">
-          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #000; padding-bottom:10px; margin-bottom:14px;">
-            <div>
-              <h1 style="font-size:20px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.05em;">SCFC Academic Timetable</h1>
-              <p style="margin:2px 0 0 0; font-size:12px; color:#444;">School of Computer Science & Engineering</p>
+        <div style="font-family:'Inter', Arial, sans-serif; max-width:960px; margin:0 auto; padding:16px; color:#0F172A; background:#ffffff; height:auto; min-height:0; max-height:none; overflow:visible;">
+          <!-- REPORT HEADER -->
+          <div style="background:#1E3A8A; color:#ffffff; padding:16px 20px; border-radius:6px 6px 0 0; display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:26px;">🎓</span>
+              <div>
+                <h1 style="font-size:20px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.05em; color:#ffffff;">SCFC StudentOS</h1>
+                <div style="font-size:13px; font-weight:600; color:#93C5FD; margin-top:2px;">Academic Timetable</div>
+              </div>
             </div>
             <div style="text-align:right;">
-              <div style="font-size:11px; color:#666;">Date Generated</div>
-              <div style="font-size:12px; font-weight:600;">${new Date().toLocaleDateString()}</div>
+              <div style="font-size:13px; font-weight:700; color:#ffffff;">School of Computer Science & Engineering</div>
+              <div style="font-size:12px; color:#93C5FD; margin-top:2px;">Amity University Bengaluru</div>
+            </div>
+          </div>
+          <div style="height:4px; background:#2563EB; margin-bottom:16px;"></div>
+
+          <!-- STUDENT INFORMATION CARD -->
+          <div style="background:#F0F9FF; border:1px solid #BFDBFE; border-radius:6px; padding:12px 16px; margin-bottom:20px; display:grid; grid-template-columns:repeat(5, 1fr); gap:12px; page-break-inside:avoid; break-inside:avoid;">
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Student Name</span>
+              <strong style="font-size:14px; color:#0F172A;">${state.studentName || 'N/A'}</strong>
+            </div>
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">USN</span>
+              <strong style="font-size:14px; color:#0F172A;">${state.usn || 'N/A'}</strong>
+            </div>
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Academic Year</span>
+              <strong style="font-size:14px; color:#0F172A;">${getAcademicYear(semNum)}</strong>
+            </div>
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Semester</span>
+              <strong style="font-size:14px; color:#0F172A;">Semester ${semNum}</strong>
+            </div>
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Date Generated</span>
+              <strong style="font-size:14px; color:#0F172A;">${new Date().toLocaleDateString()}</strong>
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:8px; padding:10px 14px; margin-bottom:16px;">
-            <div>
-              <span style="font-size:10px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Student Name</span>
-              <strong style="font-size:14px; color:#111;">${state.studentName || 'N/A'}</strong>
-            </div>
-            <div>
-              <span style="font-size:10px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">USN</span>
-              <strong style="font-size:14px; color:#111;">${state.usn || 'N/A'}</strong>
-            </div>
-            <div>
-              <span style="font-size:10px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Academic Year</span>
-              <strong style="font-size:14px; color:#111;">${getAcademicYear(semNum)}</strong>
-            </div>
-            <div>
-              <span style="font-size:10px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Semester</span>
-              <strong style="font-size:14px; color:#111;">Semester ${semNum}</strong>
-            </div>
+          <!-- SECTION HEADER -->
+          <div style="background:#2563EB; color:#ffffff; padding:6px 12px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; border-radius:4px; margin-bottom:10px; display:inline-block;">
+            WEEKLY ACADEMIC TIMETABLE
           </div>
 
-          <h3 style="font-size:13px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.03em;">Weekly Schedule Grid</h3>
-          ${gridTableHtml}
+          <!-- WEEKLY SCHEDULE GRID -->
+          <div style="margin-bottom:16px; page-break-inside:avoid; break-inside:avoid;">
+            ${gridTableHtml}
+            ${legendPrintHtml}
+          </div>
 
-          <h3 style="font-size:13px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.03em;">Course Slot Assignments</h3>
-          <table style="width:100%; border-collapse:collapse; margin-bottom:14px; font-size:11.5px;">
-            <thead>
-              <tr style="background:#f1f3f5; border-bottom:2px solid #dee2e6; text-align:left;">
-                <th style="padding:6px;">Course</th>
-                <th style="padding:6px;">Instructor</th>
-                <th style="padding:6px;">Type</th>
-                <th style="padding:6px;">Theory Slot</th>
-                <th style="padding:6px;">Lab Slot</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${assignRows}
-            </tbody>
-          </table>
+          <!-- SECTION HEADER -->
+          <div style="background:#2563EB; color:#ffffff; padding:6px 12px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; border-radius:4px; margin-bottom:10px; display:inline-block;">
+            COURSE SLOT ASSIGNMENTS
+          </div>
 
-          <div style="border-top:1px solid #eee; padding-top:6px; font-size:10px; color:#888; text-align:center;">
-            Official Academic Timetable • Semester ${semNum} (${getAcademicYear(semNum)}) • SCFC Grade Calculator
+          <!-- COURSE SLOT ASSIGNMENTS -->
+          <div style="margin-bottom:16px; page-break-inside:avoid; break-inside:avoid;">
+            <table style="width:100%; border-collapse:collapse; margin-bottom:14px; font-size:11.5px; border:1px solid #BFDBFE;">
+              <thead>
+                <tr style="background:#1E3A8A; color:#ffffff; text-align:left;">
+                  <th style="padding:8px 10px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">Course Code & Name</th>
+                  <th style="padding:8px 10px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">Instructor</th>
+                  <th style="padding:8px 10px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">Type</th>
+                  <th style="padding:8px 10px; color:#ffffff; font-weight:700; border-right:1px solid #3B82F6;">Theory Slot</th>
+                  <th style="padding:8px 10px; color:#ffffff; font-weight:700;">Lab Slot</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${assignRows}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- FOOTER -->
+          <div style="border-top:1px solid #BFDBFE; margin-top:20px; padding-top:10px; font-size:10.5px; color:#64748B; display:flex; justify-content:space-between; align-items:center; page-break-inside:avoid; break-inside:avoid;">
+            <div>Official Academic Timetable • Semester ${semNum} (${getAcademicYear(semNum)}) • SCFC StudentOS • Amity University Bengaluru</div>
+            <div style="font-size:9.5px; color:#94A3B8; font-weight:500; letter-spacing:0.02em;">Designed &amp; Developed by C VISHNU VARDHAN</div>
           </div>
         </div>
       `;
@@ -10976,50 +11167,65 @@
 
         const printArea = document.getElementById('printableReport');
         printArea.innerHTML = `
-        <div style="font-family:'Inter', Arial, sans-serif; max-width:950px; margin:0 auto; padding:20px; color:#000; background:#fff;">
-          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #000; padding-bottom:12px; margin-bottom:20px;">
-            <div>
-              <h1 style="font-size:22px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.05em;">SCFC Official ${caTab} Examination Timetable</h1>
-              <p style="margin:4px 0 0 0; font-size:13px; color:#444;">School of Computer Science & Engineering</p>
+        <div style="font-family:'Inter', Arial, sans-serif; max-width:960px; margin:0 auto; padding:16px; color:#0F172A; background:#ffffff; height:auto; min-height:0; max-height:none; overflow:visible;">
+          <!-- REPORT HEADER -->
+          <div style="background:#1E3A8A; color:#ffffff; padding:16px 20px; border-radius:6px 6px 0 0; display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:26px;">🎓</span>
+              <div>
+                <h1 style="font-size:20px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.05em; color:#ffffff;">SCFC StudentOS</h1>
+                <div style="font-size:13px; font-weight:600; color:#93C5FD; margin-top:2px;">${caTab} Examination Timetable</div>
+              </div>
             </div>
             <div style="text-align:right;">
-              <div style="font-size:11px; color:#666;">Date Generated</div>
-              <div style="font-size:13px; font-weight:600;">${new Date().toLocaleDateString()}</div>
+              <div style="font-size:13px; font-weight:700; color:#ffffff;">School of Computer Science & Engineering</div>
+              <div style="font-size:12px; color:#93C5FD; margin-top:2px;">Amity University Bengaluru</div>
+            </div>
+          </div>
+          <div style="height:4px; background:#2563EB; margin-bottom:16px;"></div>
+
+          <!-- STUDENT INFORMATION CARD -->
+          <div style="background:#F0F9FF; border:1px solid #BFDBFE; border-radius:6px; padding:12px 16px; margin-bottom:20px; display:grid; grid-template-columns:repeat(5, 1fr); gap:12px; page-break-inside:avoid; break-inside:avoid;">
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Student Name</span>
+              <strong style="font-size:14px; color:#0F172A;">${state.studentName || 'N/A'}</strong>
+            </div>
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">USN</span>
+              <strong style="font-size:14px; color:#0F172A;">${state.usn || 'N/A'}</strong>
+            </div>
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Semester & Series</span>
+              <strong style="font-size:14px; color:#0F172A;">Semester ${state.currentSemester || 1} • ${caTab}</strong>
+            </div>
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Academic Year</span>
+              <strong style="font-size:14px; color:#0F172A;">${getAcademicYear(state.currentSemester || 1)}</strong>
+            </div>
+            <div>
+              <span style="font-size:10px; text-transform:uppercase; color:#1E40AF; font-weight:800; display:block;">Date Generated</span>
+              <strong style="font-size:14px; color:#0F172A;">${new Date().toLocaleDateString()}</strong>
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; background:#f8f9fa; border:1px solid #000; border-radius:8px; padding:14px; margin-bottom:24px;">
-            <div>
-              <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Student Name</span>
-              <strong style="font-size:15px; color:#111;">${state.studentName || 'N/A'}</strong>
-            </div>
-            <div>
-              <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">USN</span>
-              <strong style="font-size:15px; color:#111;">${state.usn || 'N/A'}</strong>
-            </div>
-            <div>
-              <span style="font-size:11px; text-transform:uppercase; color:#6c757d; font-weight:700; display:block;">Semester & Series</span>
-              <strong style="font-size:15px; color:#111;">Semester ${state.currentSemester || 1} • ${caTab}</strong>
-            </div>
+          <!-- SECTION HEADER -->
+          <div style="background:#2563EB; color:#ffffff; padding:6px 12px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; border-radius:4px; margin-bottom:10px; display:inline-block;">
+            EXAMINATION SCHEDULE
           </div>
 
-          <table style="width:100%; border-collapse:collapse; margin-bottom:24px; border:2px solid #000;">
+          <table style="width:100%; border-collapse:collapse; margin-bottom:20px; font-size:12px; border:1px solid #BFDBFE;">
             <thead>
-              <tr style="background:#e9ecef; border-bottom:1px solid #000;">
-                <th colspan="3" style="padding:8px; border-right:2px solid #000; font-size:14px; font-weight:800; text-align:center;">Forenoon</th>
-                <th colspan="3" style="padding:8px; font-size:14px; font-weight:800; text-align:center;">Afternoon</th>
+              <tr style="background:#1E3A8A; color:#ffffff;">
+                <th colspan="3" style="padding:8px; border-right:2px solid #3B82F6; font-size:13px; font-weight:800; text-align:center; color:#ffffff;">Forenoon (10:00 am - 11:30 am)</th>
+                <th colspan="3" style="padding:8px; font-size:13px; font-weight:800; text-align:center; color:#ffffff;">Afternoon (02:00 pm - 03:30 pm)</th>
               </tr>
-              <tr style="background:#f8f9fa; border-bottom:2px solid #000; font-size:12px; text-align:center;">
-                <th colspan="3" style="padding:6px; border-right:2px solid #000; font-weight:700;">10:00 am to 11:30 am</th>
-                <th colspan="3" style="padding:6px; font-weight:700;">02:00 pm to 03:30 pm</th>
-              </tr>
-              <tr style="background:#f1f3f5; border-bottom:2px solid #000; font-size:11px; text-transform:uppercase;">
-                <th style="padding:6px; width:45px; text-align:center; border-right:1px solid #ddd;">Slot</th>
-                <th style="padding:6px; text-align:left;">Course Title & Code</th>
-                <th style="padding:6px; text-align:center; border-right:2px solid #000;">Date & Day</th>
-                <th style="padding:6px; width:45px; text-align:center; border-right:1px solid #ddd;">Slot</th>
-                <th style="padding:6px; text-align:left;">Course Title & Code</th>
-                <th style="padding:6px; text-align:center;">Date & Day</th>
+              <tr style="background:#2563EB; color:#ffffff; font-size:11px; text-transform:uppercase;">
+                <th style="padding:6px; width:45px; text-align:center; border-right:1px solid #60A5FA; color:#ffffff;">Slot</th>
+                <th style="padding:6px; text-align:left; color:#ffffff;">Course Title & Code</th>
+                <th style="padding:6px; text-align:center; border-right:2px solid #3B82F6; color:#ffffff;">Date & Day</th>
+                <th style="padding:6px; width:45px; text-align:center; border-right:1px solid #60A5FA; color:#ffffff;">Slot</th>
+                <th style="padding:6px; text-align:left; color:#ffffff;">Course Title & Code</th>
+                <th style="padding:6px; text-align:center; color:#ffffff;">Date & Day</th>
               </tr>
             </thead>
             <tbody>
@@ -11027,8 +11233,10 @@
             </tbody>
           </table>
 
-          <div style="margin-top:30px; border-top:1px solid #eee; padding-top:12px; font-size:11px; color:#888; text-align:center;">
-            Official Academic Exam Timetable • SCFC Grade Calculator
+          <!-- FOOTER -->
+          <div style="border-top:1px solid #BFDBFE; margin-top:20px; padding-top:10px; font-size:10.5px; color:#64748B; display:flex; justify-content:space-between; align-items:center; page-break-inside:avoid; break-inside:avoid;">
+            <div>Official Examination Timetable • ${caTab} • SCFC StudentOS • Amity University Bengaluru</div>
+            <div style="font-size:9.5px; color:#94A3B8; font-weight:500; letter-spacing:0.02em;">Designed &amp; Developed by C VISHNU VARDHAN</div>
           </div>
         </div>
       `;
