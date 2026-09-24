@@ -2,8 +2,8 @@
   "name": "scfc-grade-calculator",
   "version": "1.0.0",
   "description": "SCFC Grade Calculator with Express & MongoDB integration",
-  "main": "server.js",
   "scripts": {
+    "build": "echo \"No build step required for static assets\"",
     "start": "node server.js",
     "dev": "node server.js",
     "lint": "echo \"no lint configured\"",
