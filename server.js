@@ -48,9 +48,8 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Google OAuth setup & callback routes (registered before express.static to prevent directory redirects/falling through)
 const googleAuthHandler = require('./api/auth/google');
-const googleAuthCallbackHandler = require('./api/auth/google/callback');
 app.get(['/api/auth/google', '/api/auth/google/'], googleAuthHandler);
-app.get(['/api/auth/google/callback', '/api/auth/google/callback/'], googleAuthCallbackHandler);
+app.get(['/api/auth/google/callback', '/api/auth/google/callback/'], googleAuthHandler);
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname)));

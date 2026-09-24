@@ -34,6 +34,10 @@
   ],
   "rewrites": [
     {
+      "source": "/api/auth/google/callback",
+      "destination": "/api/auth/google?action=callback"
+    },
+    {
       "source": "/((?!api/|lib/|icons/|sw|site\\.webmanifest|favicon|apple-touch).*)",
       "destination": "/index.html"
     }
