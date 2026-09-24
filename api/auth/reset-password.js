@@ -49,6 +49,14 @@ module.exports = async function handler(req, res) {
 
     const salt = await bcrypt.genSalt(10);
     student.password = await bcrypt.hash(password, salt);
+
+    if (student.pendingEmail) {
+      student.email = student.pendingEmail;
+      student.recoveryEmail = student.pendingEmail;
+      student.emailVerified = true;
+      student.pendingEmail = undefined;
+    }
+
     student.resetPasswordToken = undefined;
     student.resetPasswordExpires = undefined;
 

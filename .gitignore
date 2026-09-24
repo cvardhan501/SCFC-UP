@@ -2,6 +2,7 @@
 .env
 .env.local
 .env.production
+.env.*.local
 
 # Dependencies
 node_modules/
@@ -11,4 +12,3 @@ node_modules/
 
 # Scratch directory
 scratch/
-

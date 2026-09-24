@@ -46,6 +46,12 @@ console.log('Using MongoDB Atlas');
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Google OAuth setup & callback routes (registered before express.static to prevent directory redirects/falling through)
+const googleAuthHandler = require('./api/auth/google');
+const googleAuthCallbackHandler = require('./api/auth/google/callback');
+app.get(['/api/auth/google', '/api/auth/google/'], googleAuthHandler);
+app.get(['/api/auth/google/callback', '/api/auth/google/callback/'], googleAuthCallbackHandler);
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname)));
 
@@ -382,19 +388,17 @@ app.post('/api/auth/add-recovery-email', async (req, res) => {
 });
 
 // ==========================================
-// FORGOT PASSWORD ENDPOINT (USN + EMAIL MATCHING)
+// FORGOT PASSWORD ENDPOINT (USN + EMAIL MATCHING / NO EMAIL RECOVERY)
 // ==========================================
 app.post('/api/auth/forgot-password', async (req, res) => {
-  const genericSuccessMessage = 'If the enrollment number and registered email match an existing SCFC account, a password reset link will be sent.';
-
   try {
-    const { usn, email } = req.body;
-    if (!usn || !email) {
-      return res.status(400).json({ success: false, message: 'Enrollment number and email address are required.' });
+    const { usn, email, isNoEmailSet } = req.body;
+    if (!usn) {
+      return res.status(400).json({ success: false, message: 'Enrollment number is required.' });
     }
 
     const cleanUsn = usn.trim().toUpperCase();
-    const cleanEmail = email.trim().toLowerCase();
+    const cleanEmail = email ? email.trim().toLowerCase() : '';
 
     // Server-side rate limiting per IP / USN
     const clientIp = req.ip || req.headers['x-forwarded-for'] || 'unknown';
@@ -407,23 +411,73 @@ app.post('/api/auth/forgot-password', async (req, res) => {
       });
     }
 
-    // REQUIREMENT 6 & 7: Check that BOTH enrollment number AND registered email match the SAME account
-    const student = await Student.findOne({ usn: cleanUsn, email: cleanEmail });
+    // 1. FIRST, FIND THE STUDENT BY USN
+    const student = await Student.findOne({ usn: cleanUsn });
 
-    if (student) {
-      // Generate cryptographically secure short-lived token (15 mins expiry)
+    // CASE 1 — USN DOES NOT EXIST
+    if (!student) {
+      console.log(`Forgot password attempt for non-existent USN: ${cleanUsn}`);
+      return res.status(400).json({
+        success: false,
+        match: false,
+        message: 'Invalid details. The enrollment number and registered email do not match any SCFC account.'
+      });
+    }
+
+    const storedEmail = (student.email || student.recoveryEmail || '').trim().toLowerCase();
+    const hasEmail = storedEmail.length > 0;
+
+    // IF SUBMITTING NEW EMAIL FOR NO-EMAIL ACCOUNT
+    if (isNoEmailSet) {
+      if (hasEmail) {
+        return res.status(400).json({
+          success: false,
+          message: 'This account already has a registered recovery email.'
+        });
+      }
+      if (!cleanEmail) {
+        return res.status(400).json({
+          success: false,
+          message: 'Please enter a valid email address.'
+        });
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(cleanEmail)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Please enter a valid email address.'
+        });
+      }
+
+      // Check if email is already linked to another student account
+      const existingAccount = await Student.findOne({
+        $or: [
+          { email: cleanEmail },
+          { recoveryEmail: cleanEmail }
+        ],
+        usn: { $ne: cleanUsn }
+      });
+
+      if (existingAccount) {
+        return res.status(400).json({
+          success: false,
+          message: 'This email address is already linked to another student account.'
+        });
+      }
+
       const resetToken = crypto.randomBytes(32).toString('hex');
       const resetExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
 
+      student.pendingEmail = cleanEmail;
       student.resetPasswordToken = resetToken;
       student.resetPasswordExpires = resetExpires;
       await student.save();
 
-      console.log(`Generated reset token for ${cleanUsn} (${cleanEmail})`);
+      console.log(`Generated reset token with pending email for ${cleanUsn} (${cleanEmail})`);
 
-      // Send email via Resend to the registered email
       const emailResult = await sendPasswordResetEmail({
-        toEmail: student.email,
+        toEmail: cleanEmail,
         name: student.name,
         usn: student.usn,
         token: resetToken
@@ -433,24 +487,68 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         console.error(`❌ Failed to send password reset email to ${cleanUsn}:`, emailResult.error);
         return res.status(500).json({
           success: false,
-          match: true,
           message: emailResult.error || 'Unable to send reset email right now. Please try again later.'
         });
       }
 
       return res.json({
         success: true,
-        match: true,
-        message: 'Password reset link sent successfully! Please check your email inbox.'
+        message: 'Password reset link sent successfully! Please check your email inbox to verify and reset your password.'
       });
-    } else {
-      console.log(`Forgot password mismatch attempt for USN: ${cleanUsn}, Email: ${cleanEmail}`);
+    }
+
+    // CASE 3 — USN EXISTS BUT DATABASE HAS NO EMAIL
+    if (!hasEmail) {
+      console.log(`Forgot password attempt for USN with no email: ${cleanUsn}`);
+      return res.json({
+        success: false,
+        noEmail: true,
+        usn: student.usn,
+        message: 'No recovery email found.'
+      });
+    }
+
+    // CASE 2 — USN EXISTS AND DATABASE ALREADY HAS AN EMAIL
+    if (!cleanEmail || cleanEmail !== storedEmail) {
+      console.log(`Forgot password email mismatch attempt for USN: ${cleanUsn}, Email: ${cleanEmail}`);
       return res.status(400).json({
         success: false,
         match: false,
-        message: 'Invalid details. The enrollment number and registered email do not match any registered account.'
+        message: 'Invalid details. The enrollment number and registered email do not match any SCFC account.'
       });
     }
+
+    // Email matches -> Continue existing Forgot Password flow normally
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+
+    student.resetPasswordToken = resetToken;
+    student.resetPasswordExpires = resetExpires;
+    await student.save();
+
+    console.log(`Generated reset token for ${cleanUsn} (${storedEmail})`);
+
+    const emailResult = await sendPasswordResetEmail({
+      toEmail: storedEmail,
+      name: student.name,
+      usn: student.usn,
+      token: resetToken
+    });
+
+    if (!emailResult.success) {
+      console.error(`❌ Failed to send password reset email to ${cleanUsn}:`, emailResult.error);
+      return res.status(500).json({
+        success: false,
+        match: true,
+        message: emailResult.error || 'Unable to send reset email right now. Please try again later.'
+      });
+    }
+
+    return res.json({
+      success: true,
+      match: true,
+      message: 'Password reset link sent successfully! Please check your email inbox.'
+    });
   } catch (error) {
     console.error('Forgot password endpoint error:', error);
     return res.status(500).json({
@@ -501,6 +599,13 @@ app.post('/api/auth/reset-password', async (req, res) => {
     const hashed = await bcrypt.hash(password, 10);
     student.password = hashed;
 
+    if (student.pendingEmail) {
+      student.email = student.pendingEmail;
+      student.recoveryEmail = student.pendingEmail;
+      student.emailVerified = true;
+      student.pendingEmail = undefined;
+    }
+
     // Invalidate reset token (single-use)
     student.resetPasswordToken = undefined;
     student.resetPasswordExpires = undefined;
@@ -544,6 +649,7 @@ app.get('/api/auth/verify-email', async (req, res) => {
     return res.status(500).json({ success: false, message: 'Failed to verify email.' });
   }
 });
+
 
 // ==========================================
 // DIRECT CHANGE EMAIL ADDRESS ENDPOINT

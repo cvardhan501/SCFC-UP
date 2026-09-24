@@ -5613,6 +5613,33 @@
     </div>
   </div>
 
+  <!-- NO RECOVERY EMAIL MODAL -->
+  <div class="modal-overlay" id="noRecoveryEmailModal">
+    <div class="glass modal" style="width:460px;">
+      <div class="modal-head" style="text-align:center; padding-bottom:10px;">
+        <h3 style="font-size:22px; font-weight:700; margin-bottom:6px;">No Recovery Email Found</h3>
+        <p style="font-size:13px; color:var(--ink-soft); line-height:1.5;">
+          Your account does not have a recovery email linked to it.<br>Enter a new email address to set up password recovery.
+        </p>
+      </div>
+      <div style="padding:24px;">
+        <div class="auth-banner" id="noRecoveryEmailBanner"></div>
+        <input type="hidden" id="noRecoveryUsnInput">
+        <div class="form-group">
+          <label>New Email Address</label>
+          <input type="email" id="noRecoveryEmailInput" class="form-input" placeholder="Enter New Email Address"
+            onkeydown="if(event.key==='Enter' && !event.repeat) handleAddEmailAndResetPasswordSubmit()">
+        </div>
+        <button class="btn btn-primary" id="noRecoverySubmitBtn"
+          style="width:100%; justify-content:center; padding:12px; margin-top:8px;"
+          onclick="handleAddEmailAndResetPasswordSubmit()">Add Email &amp; Reset Password</button>
+        <div style="text-align:center; margin-top:16px; font-size:13px; color:var(--ink-soft);">
+          <a href="#" style="color:var(--indigo); font-weight:700;" onclick="closeNoRecoveryEmailModal()">Back to Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MOBILE QUICK MENU MODAL -->
     <div class="modal-overlay" id="mobileMenuModal">
       <div class="glass modal" style="width: 380px; max-width: 90vw;">
@@ -7066,6 +7093,114 @@
         if (m) m.classList.remove('open');
       }
 
+      function openNoRecoveryEmailModal(usn) {
+        closeForgotPasswordModal();
+        const usnInput = document.getElementById('noRecoveryUsnInput');
+        if (usnInput) usnInput.value = usn || '';
+        const emailInput = document.getElementById('noRecoveryEmailInput');
+        if (emailInput) emailInput.value = '';
+        const banner = document.getElementById('noRecoveryEmailBanner');
+        if (banner) {
+          banner.textContent = '';
+          banner.className = 'auth-banner';
+        }
+        const btn = document.getElementById('noRecoverySubmitBtn');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Add Email & Reset Password';
+        }
+        const m = document.getElementById('noRecoveryEmailModal');
+        if (m) m.classList.add('open');
+      }
+
+      function closeNoRecoveryEmailModal(e) {
+        if (e) e.preventDefault();
+        const m = document.getElementById('noRecoveryEmailModal');
+        if (m) m.classList.remove('open');
+      }
+
+      async function handleAddEmailAndResetPasswordSubmit() {
+        const usn = document.getElementById('noRecoveryUsnInput').value.trim().toUpperCase();
+        const email = document.getElementById('noRecoveryEmailInput').value.trim().toLowerCase();
+        const banner = document.getElementById('noRecoveryEmailBanner');
+        const btn = document.getElementById('noRecoverySubmitBtn');
+
+        if (!email) {
+          if (banner) {
+            banner.textContent = 'Please enter a new email address.';
+            banner.className = 'auth-banner error';
+          }
+          return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          if (banner) {
+            banner.textContent = 'Please enter a valid email address.';
+            banner.className = 'auth-banner error';
+          }
+          return;
+        }
+
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Sending Request...';
+        }
+
+        try {
+          const { ok, data } = await safeFetchJson('/api/auth/forgot-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usn, email, isNoEmailSet: true })
+          });
+
+          if (!ok || !data || !data.success) {
+            if (banner) {
+              banner.textContent = (data && data.message) ? data.message : 'Failed to send reset email.';
+              banner.className = 'auth-banner error';
+            }
+            if (btn) {
+              btn.disabled = false;
+              btn.textContent = 'Add Email & Reset Password';
+            }
+            return;
+          }
+
+          if (banner) {
+            banner.innerHTML = `
+              <div style="display:flex; align-items:center; gap:14px; text-align:left; padding:6px 0;">
+                <div class="animated-tick-circle" style="width:38px; height:38px; border-radius:50%; background:rgba(34, 197, 94, 0.2); border:2px solid #22C55E; color:#22C55E; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 0 16px rgba(34,197,94,0.35);">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" class="animated-tick-path"></polyline>
+                  </svg>
+                </div>
+                <div>
+                  <b style="color:#22C55E; font-size:14px; display:block; margin-bottom:2px;">Reset Link Sent Successfully!</b>
+                  <span style="font-size:12.5px; color:var(--ink-soft); line-height:1.35; display:block;">A password reset link has been sent to <b style="color:var(--ink);">${email}</b>. Please check your inbox to verify your email and reset your password.</span>
+                </div>
+              </div>
+            `;
+            banner.className = 'auth-banner success';
+          }
+
+          if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Reset Link Sent';
+          }
+
+        } catch (err) {
+          console.error('Add email and reset password error:', err);
+          if (banner) {
+            banner.textContent = 'Connection error. Please try again.';
+            banner.className = 'auth-banner error';
+          }
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Add Email & Reset Password';
+          }
+        }
+      }
+
       function closeRecoveryEmailModal() {
         if (state.usn) {
           sessionStorage.setItem(`scfc_recovery_email_dismissed_${state.usn}`, 'true');
@@ -7147,6 +7282,15 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ usn, email })
           });
+
+          if (data && data.noEmail) {
+            if (btn) {
+              btn.disabled = false;
+              btn.textContent = 'Send Reset Link';
+            }
+            openNoRecoveryEmailModal(data.usn || usn);
+            return;
+          }
 
           if (!ok || !data || !data.success || !data.match) {
             if (banner) {
