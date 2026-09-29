@@ -8643,7 +8643,7 @@
       }
 
       function initTimetableListeners() {
-        const assignBody = document.getElementById('timetableAssignBody');
+        const assignBody = document.getElementById('timetableCourseAssignmentBody');
         if (!assignBody || assignBody.dataset.listenersInitialized) return;
         assignBody.dataset.listenersInitialized = 'true';
 
@@ -9102,8 +9102,8 @@
         syncSemesterDropdowns();
         renderTable();
         renderStats();
-        if (typeof renderTimetable === 'function') renderTimetable();
-        if (typeof renderTracker === 'function') renderTracker();
+        if (typeof renderTimetable === 'function' && typeof activeView !== 'undefined' && activeView === 'timetable') renderTimetable();
+        if (typeof renderTracker === 'function' && typeof activeView !== 'undefined' && activeView === 'tracker') renderTracker();
         if (typeof renderAnalyticsView === 'function') renderAnalyticsView();
         if (typeof renderExamDashboard === 'function' && typeof activeView !== 'undefined' && activeView === 'exams') renderExamDashboard();
       }
@@ -11747,10 +11747,17 @@
 
       // Spot tracking
       document.querySelectorAll('.spot').forEach(card => {
+        let rect = null;
+        card.addEventListener('mouseenter', () => {
+          rect = card.getBoundingClientRect();
+        });
         card.addEventListener('mousemove', (e) => {
-          const rect = card.getBoundingClientRect();
+          if (!rect) rect = card.getBoundingClientRect();
           card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
           card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+        });
+        card.addEventListener('mouseleave', () => {
+          rect = null;
         });
       });
 
