@@ -3471,7 +3471,7 @@
 
       @page {
         size: auto;
-        margin: 8mm;
+        margin: 4mm;
         background: #ffffff;
       }
     }
@@ -3790,9 +3790,46 @@
       transform: rotate(180deg);
     }
 
-    @media (max-width: 640px) {
-      .login-quote-pill .quote-author {
-        font-size: 11px;
+    /* PRINT ALL 3 CA TIMETABLES STYLES */
+    #printAllCAReport {
+      display: none;
+    }
+
+    @media print {
+      html.print-all-ca-active,
+      body.print-all-ca-active {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+      }
+
+      body.print-all-ca-active > *:not(#printAllCAReport) {
+        display: none !important;
+      }
+
+      body.print-all-ca-active #printAllCAReport {
+        display: block !important;
+        position: relative !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        box-sizing: border-box !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      #printAllCAReport,
+      #printAllCAReport *,
+      #printAllCAReport table,
+      #printAllCAReport tr,
+      #printAllCAReport td,
+      #printAllCAReport div {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
       }
     }
   </style>
@@ -4339,7 +4376,7 @@
         <div id="view-timetable" class="page-view">
           <div class="hero fade-up">
             <h1>Semester <span class="grad">Timetable</span></h1>
-            <p>Official course timetable with theory and lab slot mapping for this semester.</p>
+            <p>Unofficial course timetable with theory and lab slot mapping for this semester.</p>
           </div>
 
           <!-- 1. COURSE SLOT ASSIGNMENTS (FIRST) -->
@@ -4478,6 +4515,12 @@
                   <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                   <rect x="6" y="14" width="12" height="8"></rect>
                 </svg> Print Schedule</button>
+              <button class="btn btn-ghost" onclick="printAllCATimetablesReport()"><svg width="16" height="16"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                  <rect x="6" y="14" width="12" height="8"></rect>
+                </svg> Print All 3 CA Timetables</button>
               <button class="btn btn-primary" onclick="shareExamSchedule()"><svg width="16" height="16"
                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                   <circle cx="18" cy="5" r="3"></circle>
@@ -4740,7 +4783,7 @@
             <div class="glass p-6">
               <h3>Total Degree Credits</h3>
               <div class="val" id="trackerRequiredCredits" style="font-size:36px; margin: 10px 0;">160</div>
-              <p style="color:var(--ink-soft); font-size:13px;">Official graduation requirement</p>
+              <p style="color:var(--ink-soft); font-size:13px;">Unofficial graduation requirement</p>
             </div>
             <div class="glass p-6">
               <h3>Credits Earned</h3>
@@ -5117,7 +5160,7 @@
         <div id="view-gradesystem" class="page-view">
           <div class="hero fade-up">
             <h1>SCFC <span class="grad">Grade Scale</span></h1>
-            <p>Official 10-point scale grading rules and calculation mathematical formulas.</p>
+            <p>Unofficial 10-point scale grading rules and calculation mathematical formulas.</p>
           </div>
 
           <div class="glass spot card-pad" style="margin-bottom:20px;">
@@ -5473,6 +5516,8 @@
         </div>
       </div>
     </div>
+
+
 
     <!-- LOGIN MOTIVATIONAL QUOTE CONTAINER -->
     <div id="loginQuotePill" class="login-quote-pill">
@@ -6044,6 +6089,11 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- DEDICATED COMBINED CA PRINT REPORT CONTAINER (PRINT ONLY) -->
+<div id="printAllCAReport">
+  <!-- Dynamic CA1 + CA2 + CA3 clean print layout -->
 </div>
 
 <!-- PRINTABLE CLEAN REPORT CONTAINER (PRINT ONLY) -->
@@ -9250,7 +9300,7 @@
     <div class="report-header-row" style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--glass-border); padding-bottom:14px; margin-bottom:20px;">
       <div>
         <h2 style="font-size:22px; font-weight:800; text-transform:uppercase;">SCFC Academic Grade Report</h2>
-        <p style="font-size:13px; color:var(--ink-soft); margin-top:2px;">Official Semester Performance Transcript</p>
+        <p style="font-size:13px; color:var(--ink-soft); margin-top:2px;">Unofficial Semester Performance Transcript</p>
       </div>
       <div style="text-align:right;">
         <span style="font-size:11px; color:var(--ink-soft); display:block;">Date</span>
@@ -9366,8 +9416,6 @@
           </div>
         </div>
         <div style="text-align:right;">
-          <div style="font-size:13px; font-weight:700; color:#ffffff;">School of Computer Science & Engineering</div>
-          <div style="font-size:12px; color:#93C5FD; margin-top:2px;">Amity University Bengaluru</div>
         </div>
       </div>
       <div style="height:4px; background:#2563EB; margin-bottom:16px;"></div>
@@ -9436,7 +9484,7 @@
 
       <!-- FOOTER -->
       <div style="margin-top:30px; border-top:1px solid #BFDBFE; padding-top:10px; font-size:10.5px; color:#64748B; display:flex; justify-content:space-between; align-items:center; page-break-inside:avoid; break-inside:avoid;">
-        <div>Official Academic Grade Report • SCFC StudentOS • Amity University Bengaluru</div>
+        <div>Unofficial Academic Grade Report • SCFC StudentOS</div>
         <div style="font-size:9.5px; color:#94A3B8; font-weight:500; letter-spacing:0.02em;">Designed &amp; Developed by C VISHNU VARDHAN</div>
       </div>
     </div>
@@ -9511,8 +9559,6 @@
             </div>
           </div>
           <div style="text-align:right;">
-            <div style="font-size:13px; font-weight:700; color:#ffffff;">School of Computer Science & Engineering</div>
-            <div style="font-size:12px; color:#93C5FD; margin-top:2px;">Amity University Bengaluru</div>
           </div>
         </div>
         <div style="height:4px; background:#2563EB; margin-bottom:16px;"></div>
@@ -9598,7 +9644,7 @@
 
         <!-- FOOTER -->
         <div style="border-top:1px solid #BFDBFE; margin-top:20px; padding-top:10px; font-size:10.5px; color:#64748B; display:flex; justify-content:space-between; align-items:center; page-break-inside:avoid; break-inside:avoid;">
-          <div>Official Credit Tracker Report • SCFC StudentOS • Amity University Bengaluru</div>
+          <div>Unofficial Credit Tracker Report • SCFC StudentOS</div>
           <div style="font-size:9.5px; color:#94A3B8; font-weight:500; letter-spacing:0.02em;">Designed &amp; Developed by C VISHNU VARDHAN</div>
         </div>
       </div>`;
@@ -9739,8 +9785,6 @@
               </div>
             </div>
             <div style="text-align:right;">
-              <div style="font-size:13px; font-weight:700; color:#ffffff;">School of Computer Science & Engineering</div>
-              <div style="font-size:12px; color:#93C5FD; margin-top:2px;">Amity University Bengaluru</div>
             </div>
           </div>
           <div style="height:4px; background:#2563EB; margin-bottom:16px;"></div>
@@ -9805,7 +9849,7 @@
 
           <!-- FOOTER -->
           <div style="border-top:1px solid #BFDBFE; margin-top:20px; padding-top:10px; font-size:10.5px; color:#64748B; display:flex; justify-content:space-between; align-items:center; page-break-inside:avoid; break-inside:avoid;">
-            <div>Official Academic Timetable • Semester ${semNum} (${getAcademicYear(semNum)}) • SCFC StudentOS • Amity University Bengaluru</div>
+            <div>Unofficial Academic Timetable • Semester ${semNum} (${getAcademicYear(semNum)}) • SCFC StudentOS</div>
             <div style="font-size:9.5px; color:#94A3B8; font-weight:500; letter-spacing:0.02em;">Designed &amp; Developed by C VISHNU VARDHAN</div>
           </div>
         </div>
@@ -11329,8 +11373,6 @@
               </div>
             </div>
             <div style="text-align:right;">
-              <div style="font-size:13px; font-weight:700; color:#ffffff;">School of Computer Science & Engineering</div>
-              <div style="font-size:12px; color:#93C5FD; margin-top:2px;">Amity University Bengaluru</div>
             </div>
           </div>
           <div style="height:4px; background:#2563EB; margin-bottom:16px;"></div>
@@ -11386,7 +11428,7 @@
 
           <!-- FOOTER -->
           <div style="border-top:1px solid #BFDBFE; margin-top:20px; padding-top:10px; font-size:10.5px; color:#64748B; display:flex; justify-content:space-between; align-items:center; page-break-inside:avoid; break-inside:avoid;">
-            <div>Official Examination Timetable • ${caTab} • SCFC StudentOS • Amity University Bengaluru</div>
+            <div>Unofficial Examination Timetable • ${caTab} • SCFC StudentOS</div>
             <div style="font-size:9.5px; color:#94A3B8; font-weight:500; letter-spacing:0.02em;">Designed &amp; Developed by C VISHNU VARDHAN</div>
           </div>
         </div>
@@ -11394,6 +11436,8 @@
 
         window.print();
       }
+
+
 
       function shareExamSchedule() {
         const caTab = (state.examConfig && state.examConfig.activeExamTab) ? state.examConfig.activeExamTab : 'CA1';
@@ -11410,6 +11454,173 @@
           alert('Exam Schedule summary and link copied to clipboard!');
         }
       }
+
+      /* =========================================================
+         PRINT ALL 3 CA TIMETABLES FEATURE IMPLEMENTATION
+      ========================================================= */
+      function renderCATableHTMLForPrint(caTab) {
+        const mappedExams = getMappedExamsForCA(caTab);
+        const slotPairs = [
+          { fn: 'A1', an: 'A2' },
+          { fn: 'B1', an: 'B2' },
+          { fn: 'C1', an: 'C2' },
+          { fn: 'D1', an: 'D2' },
+          { fn: 'E1', an: 'E2' },
+          { fn: 'F1', an: 'F2' },
+          { fn: 'G1', an: 'G2' }
+        ];
+
+        let rowsHtml = '';
+        slotPairs.forEach(pair => {
+          const fnMatch = mappedExams.find(m => m.slot === pair.fn);
+          const anMatch = mappedExams.find(m => m.slot === pair.an);
+
+          rowsHtml += `<tr style="border-bottom:1px solid #ddd; font-size:9.5px; line-height:1.15;">
+            <!-- Forenoon Slot -->
+            <td style="padding:2.5px 5px; font-weight:800; text-align:center; background:#f8f9fa; border-right:1px solid #eee; width:36px; color:#0f172a;">${pair.fn}</td>
+            <!-- Forenoon Course Title & Code -->
+            <td style="padding:2.5px 5px; ${!fnMatch ? 'background:#fff5f5;' : ''}">
+              ${fnMatch ? `<strong style="font-size:9.5px; color:#000000; display:block;">${fnMatch.course.code}</strong><span style="font-size:8px; color:#555555;">${fnMatch.course.name}</span>` : '<span style="color:#dc2626; background:#fee2e2; border:1px solid #fca5a5; padding:1px 5px; border-radius:4px; font-weight:600; font-size:8px; display:inline-block;">No Course</span>'}
+            </td>
+            <!-- Forenoon Date & Day -->
+            <td style="padding:2.5px 5px; border-right:2px solid #000000; text-align:center; width:120px; ${!fnMatch ? 'background:#fff5f5;' : ''}">
+              ${fnMatch && fnMatch.dateVal ? `<strong style="font-size:9.5px; color:#000000; display:block;">${fnMatch.formattedDate}</strong><span style="font-size:8px; color:#444444;">${fnMatch.dayName}</span>` : '<span style="color:#999999; font-style:italic; font-size:8px;">Unscheduled</span>'}
+            </td>
+
+            <!-- Afternoon Slot -->
+            <td style="padding:2.5px 5px; font-weight:800; text-align:center; background:#f8f9fa; border-right:1px solid #eee; width:36px; color:#0f172a;">${pair.an}</td>
+            <!-- Afternoon Course Title & Code -->
+            <td style="padding:2.5px 5px; ${!anMatch ? 'background:#fff5f5;' : ''}">
+              ${anMatch ? `<strong style="font-size:9.5px; color:#000000; display:block;">${anMatch.course.code}</strong><span style="font-size:8px; color:#555555;">${anMatch.course.name}</span>` : '<span style="color:#dc2626; background:#fee2e2; border:1px solid #fca5a5; padding:1px 5px; border-radius:4px; font-weight:600; font-size:8px; display:inline-block;">No Course</span>'}
+            </td>
+            <!-- Afternoon Date & Day -->
+            <td style="padding:2.5px 5px; text-align:center; width:120px; ${!anMatch ? 'background:#fff5f5;' : ''}">
+              ${anMatch && anMatch.dateVal ? `<strong style="font-size:9.5px; color:#000000; display:block;">${anMatch.formattedDate}</strong><span style="font-size:8px; color:#444444;">${anMatch.dayName}</span>` : '<span style="color:#999999; font-style:italic; font-size:8px;">Unscheduled</span>'}
+            </td>
+          </tr>`;
+        });
+
+        return `
+          <div style="margin-bottom:10px; page-break-inside:avoid; break-inside:avoid;">
+            <div style="background:#2563eb; color:#ffffff; padding:3px 8px; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; border-radius:4px; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
+              <span>${caTab} TIMETABLE</span>
+              <span style="font-size:8.5px; font-weight:600; color:#ffffff;">Continuous Assessment ${caTab.replace('CA', '')}</span>
+            </div>
+            <table style="width:100%; border-collapse:collapse; font-size:9.5px; border:1px solid #BFDBFE;">
+              <thead>
+                <tr style="background:#1e3a8a; color:#ffffff; font-size:9px;">
+                  <th colspan="3" style="padding:3px 5px; border-right:2px solid #3B82F6; font-weight:800; text-align:center;">Forenoon (10:00 am - 11:30 am)</th>
+                  <th colspan="3" style="padding:3px 5px; font-weight:800; text-align:center;">Afternoon (02:00 pm - 03:30 pm)</th>
+                </tr>
+                <tr style="background:#2563eb; color:#ffffff; font-size:8.5px; text-transform:uppercase; letter-spacing:0.03em;">
+                  <th style="padding:2.5px 4px; width:36px; text-align:center; border-right:1px solid #60a5fa;">SLOT</th>
+                  <th style="padding:2.5px 5px; text-align:left;">COURSE TITLE &amp; CODE</th>
+                  <th style="padding:2.5px 5px; width:120px; text-align:center; border-right:2px solid #3B82F6;">DATE &amp; DAY</th>
+                  <th style="padding:2.5px 4px; width:36px; text-align:center; border-right:1px solid #60a5fa;">SLOT</th>
+                  <th style="padding:2.5px 5px; text-align:left;">COURSE TITLE &amp; CODE</th>
+                  <th style="padding:2.5px 5px; width:120px; text-align:center;">DATE &amp; DAY</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      function printAllCATimetablesReport() {
+        const printReportDiv = document.getElementById('printAllCAReport');
+        if (!printReportDiv) return;
+
+        const activeSem = state.currentSemester || 1;
+        const studentName = state.studentName || 'Student';
+        const usn = state.usn || 'N/A';
+        const acadYear = typeof getAcademicYear === 'function' ? getAcademicYear(activeSem) : '2026 - 2027';
+        const currentDateStr = new Date().toLocaleDateString();
+
+        const ca1Html = renderCATableHTMLForPrint('CA1');
+        const ca2Html = renderCATableHTMLForPrint('CA2');
+        const ca3Html = renderCATableHTMLForPrint('CA3');
+
+        printReportDiv.innerHTML = `
+          <div id="printAllCAReportInner" style="font-family:'Inter', Arial, sans-serif; width:100%; max-width:100%; box-sizing:border-box; margin:0 auto; padding:2px; color:#0f172a; background:#ffffff; break-inside:avoid; page-break-inside:avoid;">
+            <!-- HEADER -->
+            <div style="background:#1e3a8a; color:#ffffff; padding:5px 10px; border-radius:6px 6px 0 0; display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-size:16px;">🎓</span>
+                <div>
+                  <h1 style="font-size:14px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing:0.04em; color:#ffffff; line-height:1.1;">SCFC StudentOS</h1>
+                  <div style="font-size:9.5px; font-weight:600; color:#93c5fd; margin-top:1px;">Unofficial CA Examination Schedule (CA1, CA2 &amp; CA3)</div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:8.5px; color:#93c5fd;">Combined Master CA Timetable</div>
+              </div>
+            </div>
+
+            <!-- STUDENT INFORMATION CARD -->
+            <div style="background:#f0f9ff; border:1px solid #bfdbfe; border-radius:6px; padding:3px 8px; margin-bottom:6px; display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; font-size:8.5px; page-break-inside:avoid; break-inside:avoid;">
+              <div>
+                <span style="font-size:7.5px; text-transform:uppercase; color:#1e40af; font-weight:800; display:block;">Student Name</span>
+                <strong style="font-size:10px; color:#0f172a;">${studentName}</strong>
+              </div>
+              <div>
+                <span style="font-size:7.5px; text-transform:uppercase; color:#1e40af; font-weight:800; display:block;">USN</span>
+                <strong style="font-size:10px; color:#0f172a;">${usn}</strong>
+              </div>
+              <div>
+                <span style="font-size:7.5px; text-transform:uppercase; color:#1e40af; font-weight:800; display:block;">Semester &amp; Series</span>
+                <strong style="font-size:10px; color:#0f172a;">Semester ${activeSem} • CA1-CA3</strong>
+              </div>
+              <div>
+                <span style="font-size:7.5px; text-transform:uppercase; color:#1e40af; font-weight:800; display:block;">Academic Year</span>
+                <strong style="font-size:10px; color:#0f172a;">${acadYear}</strong>
+              </div>
+              <div>
+                <span style="font-size:7.5px; text-transform:uppercase; color:#1e40af; font-weight:800; display:block;">Date Generated</span>
+                <strong style="font-size:10px; color:#0f172a;">${currentDateStr}</strong>
+              </div>
+            </div>
+
+            <!-- THREE STACKED CA SECTIONS -->
+            ${ca1Html}
+            ${ca2Html}
+            ${ca3Html}
+
+            <!-- FOOTER -->
+            <div style="border-top:1px solid #bfdbfe; margin-top:3px; padding-top:3px; font-size:8px; color:#64748b; display:flex; justify-content:space-between; align-items:center;">
+              <div>Unofficial Examination Timetable • All 3 CA Schedules • SCFC StudentOS</div>
+              <div style="font-size:7.5px; color:#94a3b8; font-weight:500;">Designed &amp; Developed by C VISHNU VARDHAN</div>
+            </div>
+          </div>
+        `;
+
+        document.documentElement.classList.add('print-all-ca-active');
+        document.body.classList.add('print-all-ca-active');
+
+        // Auto-scaling verification & guard to guarantee single-page fitting in both Portrait and Landscape
+        const innerDiv = document.getElementById('printAllCAReportInner');
+        if (innerDiv) {
+          const maxAllowedPx = 710;
+          const actualPx = innerDiv.scrollHeight || innerDiv.offsetHeight;
+          if (actualPx > maxAllowedPx) {
+            const scaleFactor = Math.min(0.98, (maxAllowedPx / actualPx) - 0.01);
+            innerDiv.style.transform = `scale(${scaleFactor})`;
+            innerDiv.style.transformOrigin = 'top left';
+            innerDiv.style.width = `${(100 / scaleFactor).toFixed(2)}%`;
+          } else {
+            innerDiv.style.transform = 'none';
+            innerDiv.style.width = '100%';
+          }
+        }
+
+        setTimeout(() => {
+          window.print();
+        }, 100);
+      }
+
+      window.printAllCATimetablesReport = printAllCATimetablesReport;
 
       // Interval to refresh countdown timer every 1 second
       setInterval(updateExamCountdown, 1000);
@@ -11436,6 +11647,10 @@
       window.addEventListener('afterprint', () => {
         const printArea = document.getElementById('printableReport');
         if (printArea) printArea.innerHTML = '';
+        document.documentElement.classList.remove('print-all-ca-active');
+        document.body.classList.remove('print-all-ca-active');
+        const printAllArea = document.getElementById('printAllCAReport');
+        if (printAllArea) printAllArea.innerHTML = '';
       });
 
       /* =========================================================
