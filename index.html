@@ -3830,6 +3830,21 @@
       #printAllCAReport div {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      #printAllCAReport table {
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+        box-sizing: border-box !important;
+        border: 1px solid #3B82F6 !important;
+      }
+
+      #printAllCAReport th,
+      #printAllCAReport td {
+        box-sizing: border-box !important;
+        background-clip: padding-box !important;
       }
     }
   </style>
@@ -11478,50 +11493,50 @@
           const fnMatch = mappedExams.find(m => m.slot === pair.fn);
           const anMatch = mappedExams.find(m => m.slot === pair.an);
 
-          rowsHtml += `<tr style="border-bottom:1px solid #ddd; font-size:9.5px; line-height:1.15;">
+          rowsHtml += `<tr style="font-size:9.5px; line-height:1.15;">
             <!-- Forenoon Slot -->
-            <td style="padding:2.5px 5px; font-weight:800; text-align:center; background:#f8f9fa; border-right:1px solid #eee; width:36px; color:#0f172a;">${pair.fn}</td>
+            <td style="padding:2.5px 5px; font-weight:800; text-align:center; background:#f8f9fa; border-right:1px solid #cbd5e1; border-bottom:1px solid #cbd5e1; width:36px; color:#0f172a;">${pair.fn}</td>
             <!-- Forenoon Course Title & Code -->
-            <td style="padding:2.5px 5px; ${!fnMatch ? 'background:#fff5f5;' : ''}">
-              ${fnMatch ? `<strong style="font-size:9.5px; color:#000000; display:block;">${fnMatch.course.code}</strong><span style="font-size:8px; color:#555555;">${fnMatch.course.name}</span>` : '<span style="color:#dc2626; background:#fee2e2; border:1px solid #fca5a5; padding:1px 5px; border-radius:4px; font-weight:600; font-size:8px; display:inline-block;">No Course</span>'}
+            <td style="padding:2.5px 5px; border-bottom:1px solid #cbd5e1; ${!fnMatch ? 'background:#fef2f2;' : ''}">
+              ${fnMatch ? `<strong style="font-size:9.5px; color:#000000; display:block;">${fnMatch.course.code}</strong><span style="font-size:8px; color:#475569;">${fnMatch.course.name}</span>` : '<span style="color:#991b1b; background:#fee2e2; border:1px solid #f87171; padding:1px 5px; border-radius:4px; font-weight:700; font-size:8px; display:inline-block;">No Course</span>'}
             </td>
             <!-- Forenoon Date & Day -->
-            <td style="padding:2.5px 5px; border-right:2px solid #000000; text-align:center; width:120px; ${!fnMatch ? 'background:#fff5f5;' : ''}">
-              ${fnMatch && fnMatch.dateVal ? `<strong style="font-size:9.5px; color:#000000; display:block;">${fnMatch.formattedDate}</strong><span style="font-size:8px; color:#444444;">${fnMatch.dayName}</span>` : '<span style="color:#999999; font-style:italic; font-size:8px;">Unscheduled</span>'}
+            <td style="padding:2.5px 5px; border-right:2px solid #3B82F6; border-bottom:1px solid #cbd5e1; text-align:center; width:120px; ${!fnMatch ? 'background:#fef2f2;' : ''}">
+              ${fnMatch && fnMatch.dateVal ? `<strong style="font-size:9.5px; color:#000000; display:block;">${fnMatch.formattedDate}</strong><span style="font-size:8px; color:#334155;">${fnMatch.dayName}</span>` : '<span style="color:#64748b; font-style:italic; font-size:8px; font-weight:500;">Unscheduled</span>'}
             </td>
 
             <!-- Afternoon Slot -->
-            <td style="padding:2.5px 5px; font-weight:800; text-align:center; background:#f8f9fa; border-right:1px solid #eee; width:36px; color:#0f172a;">${pair.an}</td>
+            <td style="padding:2.5px 5px; font-weight:800; text-align:center; background:#f8f9fa; border-right:1px solid #cbd5e1; border-bottom:1px solid #cbd5e1; width:36px; color:#0f172a;">${pair.an}</td>
             <!-- Afternoon Course Title & Code -->
-            <td style="padding:2.5px 5px; ${!anMatch ? 'background:#fff5f5;' : ''}">
-              ${anMatch ? `<strong style="font-size:9.5px; color:#000000; display:block;">${anMatch.course.code}</strong><span style="font-size:8px; color:#555555;">${anMatch.course.name}</span>` : '<span style="color:#dc2626; background:#fee2e2; border:1px solid #fca5a5; padding:1px 5px; border-radius:4px; font-weight:600; font-size:8px; display:inline-block;">No Course</span>'}
+            <td style="padding:2.5px 5px; border-bottom:1px solid #cbd5e1; ${!anMatch ? 'background:#fef2f2;' : ''}">
+              ${anMatch ? `<strong style="font-size:9.5px; color:#000000; display:block;">${anMatch.course.code}</strong><span style="font-size:8px; color:#475569;">${anMatch.course.name}</span>` : '<span style="color:#991b1b; background:#fee2e2; border:1px solid #f87171; padding:1px 5px; border-radius:4px; font-weight:700; font-size:8px; display:inline-block;">No Course</span>'}
             </td>
             <!-- Afternoon Date & Day -->
-            <td style="padding:2.5px 5px; text-align:center; width:120px; ${!anMatch ? 'background:#fff5f5;' : ''}">
-              ${anMatch && anMatch.dateVal ? `<strong style="font-size:9.5px; color:#000000; display:block;">${anMatch.formattedDate}</strong><span style="font-size:8px; color:#444444;">${anMatch.dayName}</span>` : '<span style="color:#999999; font-style:italic; font-size:8px;">Unscheduled</span>'}
+            <td style="padding:2.5px 5px; border-bottom:1px solid #cbd5e1; text-align:center; width:120px; ${!anMatch ? 'background:#fef2f2;' : ''}">
+              ${anMatch && anMatch.dateVal ? `<strong style="font-size:9.5px; color:#000000; display:block;">${anMatch.formattedDate}</strong><span style="font-size:8px; color:#334155;">${anMatch.dayName}</span>` : '<span style="color:#64748b; font-style:italic; font-size:8px; font-weight:500;">Unscheduled</span>'}
             </td>
           </tr>`;
         });
 
         return `
-          <div style="margin-bottom:10px; page-break-inside:avoid; break-inside:avoid;">
+          <div class="ca-print-section" style="margin-bottom:9px; page-break-inside:avoid; break-inside:avoid;">
             <div style="background:#2563eb; color:#ffffff; padding:3px 8px; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; border-radius:4px; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
               <span>${caTab} TIMETABLE</span>
               <span style="font-size:8.5px; font-weight:600; color:#ffffff;">Continuous Assessment ${caTab.replace('CA', '')}</span>
             </div>
-            <table style="width:100%; border-collapse:collapse; font-size:9.5px; border:1px solid #BFDBFE;">
+            <table style="width:100%; border-collapse:collapse; font-size:9.5px; border:1px solid #3B82F6;">
               <thead>
                 <tr style="background:#1e3a8a; color:#ffffff; font-size:9px;">
-                  <th colspan="3" style="padding:3px 5px; border-right:2px solid #3B82F6; font-weight:800; text-align:center;">Forenoon (10:00 am - 11:30 am)</th>
-                  <th colspan="3" style="padding:3px 5px; font-weight:800; text-align:center;">Afternoon (02:00 pm - 03:30 pm)</th>
+                  <th colspan="3" style="padding:3px 5px; border-right:2px solid #3B82F6; border-bottom:1px solid #3B82F6; font-weight:800; text-align:center;">Forenoon (10:00 am - 11:30 am)</th>
+                  <th colspan="3" style="padding:3px 5px; border-bottom:1px solid #3B82F6; font-weight:800; text-align:center;">Afternoon (02:00 pm - 03:30 pm)</th>
                 </tr>
                 <tr style="background:#2563eb; color:#ffffff; font-size:8.5px; text-transform:uppercase; letter-spacing:0.03em;">
-                  <th style="padding:2.5px 4px; width:36px; text-align:center; border-right:1px solid #60a5fa;">SLOT</th>
-                  <th style="padding:2.5px 5px; text-align:left;">COURSE TITLE &amp; CODE</th>
-                  <th style="padding:2.5px 5px; width:120px; text-align:center; border-right:2px solid #3B82F6;">DATE &amp; DAY</th>
-                  <th style="padding:2.5px 4px; width:36px; text-align:center; border-right:1px solid #60a5fa;">SLOT</th>
-                  <th style="padding:2.5px 5px; text-align:left;">COURSE TITLE &amp; CODE</th>
-                  <th style="padding:2.5px 5px; width:120px; text-align:center;">DATE &amp; DAY</th>
+                  <th style="padding:2.5px 4px; width:36px; text-align:center; border-right:1px solid #60a5fa; border-bottom:1px solid #3B82F6;">SLOT</th>
+                  <th style="padding:2.5px 5px; text-align:left; border-bottom:1px solid #3B82F6;">COURSE TITLE &amp; CODE</th>
+                  <th style="padding:2.5px 5px; width:120px; text-align:center; border-right:2px solid #3B82F6; border-bottom:1px solid #3B82F6;">DATE &amp; DAY</th>
+                  <th style="padding:2.5px 4px; width:36px; text-align:center; border-right:1px solid #60a5fa; border-bottom:1px solid #3B82F6;">SLOT</th>
+                  <th style="padding:2.5px 5px; text-align:left; border-bottom:1px solid #3B82F6;">COURSE TITLE &amp; CODE</th>
+                  <th style="padding:2.5px 5px; width:120px; text-align:center; border-bottom:1px solid #3B82F6;">DATE &amp; DAY</th>
                 </tr>
               </thead>
               <tbody>
