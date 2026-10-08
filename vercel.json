@@ -34,11 +34,15 @@
   ],
   "rewrites": [
     {
+      "source": "/privacy-policy",
+      "destination": "/privacy-policy.html"
+    },
+    {
       "source": "/api/auth/google/callback",
       "destination": "/api/auth/google?action=callback"
     },
     {
-      "source": "/((?!api/|lib/|icons/|sw|site\\.webmanifest|favicon|apple-touch).*)",
+      "source": "/((?!api/|lib/|icons/|sw|site\\.webmanifest|favicon|apple-touch|privacy-policy).*)",
       "destination": "/index.html"
     }
   ]

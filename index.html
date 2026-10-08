@@ -7850,6 +7850,9 @@
           }
         } else if (pathName === '/forgot-password') {
           openForgotPasswordModal();
+        } else if (pathName === '/privacy-policy') {
+          window.location.href = '/privacy-policy';
+          return;
         }
 
         if (isEmailVerified === 'true' || isEmailChanged === 'true') {

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy – SCFC StudentOS</title>
+  <meta name="description" content="Privacy Policy for SCFC StudentOS Grade Calculator. Read about how we collect, process, and protect your academic and personal information.">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #0c1024;
+      --bg-radial: radial-gradient(circle at 50% 0%, #1a1f3d 0%, #0c1024 75%);
+      --card-bg: #171a30;
+      --card-bg-subtle: rgba(23, 26, 48, 0.7);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --primary: #6C63FF;
+      --primary-gradient: linear-gradient(135deg, #6C63FF, #8B5CF6);
+      --accent-cyan: #22D3EE;
+      --accent-green: #22C55E;
+      --ink: #f3f5ff;
+      --ink-muted: #93a0c7;
+      --ink-soft: #6b7280;
+      --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-dark);
+      background-image: var(--bg-radial);
+      color: var(--ink);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-bar {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-gradient);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 18px;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(108, 99, 255, 0.4);
+    }
+
+    .brand-name {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-tag {
+      font-size: 11px;
+      color: var(--accent-cyan);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-top: -2px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--ink);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto 60px;
+      padding: 0 20px;
+    }
+
+    .policy-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .header-section {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff, var(--ink-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .meta-info {
+      font-size: 13.5px;
+      color: var(--ink-soft);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: rgba(108, 99, 255, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 19px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-num {
+      background: var(--primary-gradient);
+      color: #fff;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    p {
+      font-size: 14.5px;
+      color: var(--ink-muted);
+      margin-bottom: 12px;
+      line-height: 1.65;
+    }
+
+    ul {
+      list-style-type: none;
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    li {
+      position: relative;
+      padding-left: 22px;
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    li::before {
+      content: "•";
+      position: absolute;
+      left: 6px;
+      top: -1px;
+      color: var(--accent-cyan);
+      font-size: 18px;
+    }
+
+    strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .contact-box {
+      background: var(--card-bg-subtle);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .contact-email {
+      font-family: var(--font-heading);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-decoration: none;
+    }
+
+    .contact-email:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--ink-soft);
+      font-size: 13px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      margin-top: 40px;
+    }
+
+    footer a {
+      color: var(--ink-muted);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: var(--primary);
+    }
+
+    @media (max-width: 640px) {
+      .policy-card {
+        padding: 24px 18px;
+        border-radius: 16px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .section-title {
+        font-size: 17px;
+      }
+
+      .nav-bar {
+        padding-top: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav-bar">
+    <a href="/" class="brand-logo">
+      <div class="brand-icon">S</div>
+      <div>
+        <span class="brand-name">SCFC StudentOS</span>
+        <span class="brand-tag">Grade Calculator &amp; OS</span>
+      </div>
+    </a>
+    <a href="/" class="back-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Back to App
+    </a>
+  </header>
+
+  <main class="container">
+    <article class="policy-card">
+      
+      <header class="header-section">
+        <span class="badge">Official Documentation</span>
+        <h1 style="margin-top:10px;">Privacy Policy</h1>
+        <div class="meta-info">
+          <span><strong>Effective Date:</strong> October 8, 2026</span>
+          <span>•</span>
+          <span><strong>Application:</strong> SCFC StudentOS Grade Calculator</span>
+        </div>
+      </header>
+
+      <!-- Section 1 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">1</span> Information Collected</h2>
+        <p>SCFC StudentOS collects only the minimum necessary information required to manage student accounts, calculate course grades, track semester progress, store exam timetables, and facilitate secure password recovery.</p>
+        <p>We process information directly provided by students when registering or using our application services.</p>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">2</span> Account and Enrollment Information</h2>
+        <p>When creating or managing an account on SCFC StudentOS, we collect:</p>
+        <ul>
+          <li><strong>Student Full Name:</strong> Used for account personalization and user profile display.</li>
+          <li><strong>Enrollment Number / USN (University Seat Number):</strong> Serves as the unique, primary identifier for your account, authentication, and data isolation.</li>
+        </ul>
+      </section>
+
+      <!-- Section 3 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">3</span> Email and Recovery Email Usage</h2>
+        <p>We collect primary and optional recovery email addresses for essential security and operational functions:</p>
+        <ul>
+          <li><strong>Password Recovery:</strong> Sending automated password reset verification links when requested.</li>
+          <li><strong>Email Verification:</strong> Confirming ownership when adding or updating a recovery email address.</li>
+        </ul>
+        <p>Email addresses are used strictly for transactional security messages and are never used for marketing, advertising, or unsolicited promotional communications.</p>
+      </section>
+
+      <!-- Section 4 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">4</span> Password and Authentication Security</h2>
+        <p>Your security is paramount. SCFC StudentOS enforces robust authentication practices:</p>
+        <ul>
+          <li><strong>Hashed Password Storage:</strong> Passwords are cryptographically hashed prior to storage using strong one-way hashing algorithms (such as bcrypt). Plaintext passwords are never stored or logged.</li>
+          <li><strong>Session Authentication:</strong> Authentication uses secure session tokens stored locally on your device to maintain authorized access without repeatedly requesting credentials.</li>
+        </ul>
+      </section>
+
+      <!-- Section 5 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">5</span> Academic Data</h2>
+        <p>To provide grade calculation, semester management, and study planning, SCFC StudentOS processes:</p>
+        <ul>
+          <li>Course names, course codes, and credit unit allocations.</li>
+          <li>Earned grades (e.g., S, A, B, C, D, E, F) and associated SGPA/CGPA calculations.</li>
+          <li>Exam schedules, timetables, and study planner task completion statuses.</li>
+        </ul>
+        <p>Your academic data is private to your account and is accessible exclusively to you when logged in.</p>
+      </section>
+
+      <!-- Section 6 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">6</span> Data Storage and MongoDB Atlas</h2>
+        <p>SCFC StudentOS utilizes cloud database infrastructure and local client-side storage:</p>
+        <ul>
+          <li><strong>MongoDB Atlas:</strong> Account profile information and synced academic records are stored in encrypted cloud databases on MongoDB Atlas using TLS-encrypted connections and restricted database credentials.</li>
+          <li><strong>Browser Offline Storage (IndexedDB):</strong> Academic records and preferences are cached locally on your device via IndexedDB (<code>scfcDB</code>) for fast, offline access when disconnected from the internet.</li>
+        </ul>
+      </section>
+
+      <!-- Section 7 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">7</span> Email Services Used for Account Recovery</h2>
+        <p>To reliably deliver transactional security communications, SCFC StudentOS integrates with trusted email infrastructure providers:</p>
+        <ul>
+          <li><strong>Google Gmail API:</strong> Primary transactional email transport utilizing OAuth2 authorization protocols.</li>
+          <li><strong>Resend API:</strong> Secondary fallback email transport for account verification and password reset dispatch.</li>
+        </ul>
+        <p>Email content dispatched via these services contains only necessary security instructions (such as single-use, 15-minute expiration password reset links).</p>
+      </section>
+
+      <!-- Section 8 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">8</span> Cookies, Local Storage, and Offline Storage</h2>
+        <p>SCFC StudentOS uses client-side web storage mechanisms to maintain session state and offline capability:</p>
+        <ul>
+          <li><strong>LocalStorage &amp; SessionStorage:</strong> Used to store active USN state, active session tokens, and visual UI preferences (such as dark/light theme).</li>
+          <li><strong>IndexedDB:</strong> Used to store local course grades and offline academic data.</li>
+        </ul>
+        <p>We do not use tracking cookies, cross-site analytics beacons, or third-party advertising cookies.</p>
+      </section>
+
+      <!-- Section 9 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">9</span> Data Sharing</h2>
+        <p><strong>We do not sell, trade, rent, or monetize your personal or academic information.</strong></p>
+        <p>Your data is not shared with third-party advertisers, data brokers, or commercial organizations. Data is only processed as necessary to deliver the core functionalities of SCFC StudentOS.</p>
+      </section>
+
+      <!-- Section 10 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">10</span> Data Retention and Deletion</h2>
+        <p>We retain your profile information and academic data for as long as your account remains active on SCFC StudentOS.</p>
+        <p>You have the right to request the complete deletion of your account and associated database records at any time. To request account deletion, contact our support team at <a href="mailto:scfc.studentos@gmail.com" style="color:var(--accent-cyan); font-weight:600;">scfc.studentos@gmail.com</a>.</p>
+      </section>
+
+      <!-- Section 11 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">11</span> Security</h2>
+        <p>We implement technical and organizational safeguards to protect your data:</p>
+        <ul>
+          <li><strong>Transport Encryption:</strong> All web traffic and API endpoints operate strictly over encrypted HTTPS connections (TLS 1.3).</li>
+          <li><strong>Endpoint Protection &amp; Rate Limiting:</strong> Sensitive API endpoints (such as password reset and login requests) employ IP and USN rate limiting to prevent brute-force attacks.</li>
+          <li><strong>Token Expiration:</strong> Password reset tokens are single-use cryptographically random strings that automatically expire 15 minutes after issuance.</li>
+        </ul>
+      </section>
+
+      <!-- Section 12 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">12</span> Children's Privacy</h2>
+        <p>SCFC StudentOS is designed for college and university students. The application is not directed toward children under the age of 13, and we do not knowingly collect personal information from children.</p>
+      </section>
+
+      <!-- Section 13 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">13</span> Changes to This Privacy Policy</h2>
+        <p>We may update this Privacy Policy periodically to reflect application enhancements or regulatory requirements. Any updates will be posted directly on this page with a revised "Effective Date" at the top.</p>
+      </section>
+
+      <!-- Section 14 -->
+      <section class="section">
+        <h2 class="section-title"><span class="section-num">14</span> Contact Information</h2>
+        <p>If you have any questions, feedback, or data privacy requests regarding this Privacy Policy or SCFC StudentOS, please contact us:</p>
+        <div class="contact-box">
+          <div>
+            <div style="font-size:13px; color:var(--ink-soft); margin-bottom:2px;">Privacy &amp; Support Contact</div>
+            <div style="font-size:15px; font-weight:700; color:#fff;">SCFC StudentOS Team</div>
+          </div>
+          <a href="mailto:scfc.studentos@gmail.com" class="contact-email">scfc.studentos@gmail.com</a>
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+  <footer>
+    <div class="container" style="margin:0 auto; padding:0;">
+      <p>&copy; 2026 SCFC StudentOS. All rights reserved. | <a href="/privacy-policy">Privacy Policy</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>

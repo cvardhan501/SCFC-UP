@@ -917,6 +917,11 @@ app.put('/api/student/:usn', async (req, res) => {
   }
 });
 
+// Serve Privacy Policy page
+app.get('/privacy-policy', (req, res) => {
+  res.sendFile(path.join(__dirname, 'privacy-policy.html'));
+});
+
 // Catch-all route to serve SPA frontend
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
